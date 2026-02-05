@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAZUR DATABASE // PROFILE V6</title>
+    <title>MAZUR DATABASE // V7</title>
     <style>
         :root { --bg-color: #050505; --terminal-green: #00ff41; --terminal-dim: #008f11; }
         body { background-color: var(--bg-color); color: var(--terminal-green); font-family: 'Courier New', Courier, monospace; margin: 0; padding: 20px; background-image: radial-gradient(circle, #0a0a0a 0%, #000000 100%); }
@@ -12,6 +12,7 @@
         h1, h2 { text-align: center; border-bottom: 1px solid var(--terminal-dim); padding-bottom: 10px; letter-spacing: 2px; }
         input, textarea, button { width: 100%; box-sizing: border-box; background: #000; border: 1px solid var(--terminal-dim); color: var(--terminal-green); padding: 12px; margin-bottom: 10px; font-family: 'Courier New', monospace; }
         input:focus, textarea:focus { outline: none; border-color: var(--terminal-green); }
+        input:disabled { background: #1a1a1a; color: #555; border-color: #333; cursor: not-allowed; }
         .row-inputs { display: flex; gap: 10px; } .row-inputs input { flex: 1; }
         button { font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 10px; border: 1px solid var(--terminal-green); transition: 0.2s; }
         button:hover { background: var(--terminal-green); color: #000; }
@@ -22,15 +23,15 @@
         .card-info { flex-grow: 1; } .card h3 { margin: 0 0 5px 0; color: #fff; text-transform: uppercase; font-size: 1.2em; }
         .label { font-size: 10px; color: #aaa; display: block; margin-top: 8px; margin-bottom: 2px; text-transform: uppercase; }
         .data-text { font-size: 14px; margin-bottom: 5px; display: block; color: #ddd; }
-        .optional-info { font-size: 12px; color: var(--terminal-green); margin-bottom: 4px; display: block; }
         .link-btn { display: inline-block; padding: 5px 10px; border: 1px solid var(--terminal-green); color: var(--terminal-green); text-decoration: none; font-size: 11px; margin-top: 10px; }
-        .link-btn:hover { background: var(--terminal-green); color: #000; }
+        .action-btn { display: inline-block; padding: 5px 10px; background: #003300; border: 1px solid var(--terminal-green); color: #fff; cursor: pointer; font-size: 10px; margin-top: 5px; text-transform: uppercase; }
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 999; display: flex; justify-content: center; align-items: center; }
         .login-box { border: 1px solid var(--terminal-green); padding: 30px; width: 300px; background: #000; box-shadow: 0 0 20px rgba(0,255,65,0.2); }
         #app-system { display: none; } .hidden { display: none !important; }
         .tabs { display: flex; margin-bottom: 20px; border-bottom: 1px solid var(--terminal-dim); }
         .tab { flex: 1; padding: 10px; text-align: center; border-right: 1px solid var(--terminal-dim); cursor: pointer; background: #0a0a0a; } .tab:last-child { border: none; }
         .tab.active { background: var(--terminal-green); color: #000; font-weight: bold; }
+        #edit-warning { display:none; background: #330000; color: red; font-size: 10px; text-align: center; padding: 5px; margin-bottom: 10px; border: 1px solid red; }
     </style>
 </head>
 <body>
@@ -48,33 +49,54 @@
 <div id="app-system" class="container">
     <div style="display:flex; justify-content:space-between; font-size:10px; color:#555; margin-bottom:10px;">
         <span>USER: <span id="displayUser">UNKNOWN</span></span>
-        <span>DB STATUS: ONLINE</span>
+        <span>STATUS: <span id="modeStatus">CADASTRO</span></span>
     </div>
-    <h1>DOSSIÊ CRIMINAL V6</h1>
+    <h1>DOSSIÊ CRIMINAL V7</h1>
     <div class="tabs">
-        <div class="tab active" onclick="mudarAba('cadastro')">NOVO REGISTRO</div>
-        <div class="tab" onclick="mudarAba('busca')">CONSULTAR</div>
+        <div class="tab active" onclick="mudarAba('cadastro')">FICHA TÉCNICA</div>
+        <div class="tab" onclick="mudarAba('busca')">CONSULTAR BASE</div>
     </div>
 
     <div id="cadastro">
-        <p class="label" style="color:#fff; border-bottom:1px dashed #333;">// DADOS BIOMÉTRICOS</p>
+        <div id="edit-warning">⚠️ MODO DE EDIÇÃO - ALTERANDO REGISTRO EXISTENTE</div>
+        
+        <p class="label" style="color:#fff; border-bottom:1px dashed #333;">// BIOMETRIA</p>
         <div class="photo-upload-container">
             <div id="previewBox" class="photo-preview">SEM FOTO</div>
-            <div style="flex-grow:1"><input type="file" id="fotoPerfil" accept="image/*" onchange="previewImagem(this)" style="border:none; padding:0;"><span style="font-size:10px; color:#666;">FOTO 3x4</span></div>
+            <div style="flex-grow:1"><input type="file" id="fotoPerfil" accept="image/*" onchange="previewImagem(this)" style="border:none; padding:0;"><span style="font-size:10px; color:#666;">FOTO 3x4 (DEIXE VAZIO AO EDITAR PARA MANTER)</span></div>
         </div>
+        
         <p class="label" style="color:#fff; border-bottom:1px dashed #333;">// IDENTIFICAÇÃO</p>
         <input type="text" id="nome" placeholder="NOME COMPLETO *">
-        <div class="row-inputs"><input type="number" id="cpf" placeholder="CPF / RG"><input type="number" id="idade" placeholder="IDADE"></div>
-        <p class="label" style="color:#fff; border-bottom:1px dashed #333;">// CONTATO</p>
-        <input type="text" id="telefone" placeholder="TELEFONE"><input type="email" id="email" placeholder="EMAIL"><input type="text" id="redes" placeholder="REDES SOCIAIS">
-        <p class="label" style="color:#fff; border-bottom:1px dashed #333;">// DOSSIÊ</p>
-        <textarea id="detalhes" rows="6" placeholder="HISTÓRICO..."></textarea>
-        <p class="label">EVIDÊNCIA</p><input type="file" id="arquivoEvidencia">
+        <div class="row-inputs">
+            <input type="text" id="vulgo" placeholder="VULGO / APELIDO" style="border-color:#005500">
+            <input type="text" id="profissao" placeholder="PROFISSÃO / OCUPAÇÃO">
+        </div>
+        <div class="row-inputs">
+            <input type="number" id="cpf" placeholder="CPF / RG (CHAVE ÚNICA)">
+            <input type="number" id="idade" placeholder="IDADE">
+        </div>
+
+        <p class="label" style="color:#fff; border-bottom:1px dashed #333;">// LOCALIZAÇÃO & CONTATO</p>
+        <input type="text" id="endereco" placeholder="ENDEREÇO COMPLETO / LOCALIZAÇÃO">
+        <div class="row-inputs">
+            <input type="text" id="telefone" placeholder="TELEFONE">
+            <input type="email" id="email" placeholder="EMAIL">
+        </div>
+        <input type="text" id="redes" placeholder="REDES SOCIAIS / LINKS">
+        
+        <p class="label" style="color:#fff; border-bottom:1px dashed #333;">// HISTÓRICO</p>
+        <textarea id="detalhes" rows="6" placeholder="DIGITE O DOSSIÊ COMPLETO..."></textarea>
+        
+        <p class="label">ARQUIVO DE PROVA</p>
+        <input type="file" id="arquivoEvidencia">
+        
         <button onclick="enviarDados()" id="btnEnviar">ARQUIVAR FICHA</button>
+        <button onclick="cancelarEdicao()" id="btnCancelar" class="hidden" style="border-color: #555; color: #555;">CANCELAR EDIÇÃO</button>
     </div>
 
     <div id="busca" class="hidden">
-        <input type="text" id="termoBusca" placeholder="NOME OU CPF...">
+        <input type="text" id="termoBusca" placeholder="NOME, VULGO OU CPF...">
         <button onclick="buscarDados()" id="btnBuscar">INICIAR VARREDURA</button>
         <div id="resultados" style="margin-top:20px;"></div>
     </div>
@@ -82,60 +104,35 @@
 </div>
 
 <script>
-    // --- COLE SUA URL NOVA AQUI ---
+    // --- SUA URL DO APPS SCRIPT ---
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyVgkv76_NApSCN3_3Uf6B0hGdehSml6ZW109I6WYqF0OWyar8lQbaRf2_IklccdCNR8w/exec"; 
     
     const VALID_USER = "mazur";
     let sessionPass = ""; 
+    let modoEdicao = false; 
+    let dadosCache = []; 
+    let urlFotoAntiga = "";
+    let urlEvidenciaAntiga = "";
 
     function fazerLogin() {
         const user = document.getElementById('loginUser').value.trim();
         const pass = document.getElementById('loginPass').value.trim();
         const btn = document.querySelector('.login-box button');
-        const errorMsg = document.getElementById('loginError');
 
-        if (user.toLowerCase() !== VALID_USER) {
-            errorMsg.innerText = "USUÁRIO INVÁLIDO";
-            errorMsg.style.display = 'block';
-            return;
-        }
+        if (user.toLowerCase() !== VALID_USER) return alert("USUÁRIO INVÁLIDO");
 
         btn.innerText = "VERIFICANDO..."; btn.disabled = true;
 
-        // AGORA O LOGIN É VIA POST (BLINDAGEM CONTRA CORS)
-        const loginData = { acao: "login", senhaacesso: pass };
-
         fetch(SCRIPT_URL, {
-            method: 'POST',
-            body: JSON.stringify(loginData)
-        })
-        .then(res => res.json())
-        .then(data => {
+            method: 'POST', body: JSON.stringify({ acao: "login", senhaacesso: pass })
+        }).then(res => res.json()).then(data => {
             if(data.status === "sucesso") {
                 sessionPass = pass;
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('app-system').style.display = 'block';
                 document.getElementById('displayUser').innerText = user.toUpperCase();
-            } else {
-                errorMsg.innerText = "SENHA INCORRETA";
-                errorMsg.style.display = 'block';
-                btn.innerText = "ACESSAR SISTEMA"; btn.disabled = false;
-            }
-        }).catch(e => {
-            alert("ERRO DE CONEXÃO: " + e.message);
-            errorMsg.innerText = "ERRO NO SERVIDOR";
-            errorMsg.style.display = 'block';
-            btn.innerText = "ACESSAR SISTEMA"; btn.disabled = false;
-        });
-    }
-
-    function previewImagem(input) {
-        const preview = document.getElementById('previewBox');
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) { preview.style.backgroundImage = `url(${e.target.result})`; preview.innerText = ""; }
-            reader.readAsDataURL(input.files[0]);
-        }
+            } else { alert("SENHA INCORRETA"); btn.innerText = "ACESSAR"; btn.disabled = false; }
+        }).catch(e => { alert("ERRO CONEXÃO"); btn.innerText = "ACESSAR"; btn.disabled = false; });
     }
 
     function mudarAba(aba) {
@@ -144,12 +141,58 @@
         document.getElementById(aba).classList.remove('hidden');
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         event.target.classList.add('active');
-        if(aba==='cadastro') document.getElementById('resultados').innerHTML = "";
+        if(aba==='cadastro' && !modoEdicao) document.getElementById('resultados').innerHTML = "";
+    }
+
+    function prepararEdicao(index) {
+        const item = dadosCache[index];
+        modoEdicao = true;
+        
+        document.getElementById('nome').value = item.nome;
+        document.getElementById('vulgo').value = item.vulgo || "";
+        document.getElementById('profissao').value = item.profissao || "";
+        document.getElementById('cpf').value = item.cpf;
+        document.getElementById('idade').value = item.idade;
+        document.getElementById('endereco').value = item.endereco || "";
+        document.getElementById('email').value = item.email;
+        document.getElementById('telefone').value = item.telefone;
+        document.getElementById('redes').value = item.redes;
+        document.getElementById('detalhes').value = item.detalhes;
+        
+        document.getElementById('cpf').disabled = true;
+        document.getElementById('btnEnviar').innerText = "SALVAR ALTERAÇÕES";
+        document.getElementById('edit-warning').style.display = 'block';
+        document.getElementById('btnCancelar').classList.remove('hidden');
+        document.getElementById('modeStatus').innerText = "EDIÇÃO";
+        document.getElementById('modeStatus').style.color = "yellow";
+        
+        urlFotoAntiga = item.foto;
+        urlEvidenciaAntiga = item.evidencia;
+
+        if(item.foto) {
+            document.getElementById('previewBox').style.backgroundImage = `url(${item.foto})`;
+            document.getElementById('previewBox').innerText = "";
+        }
+        mudarAba('cadastro');
+    }
+
+    function cancelarEdicao() {
+        modoEdicao = false;
+        document.getElementById('cpf').disabled = false;
+        document.getElementById('btnEnviar').innerText = "ARQUIVAR FICHA";
+        document.getElementById('edit-warning').style.display = 'none';
+        document.getElementById('btnCancelar').classList.add('hidden');
+        document.getElementById('modeStatus').innerText = "CADASTRO";
+        document.getElementById('modeStatus').style.color = "#555";
+        document.querySelectorAll('input, textarea').forEach(i => i.value = "");
+        document.getElementById('previewBox').style.backgroundImage = "none";
+        document.getElementById('previewBox').innerText = "SEM FOTO";
     }
 
     async function enviarDados() {
         const nome = document.getElementById('nome').value;
-        if(!nome) return alert("NOME OBRIGATÓRIO");
+        const cpf = document.getElementById('cpf').value;
+        if(!nome || !cpf) return alert("NOME E CPF SÃO OBRIGATÓRIOS");
         
         document.getElementById('btnEnviar').disabled = true;
         document.getElementById('loading').style.display = 'block';
@@ -163,15 +206,20 @@
         const ev = await getB64('arquivoEvidencia');
 
         const dados = { 
-            senhaacesso: sessionPass, nome, 
-            cpf: document.getElementById('cpf').value,
+            senhaacesso: sessionPass, 
+            acao: modoEdicao ? "editar" : "criar",
+            nome, cpf, 
+            vulgo: document.getElementById('vulgo').value,
+            profissao: document.getElementById('profissao').value,
             idade: document.getElementById('idade').value,
+            endereco: document.getElementById('endereco').value,
             email: document.getElementById('email').value,
             telefone: document.getElementById('telefone').value,
             redes: document.getElementById('redes').value,
             detalhes: document.getElementById('detalhes').value,
             fotoBase64: foto.b64, fotoMime: foto.mime, fotoNome: foto.nome,
-            arquivoBase64: ev.b64, arquivoMime: ev.mime, arquivoNome: ev.nome
+            arquivoBase64: ev.b64, arquivoMime: ev.mime, arquivoNome: ev.nome,
+            urlFotoExistente: urlFotoAntiga, urlEvidenciaExistente: urlEvidenciaAntiga
         };
 
         fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(dados) })
@@ -180,8 +228,8 @@
             document.getElementById('loading').style.display = 'none';
             document.getElementById('btnEnviar').disabled = false;
             if(data.status === "sucesso") {
-                alert("SUCESSO!");
-                location.reload();
+                alert(modoEdicao ? "ATUALIZADO!" : "CRIADO!");
+                cancelarEdicao();
             } else { alert("ERRO: " + data.msg); }
         }).catch(e => { alert("ERRO CONEXÃO"); document.getElementById('btnEnviar').disabled = false; });
     }
@@ -199,11 +247,31 @@
             if(data[0] && data[0].erro) { alert("LOGIN EXPIRADO"); location.reload(); return; }
             if(data.length === 0) { document.getElementById('resultados').innerHTML = "<p align='center'>NADA ENCONTRADO</p>"; return; }
             
-            data.forEach(item => {
+            dadosCache = data;
+
+            data.forEach((item, index) => {
                 let img = item.foto ? `<img src="${item.foto}" class="mugshot">` : `<div class="mugshot">SEM FOTO</div>`;
-                let html = `<div class="card">${img}<div class="card-info"><h3>${item.nome}</h3><span class="label">CPF: ${item.cpf} | IDADE: ${item.idade}</span><span class="data-text">${item.email} | ${item.telefone}</span><div style="margin-top:10px; color:#ddd; font-size:13px">${item.detalhes}</div>`;
-                if(item.evidencia && item.evidencia !== "Sem anexo") html += `<a href="${item.evidencia}" target="_blank" class="link-btn">EVIDÊNCIA</a>`;
-                html += `</div></div>`;
+                let vulgo = item.vulgo ? `"${item.vulgo}"` : "";
+                
+                let html = `
+                    <div class="card">
+                        ${img}
+                        <div class="card-info">
+                            <h3>${item.nome} <span style="font-size:0.6em; color:#ffff00">${vulgo}</span></h3>
+                            <span class="label">CPF: ${item.cpf} | IDADE: ${item.idade}</span>
+                            <span class="data-text">${item.profissao || "SEM OCUPAÇÃO"}</span>
+                            
+                            ${item.endereco ? `<span class="label">LOCALIZAÇÃO:</span><span class="data-text" style="color:#00ff41">${item.endereco}</span>` : ""}
+                            
+                            <span class="label">CONTATO:</span>
+                            <span class="data-text">${item.telefone} | ${item.email}</span>
+                            
+                            <div style="margin-top:10px; color:#ddd; font-size:13px; border-top:1px dashed #333; padding-top:5px">${item.detalhes}</div>
+                            <div style="margin-top:10px;">
+                                <button onclick="prepararEdicao(${index})" class="action-btn" style="background:#333">✏️ EDITAR</button>
+                `;
+                if(item.evidencia && item.evidencia !== "Sem anexo") html += `<a href="${item.evidencia}" target="_blank" class="link-btn" style="margin-left:10px;">📂 EVIDÊNCIA</a>`;
+                html += `</div></div></div>`;
                 document.getElementById('resultados').innerHTML += html;
             });
         });
@@ -215,6 +283,14 @@
         reader.onload = () => resolve(reader.result.split(',')[1]);
         reader.onerror = error => reject(error);
     });
+    function previewImagem(input) {
+        const preview = document.getElementById('previewBox');
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) { preview.style.backgroundImage = `url(${e.target.result})`; preview.innerText = ""; }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
 </script>
 
 </body>

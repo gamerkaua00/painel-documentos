@@ -154,7 +154,7 @@
 </div>
 
 <script>
-    // URL INTEGRADA CORRETAMENTE:
+    // --- SUA URL ATUALIZADA AQUI ---
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw-N38fOeT3BG_GAVWug3FNa52zmVTRWpCPSOgdSzRTsDGsTLGNf5i6wRU-Ntrhgto4yg/exec";
     
     const VALID_USER = "mazur";
@@ -181,7 +181,8 @@
                 document.getElementById('displayUser').innerText = user.toUpperCase();
             }
         }).catch(e => { 
-            alert("Erro de conexão. Verifique se publicou como NOVA VERSÃO no Apps Script."); 
+            // Se der erro de CORS ou Net, geralmente é script não publicado como "Nova Versão" ou "Qualquer Pessoa"
+            alert("Erro de conexão. Verifique se o Script foi implantado corretamente."); 
             erroLogin(); 
         });
 
@@ -261,7 +262,7 @@
                 document.getElementById('previewBox').style.backgroundImage = "none";
                 document.getElementById('previewBox').innerText = "SEM FOTO";
             } else { alert("ERRO NO SERVIDOR: " + data.msg); }
-        }).catch(e => { alert("FALHA DE CONEXÃO. Verifique se o Script foi publicado como 'Nova Versão'."); btn.disabled = false; });
+        }).catch(e => { alert("FALHA DE CONEXÃO."); btn.disabled = false; });
     }
 
     function buscarDados() {

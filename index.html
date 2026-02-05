@@ -3,105 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SISTEMA V18</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <title>SISTEMA DE INTELIGÊNCIA // V19</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
         :root {
-            --bg-body: #0a0b0d; --bg-card: #141619; --bg-input: #1f2228;
-            --primary: #3a7bd5; --text-main: #e0e0e0; --text-muted: #8892b0;
-            --border: #2d323b; --danger: #ef4444; --warning: #f59e0b; --success: #10b981;
+            --bg-body: #050505; --bg-panel: #111; --bg-input: #1a1a1a;
+            --primary: #007bff; --accent: #00d2ff; --text-main: #e0e0e0; --text-muted: #666;
+            --border: #333; --danger: #ff3333; --warning: #ffcc00; --success: #00cc66;
         }
         body { background-color: var(--bg-body); color: var(--text-main); font-family: 'Roboto', sans-serif; margin: 0; padding: 20px; font-size: 14px; }
-        .container { max-width: 900px; margin: 0 auto; }
+        .container { max-width: 1200px; margin: 0 auto; }
 
-        header { border-bottom: 2px solid var(--primary); padding-bottom: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end; }
-        h1 { margin: 0; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 1px; font-size: 1.5rem; }
+        /* HEADER */
+        header { border-bottom: 2px solid var(--primary); padding-bottom: 15px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: flex-end; }
+        h1 { margin: 0; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 2px; font-size: 1.8rem; }
         
+        /* CARD DA BUSCA (Resumo) */
         .card { 
-            background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; 
+            background: var(--bg-panel); border: 1px solid var(--border); border-radius: 4px; 
             padding: 15px; margin-bottom: 15px; display: flex; gap: 20px;
-            border-left: 4px solid #555; align-items: center;
+            border-left: 5px solid #555; transition: 0.2s; align-items: center;
         }
-        .card-mugshot { width: 80px; height: 100px; background: #000; object-fit: cover; border: 1px solid #444; flex-shrink: 0; }
+        .card:hover { background: #161616; border-color: #555; transform: translateX(5px); }
+        .card-mugshot { width: 70px; height: 90px; background: #000; object-fit: cover; border: 1px solid #444; flex-shrink: 0; }
         .card-info { flex: 1; }
-        .card-title { font-size: 1.2rem; font-weight: bold; color: #fff; margin: 0 0 5px 0; }
-        .card-meta { font-size: 0.8rem; color: #888; }
-        
-        .status-ativo { border-left-color: var(--success); } .status-preso { border-left-color: var(--danger); }
-        
-        input, textarea, select { width: 100%; box-sizing: border-box; background: var(--bg-input); border: 1px solid var(--border); color: #fff; padding: 10px; margin-bottom: 12px; border-radius: 3px; font-family: 'Roboto', sans-serif; }
-        input:focus, textarea:focus, select:focus { border-color: var(--primary); outline: none; background: #252a33; }
-        label { display: block; font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; font-weight: 600; }
-        .row { display: flex; gap: 15px; } .col { flex: 1; }
+        .card-title { font-size: 1.3rem; font-weight: bold; color: #fff; margin: 0; font-family: 'Courier Prime', monospace; }
+        .card-meta { font-size: 0.85rem; color: #888; margin-top: 5px; font-family: 'Courier Prime', monospace; }
+        .status-ativo { border-left-color: var(--success); } .status-preso { border-left-color: var(--danger); } .status-vigilancia { border-left-color: var(--warning); }
 
-        button { background: var(--primary); color: #fff; border: none; padding: 10px 15px; border-radius: 3px; font-weight: 600; cursor: pointer; text-transform: uppercase; margin-bottom: 5px; width: 100%; }
-        .btn-sm { padding: 5px 10px; font-size: 0.7rem; width: 100%; text-align: center; background: #333; }
-        .btn-del { background: var(--danger); margin-top: 15px; }
-        .btn-del:hover { background: #cc0000; }
-
-        .tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
-        .tab { padding: 12px 25px; cursor: pointer; color: var(--text-muted); font-weight: 500; border-bottom: 3px solid transparent; }
-        .tab.active { color: var(--primary); border-bottom-color: var(--primary); color: #fff; }
-
-        /* Modal Dossiê */
-        #modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; display: none; justify-content: center; align-items: center; overflow-y: auto; }
-        .dossier-paper { background: #141619; width: 800px; max-height: 90vh; overflow-y: auto; padding: 40px; border: 1px solid #333; position: relative; }
-        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 24px; color: #fff; cursor: pointer; z-index: 10; }
+        /* MODAL DOSSIÊ (DESIGN PROFISSIONAL) */
+        #modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; display: none; justify-content: center; align-items: center; overflow-y: auto; }
         
-        .dossier-header { display: flex; border-bottom: 2px solid var(--text-muted); padding-bottom: 20px; margin-bottom: 20px; }
-        .dossier-photo { width: 120px; height: 160px; background: #000; margin-right: 25px; object-fit: cover; border: 1px solid #555; }
-        .dossier-value { color: #fff; font-size: 1rem; display: block; margin-bottom: 10px; }
-        .dossier-text { white-space: pre-wrap; line-height: 1.5; color: #ccc; background: #0f1012; padding: 15px; border-radius: 4px; border: 1px solid #333; }
+        .dossier-paper { 
+            background: #0a0a0a; width: 900px; max-height: 95vh; overflow-y: auto; 
+            padding: 0; border: 1px solid #444; position: relative; box-shadow: 0 0 50px #000; 
+        }
+        
+        /* Faixa de Topo do Dossiê */
+        .dossier-top-strip {
+            background: repeating-linear-gradient(45deg, #111, #111 10px, #222 10px, #222 20px);
+            height: 30px; border-bottom: 1px solid var(--primary); display: flex; align-items: center; justify-content: center;
+            color: var(--primary); font-family: 'Courier Prime', monospace; font-weight: bold; letter-spacing: 5px; font-size: 0.8rem;
+        }
+
+        .dossier-content { padding: 40px; }
+
+        /* Layout Grid do Dossiê */
+        .dossier-grid { display: grid; grid-template-columns: 200px 1fr; gap: 30px; margin-bottom: 30px; border-bottom: 1px solid #333; padding-bottom: 30px; }
+        
+        .dossier-photo-container { text-align: center; }
+        .dossier-photo { width: 100%; height: 240px; background: #000; object-fit: cover; border: 2px solid #fff; margin-bottom: 10px; }
+        .risk-badge { background: #333; color: #fff; padding: 5px; font-weight: bold; text-align: center; border: 1px solid #555; font-family: 'Courier Prime'; }
+
+        .dossier-header-info h2 { margin: 0; font-size: 2.5rem; color: #fff; text-transform: uppercase; line-height: 1; }
+        .dossier-vulgo { color: var(--primary); font-size: 1.2rem; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; display: block; }
+
+        /* Dados Técnicos */
+        .data-row { display: flex; border-bottom: 1px dashed #333; padding: 8px 0; }
+        .data-label { width: 140px; color: #666; font-size: 0.75rem; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; }
+        .data-value { flex: 1; color: #ddd; font-family: 'Courier Prime', monospace; font-size: 0.95rem; }
+        .highlight { color: #fff; font-weight: bold; }
+
+        .section-title { 
+            background: #111; color: #888; padding: 5px 10px; font-size: 0.8rem; 
+            text-transform: uppercase; letter-spacing: 2px; border-left: 3px solid var(--primary); 
+            margin-top: 20px; margin-bottom: 15px; font-weight: bold;
+        }
+
+        .history-box { 
+            background: #0f0f0f; border: 1px solid #333; padding: 20px; 
+            color: #ccc; font-family: 'Courier Prime', monospace; line-height: 1.6; white-space: pre-wrap; 
+            font-size: 0.9rem; margin-bottom: 20px; 
+        }
+
+        .close-modal { position: absolute; top: 10px; right: 15px; font-size: 30px; color: #fff; cursor: pointer; z-index: 10; }
+
+        /* Botões e Inputs */
+        input, textarea, select { width: 100%; box-sizing: border-box; background: var(--bg-input); border: 1px solid var(--border); color: #fff; padding: 12px; margin-bottom: 15px; border-radius: 0; font-family: 'Courier Prime', monospace; }
+        label { display: block; font-size: 0.7rem; color: var(--primary); margin-bottom: 5px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; }
+        
+        button { background: var(--primary); color: #fff; border: none; padding: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.2s; width: 100%; margin-bottom: 10px; }
+        button:hover { background: #0056b3; }
+        .btn-del { background: var(--danger); margin-top: 20px; border: 1px solid #ff0000; }
+        .btn-sm { padding: 5px 10px; font-size: 0.7rem; width: auto; background: #333; }
+
+        /* Login */
+        #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 3000; display: flex; justify-content: center; align-items: center; }
+        .login-box { background: #111; padding: 50px; border: 1px solid #333; width: 350px; text-align: center; border-top: 4px solid var(--primary); }
 
         .hidden { display: none !important; }
-        .login-box { background: var(--bg-card); padding: 40px; border-radius: 8px; width: 320px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 3000; text-align: center; border-top: 4px solid var(--primary); }
-        @media print { .no-print { display: none !important; } }
+        @media print { .no-print { display: none !important; } .dossier-paper { border: none; box-shadow: none; width: 100%; } }
     </style>
 </head>
 <body>
 
 <div id="modal-overlay">
     <div class="dossier-paper" id="ficha-impressao">
+        <div class="dossier-top-strip">CONFIDENTIAL RECORD // CLASSIFIED</div>
         <span class="close-modal no-print" onclick="fecharModal()">&times;</span>
         
-        <div class="dossier-header">
-            <img id="view-foto" src="" class="dossier-photo" style="display:none" crossorigin="anonymous">
-            <div id="view-no-foto" class="dossier-photo" style="display:flex;align-items:center;justify-content:center;color:#555;">SEM FOTO</div>
-            <div id="view-loading" class="dossier-photo" style="display:none;align-items:center;justify-content:center;color:var(--primary);border-color:var(--primary);">BAIXANDO...</div>
-
-            <div style="flex:1">
-                <div style="display:flex; justify-content:space-between;">
-                    <h1 style="margin:0; font-size:2rem; color:#fff;" id="view-nome">NOME</h1>
-                    <div id="view-nivel" style="font-size:1.5rem"></div>
+        <div class="dossier-content">
+            <div class="dossier-grid">
+                <div class="dossier-photo-container">
+                    <img id="view-foto" src="" class="dossier-photo" style="display:none" crossorigin="anonymous">
+                    <div id="view-no-foto" class="dossier-photo" style="display:flex;align-items:center;justify-content:center;color:#555;border:2px dashed #444;">NO PHOTO</div>
+                    <div id="view-loading" style="color:var(--primary); font-size:0.7rem; margin-top:5px; display:none;">DECODIFICANDO IMAGEM...</div>
+                    <div class="risk-badge" id="view-nivel">NÍVEL DE RISCO: 0</div>
                 </div>
-                <div style="color:var(--primary); font-size:1rem; letter-spacing:2px;" id="view-vulgo">VULGO</div>
-                <div style="margin-top:15px; display:flex; gap:20px; flex-wrap:wrap;">
-                    <div><label>STATUS</label><span class="dossier-value" id="view-status">-</span></div>
-                    <div><label>CPF</label><span class="dossier-value" id="view-cpf">-</span></div>
-                    <div><label>IDADE</label><span class="dossier-value" id="view-idade">-</span></div>
+                
+                <div class="dossier-header-info">
+                    <h2 id="view-nome">NOME COMPLETO</h2>
+                    <span class="dossier-vulgo" id="view-vulgo">"VULGO"</span>
+                    
+                    <div class="data-row"><div class="data-label">STATUS ATUAL</div><div class="data-value highlight" id="view-status">ATIVO</div></div>
+                    <div class="data-row"><div class="data-label">CPF / ID</div><div class="data-value" id="view-cpf">000.000.000-00</div></div>
+                    <div class="data-row"><div class="data-label">IDADE / NASC</div><div class="data-value" id="view-idade">00 ANOS</div></div>
+                    <div class="data-row"><div class="data-label">AFILIAÇÃO</div><div class="data-value" id="view-afiliacao">NENHUMA</div></div>
+                    <div class="data-row"><div class="data-label">PROFISSÃO</div><div class="data-value" id="view-profissao">DESCONHECIDO</div></div>
                 </div>
             </div>
-        </div>
 
-        <div class="row">
-            <div class="col"><label>AFILIAÇÃO</label><span class="dossier-value" id="view-afiliacao">-</span></div>
-            <div class="col"><label>PROFISSÃO</label><span class="dossier-value" id="view-profissao">-</span></div>
-        </div>
-        
-        <label>LOCALIZAÇÃO</label><span class="dossier-value" id="view-endereco">-</span>
-        <div class="row"><div class="col"><label>TEL</label><span class="dossier-value" id="view-telefone">-</span></div><div class="col"><label>EMAIL</label><span class="dossier-value" id="view-email">-</span></div></div>
-        
-        <label>ASSOCIADOS</label><span class="dossier-value" id="view-associados">-</span>
-        <label>HISTÓRICO</label><div class="dossier-text" id="view-detalhes">...</div>
-        <div id="view-tags" style="margin-top:10px;"></div>
+            <div class="section-title">CARACTERÍSTICAS & VÍNCULOS</div>
+            <div class="data-row"><div class="data-label">FÍSICO</div><div class="data-value" id="view-fisico">-</div></div>
+            <div class="data-row"><div class="data-label">ASSOCIADOS</div><div class="data-value" id="view-associados">-</div></div>
 
-        <div style="margin-top:20px; display:flex; justify-content:space-between;" class="no-print">
-            <div style="font-size:0.7rem; color:#666;">ATT: <span id="view-update"></span></div>
-            <div>
-                <a id="view-evidencia-btn" href="#" target="_blank" class="btn-sm" style="display:none; padding:10px; background:#333; color:#fff; text-decoration:none; margin-right:10px;">EVIDÊNCIA</a>
-                <button onclick="imprimirFicha()" style="width:auto; background:#fff; color:#000;">🖨️ PDF</button>
+            <div class="section-title">LOCALIZAÇÃO & CONTATO</div>
+            <div class="data-row"><div class="data-label">ENDEREÇO</div><div class="data-value" id="view-endereco">-</div></div>
+            <div class="data-row"><div class="data-label">TELEFONE</div><div class="data-value" id="view-telefone">-</div></div>
+            <div class="data-row"><div class="data-label">EMAIL/REDES</div><div class="data-value" id="view-email">-</div></div>
+
+            <div class="section-title">HISTÓRICO OPERACIONAL</div>
+            <div class="history-box" id="view-detalhes">...</div>
+            
+            <div class="data-row" style="border:none;">
+                <div class="data-label">AUDIO / OBS</div>
+                <div class="data-value" id="view-audio-container">Nenhum registro.</div>
+            </div>
+
+            <div style="margin-top:30px; border-top:2px solid #333; padding-top:15px; display:flex; justify-content:space-between; align-items:center;" class="no-print">
+                <div style="font-size:0.7rem; color:#555;">ÚLTIMA ATUALIZAÇÃO: <span id="view-update"></span></div>
+                <div style="display:flex; gap:10px;">
+                    <a id="view-evidencia-btn" href="#" target="_blank" class="btn-sm" style="display:none; padding:10px; background:#222; color:#fff; text-decoration:none;">ABRIR EVIDÊNCIA (DRIVE)</a>
+                    <button onclick="imprimirFicha()" style="width:auto; background:#fff; color:#000;">🖨️ GERAR PDF OFICIAL</button>
+                </div>
             </div>
         </div>
     </div>
@@ -109,55 +155,96 @@
 
 <div id="login-screen">
     <div class="login-box">
-        <h2 style="color:#fff;">SYSTEM V18</h2>
-        <input type="password" id="loginPass" placeholder="SENHA">
-        <button onclick="fazerLogin()">ACESSAR</button>
-        <p id="loginError" style="color:var(--danger); display:none;">NEGADO</p>
+        <h2 style="color:#fff; letter-spacing:3px;">SYSTEM V19</h2>
+        <input type="password" id="loginPass" placeholder="SENHA DE ACESSO">
+        <button onclick="fazerLogin()">INICIAR SESSÃO</button>
     </div>
 </div>
 
 <div id="app-system" class="container hidden">
     <header>
-        <div><h1>INTELLIGENCE</h1><span style="font-size:0.8rem; color:var(--primary);">BASE DE DADOS</span></div>
-        <div class="meta-info">ONLINE</div>
+        <div>
+            <h1>INTELLIGENCE DATABASE</h1>
+            <span style="font-size:0.8rem; color:var(--primary); letter-spacing:1px;">CENTRAL DE COMANDO E CONTROLE</span>
+        </div>
+        <div class="meta-info" style="text-align:right; font-size:0.8rem; color:#666;">
+            AGENTE: <strong id="displayUser" style="color:#fff">...</strong><br>CONEXÃO SEGURA
+        </div>
     </header>
 
-    <div class="tabs">
-        <div class="tab active" onclick="mudarAba('dashboard')">DASHBOARD</div>
-        <div class="tab" onclick="mudarAba('cadastro')">NOVO REGISTRO</div>
+    <div style="display:flex; gap:10px; margin-bottom:20px; border-bottom:1px solid #333; padding-bottom:10px;">
+        <button onclick="mudarAba('dashboard')" class="btn-sm" style="width:auto;">DASHBOARD</button>
+        <button onclick="mudarAba('cadastro')" class="btn-sm" style="width:auto; background:#222;">NOVO REGISTRO</button>
     </div>
 
     <div id="dashboard">
-        <div class="row" style="margin-bottom:20px;">
-            <input type="text" id="termoBusca" placeholder="Pesquisar..." style="margin-bottom:0">
-            <button onclick="buscarDados()" style="width:auto; margin-left:10px;">🔍 BUSCAR</button>
+        <div style="display:flex; gap:10px; margin-bottom:20px;">
+            <input type="text" id="termoBusca" placeholder="Pesquisar por NOME, CPF, VULGO ou TAG..." style="margin-bottom:0; flex:1;">
+            <button onclick="buscarDados()" style="width:auto; padding:0 30px;">BUSCAR</button>
         </div>
+        
         <div id="dashboard-results"></div>
     </div>
 
     <div id="cadastro" class="hidden">
-        <div id="edit-bar" style="background: #2a3b4d; padding: 10px; margin-bottom: 20px; display:none; border-left: 4px solid var(--warning);"><strong style="color:var(--warning)">EDITANDO</strong></div>
+        <div id="edit-bar" style="background: #331100; padding: 15px; margin-bottom: 20px; display:none; border: 1px solid var(--warning); color:var(--warning); font-weight:bold; text-align:center;">
+            ⚠ MODO DE EDIÇÃO ATIVO - ALTERANDO DADOS EXISTENTES
+        </div>
         
-        <div class="row"><div class="col"><label>Status</label><select id="status"><option value="ATIVO">ATIVO</option><option value="PRESO">PRESO</option><option value="FORAGIDO">FORAGIDO</option><option value="ARQUIVADO">ARQUIVADO</option><option value="OBITO">ÓBITO</option></select></div><div class="col"><label>Nível</label><select id="nivel"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></div></div>
-        
-        <div class="row"><div class="col" style="flex:2"><label>Nome</label><input type="text" id="nome"></div><div class="col"><label>Vulgo</label><input type="text" id="vulgo"></div></div>
-        <div class="row"><div class="col"><label>CPF</label><input type="number" id="cpf"></div><div class="col"><label>Nasc</label><input type="date" id="nascimento" onchange="calcularIdade()"></div><div class="col" style="flex:0.5"><label>Idade</label><input type="number" id="idade" readonly style="background:#222;"></div></div>
-        
-        <label>Foto (3x4)</label><input type="file" id="fotoPerfil" accept="image/*">
-        <div class="row"><div class="col"><label>Grupo</label><input type="text" id="afiliacao"></div><div class="col"><label>Profissão</label><input type="text" id="profissao"></div></div>
-        <label>Associados</label><input type="text" id="associados"><label>Endereço</label><input type="text" id="endereco">
-        <div class="row"><div class="col"><label>Tel</label><input type="text" id="telefone"></div><div class="col"><label>Email</label><input type="email" id="email"></div></div>
-        <label>Histórico</label><textarea id="detalhes" rows="6"></textarea>
-        <label>Evidência</label><input type="file" id="arquivoEvidencia"><label>Tags</label><input type="text" id="tags">
+        <div style="display:grid; grid-template-columns: 150px 1fr; gap:20px;">
+            <div>
+                <label>FOTO (3x4)</label>
+                <div id="previewBox" style="width:100%; height:180px; background:#000; border:1px solid #444; display:flex; align-items:center; justify-content:center; color:#555; margin-bottom:5px;">FOTO</div>
+                <input type="file" id="fotoPerfil" accept="image/*" onchange="previewImagem(this)" style="font-size:0.7rem;">
+            </div>
+            <div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+                    <div><label>NOME COMPLETO</label><input type="text" id="nome"></div>
+                    <div><label>VULGO / CODENAME</label><input type="text" id="vulgo"></div>
+                </div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:15px;">
+                    <div><label>CPF</label><input type="number" id="cpf"></div>
+                    <div><label>NASCIMENTO</label><input type="date" id="nascimento" onchange="calcularIdade()"></div>
+                    <div><label>IDADE</label><input type="number" id="idade" readonly style="background:#111; color:#555;"></div>
+                </div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+                    <div><label>STATUS</label><select id="status"><option value="ATIVO">ATIVO</option><option value="PRESO">PRESO</option><option value="FORAGIDO">FORAGIDO</option><option value="ARQUIVADO">ARQUIVADO</option><option value="OBITO">ÓBITO</option></select></div>
+                    <div><label>NÍVEL DE RISCO</label><select id="nivel"><option value="0">0 - CIVIL</option><option value="1">1 - BAIXO</option><option value="2">2 - MÉDIO</option><option value="3">3 - ALTO</option><option value="4">4 - CRÍTICO</option><option value="5">5 - EXTREMO</option></select></div>
+                </div>
+            </div>
+        </div>
 
-        <button onclick="enviarDados()" id="btnEnviar">SALVAR</button>
-        <button onclick="cancelarEdicao()" id="btnCancelar" class="hidden" style="background:transparent; border:1px solid #666; color:#888;">CANCELAR</button>
-        <button onclick="excluirFicha()" id="btnExcluir" class="btn-del hidden">EXCLUIR REGISTRO PERMANENTEMENTE</button>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-top:15px;">
+            <div><label>GRUPO / FACÇÃO</label><input type="text" id="afiliacao"></div>
+            <div><label>PROFISSÃO</label><input type="text" id="profissao"></div>
+        </div>
+
+        <label>MARCAS FÍSICAS</label><input type="text" id="fisico">
+        <label>ENDEREÇO COMPLETO</label><input type="text" id="endereco">
+        
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+            <div><label>TELEFONE</label><input type="text" id="telefone"></div>
+            <div><label>EMAIL</label><input type="email" id="email"></div>
+        </div>
+
+        <label>ASSOCIADOS (CPFs)</label><input type="text" id="associados">
+        <label>HISTÓRICO DETALHADO</label><textarea id="detalhes" rows="8"></textarea>
+        
+        <label>ARQUIVO DE EVIDÊNCIA</label><input type="file" id="arquivoEvidencia">
+        <label>TAGS</label><input type="text" id="tags">
+
+        <div style="margin-top:20px; padding-top:20px; border-top:1px solid #333;">
+            <button onclick="enviarDados()" id="btnEnviar">SALVAR NO BANCO DE DADOS</button>
+            <button onclick="cancelarEdicao()" id="btnCancelar" class="hidden" style="background:transparent; border:1px solid #444; color:#888;">CANCELAR EDIÇÃO</button>
+            <button onclick="excluirFicha()" id="btnExcluir" class="btn-del hidden">EXCLUIR REGISTRO PERMANENTEMENTE</button>
+        </div>
     </div>
-    <p id="loading" style="text-align: center; display: none; color: var(--primary); font-weight:bold; margin-top:20px;">PROCESSANDO...</p>
+    
+    <p id="loading" style="text-align: center; display: none; color: var(--primary); font-weight:bold; margin-top:20px;">PROCESSANDO DADOS...</p>
 </div>
 
 <script>
+    // --- SUA URL DO SCRIPT V18 AQUI ---
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyVgkv76_NApSCN3_3Uf6B0hGdehSml6ZW109I6WYqF0OWyar8lQbaRf2_IklccdCNR8w/exec";
     const VALID_USER = "mazur";
     
@@ -166,26 +253,31 @@
 
     function fazerLogin() {
         const pass = document.getElementById('loginPass').value.trim();
-        if(pass === "") return;
-        document.querySelector('.login-box button').innerText = "...";
+        if(!pass) return;
+        document.querySelector('.login-box button').innerText = "VERIFICANDO...";
         fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ acao: "busca", termo: "*", senhaacesso: pass }) })
         .then(r=>r.json()).then(d=>{
-            if(d[0] && d[0].erro) { alert("Senha Incorreta"); location.reload(); }
-            else { sessionPass=pass; dadosCache=d; atualizarDashboard(); document.getElementById('login-screen').style.display='none'; document.getElementById('app-system').classList.remove('hidden'); }
+            if(d[0] && d[0].erro) { alert("ACESSO NEGADO"); location.reload(); }
+            else { sessionPass=pass; dadosCache=d; renderizarCards(d.slice(-20).reverse()); document.getElementById('login-screen').style.display='none'; document.getElementById('app-system').classList.remove('hidden'); }
         });
     }
 
     function renderizarCards(lista) {
         const div = document.getElementById('dashboard-results'); div.innerHTML = "";
+        if(lista.length === 0) div.innerHTML = "<p align='center' style='color:#666'>NENHUM REGISTRO ENCONTRADO.</p>";
+        
         lista.forEach(i => {
-            let nivel = i.nivel > 0 ? "💀".repeat(parseInt(i.nivel)) : "🛡️";
+            let nivel = i.nivel > 0 ? "💀".repeat(parseInt(i.nivel)) : "🛡";
             let status = "status-" + (i.status||"ativo").toLowerCase();
             let html = `
                 <div class="card ${status}">
+                    <img id="card-img-${i.cpf}" src="" class="card-mugshot" style="display:none">
+                    <div id="card-no-img-${i.cpf}" class="card-mugshot" style="display:flex;align-items:center;justify-content:center;color:#555;font-size:0.6rem;">FOTO</div>
+                    
                     <div class="card-info">
-                        <div class="card-title">${i.nome} <span style="font-size:0.8rem; color:#666">${nivel}</span></div>
-                        <div style="font-size:0.8rem; color:var(--primary); font-weight:bold; margin-bottom:5px;">${i.vulgo||""}</div>
-                        <div class="card-meta"><span>${i.cpf}</span><span>${i.status}</span></div>
+                        <div class="card-title">${i.nome} <span style="font-size:0.8rem; color:#666; margin-left:10px;">${nivel}</span></div>
+                        <div style="font-size:0.8rem; color:var(--primary); font-weight:bold; margin-bottom:5px; font-family:'Courier Prime'">${i.vulgo||""}</div>
+                        <div class="card-meta">CPF: ${i.cpf} | STATUS: ${i.status}</div>
                     </div>
                     <div>
                         <button onclick="abrirFicha('${i.cpf}')" class="btn-sm">ABRIR</button>
@@ -193,41 +285,54 @@
                     </div>
                 </div>`;
             div.innerHTML += html;
+            carregarFotoCard(i.cpf, i.foto); // Carrega foto assíncrona
         });
     }
 
-    // --- ABERTURA COM BASE64 ---
+    function carregarFotoCard(cpf, url) {
+        if(!url || url === "Sem anexo") return;
+        let id = ""; try { if(url.includes("id=")) id = url.split("id=")[1].split("&")[0]; else if(url.includes("/file/d/")) id = url.split("/file/d/")[1].split("/")[0]; } catch(e){}
+        if(id) {
+            // Usa link direto thumbnail para o card (mais rápido que base64)
+            let thumbUrl = `https://lh3.googleusercontent.com/d/${id}=s200`;
+            let img = document.getElementById(`card-img-${cpf}`);
+            img.src = thumbUrl; img.style.display = 'block';
+            document.getElementById(`card-no-img-${cpf}`).style.display = 'none';
+        }
+    }
+
     function abrirFicha(cpf) {
         const item = dadosCache.find(i => i.cpf == cpf);
         if(!item) return;
 
-        // Preenche Textos
         const set = (id, val) => document.getElementById(id).innerText = val || "-";
         set('view-nome', item.nome); set('view-vulgo', item.vulgo); set('view-cpf', item.cpf);
-        set('view-idade', item.idade); set('view-status', item.status); set('view-afiliacao', item.afiliacao);
-        set('view-profissao', item.profissao); set('view-endereco', item.endereco); set('view-telefone', item.telefone);
-        set('view-email', item.email); set('view-detalhes', item.detalhes); set('view-associados', item.associados);
-        document.getElementById('view-nivel').innerText = item.nivel > 0 ? "💀".repeat(item.nivel) : "🛡️";
-        document.getElementById('view-tags').innerText = item.tags;
+        set('view-idade', (item.idade || "0") + " ANOS"); set('view-status', item.status); set('view-afiliacao', item.afiliacao);
+        set('view-profissao', item.profissao); set('view-fisico', item.fisico); set('view-associados', item.associados);
+        set('view-endereco', item.endereco); set('view-telefone', item.telefone); set('view-email', item.email);
+        set('view-detalhes', item.detalhes); 
+        document.getElementById('view-nivel').innerText = "NÍVEL DE RISCO: " + (item.nivel || "0");
         document.getElementById('view-update').innerText = item.dataUpdate ? new Date(item.dataUpdate).toLocaleString() : "-";
 
-        // Botão Evidencia
+        // Áudio
+        const audioDiv = document.getElementById('view-audio-container');
+        if(item.audio) { audioDiv.innerHTML = `<audio controls src="${item.audio}" style="width:100%; height:30px;"></audio>`; } else audioDiv.innerText = "Nenhum registro.";
+
+        // Evidência Link
         const btnEv = document.getElementById('view-evidencia-btn');
         if(item.evidencia && item.evidencia !== "Sem anexo") { btnEv.href = item.evidencia; btnEv.style.display = 'inline-block'; } else btnEv.style.display = 'none';
 
-        // TRATAMENTO FOTO (BAIXA BASE64)
+        // FOTO BASE64 (PARA O PDF)
         const img = document.getElementById('view-foto');
         const noImg = document.getElementById('view-no-foto');
         const load = document.getElementById('view-loading');
-        
         img.style.display = 'none'; noImg.style.display = 'none'; load.style.display = 'none';
 
         if(item.foto && item.foto !== "Sem anexo") {
-            let id = "";
-            try { if(item.foto.includes("id=")) id = item.foto.split("id=")[1].split("&")[0]; else if(item.foto.includes("/file/d/")) id = item.foto.split("/file/d/")[1].split("/")[0]; } catch(e){}
+            let id = ""; try { if(item.foto.includes("id=")) id = item.foto.split("id=")[1].split("&")[0]; else if(item.foto.includes("/file/d/")) id = item.foto.split("/file/d/")[1].split("/")[0]; } catch(e){}
             
             if(id) {
-                load.style.display = 'flex'; // Mostra carregando
+                load.style.display = 'flex';
                 fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ acao: "getFoto", id: id, senhaacesso: sessionPass }) })
                 .then(r=>r.json()).then(d=>{
                     load.style.display = 'none';
@@ -240,15 +345,24 @@
     }
 
     function fecharModal() { document.getElementById('modal-overlay').style.display = 'none'; }
+    
     function imprimirFicha() {
         const el = document.getElementById('ficha-impressao');
         document.querySelectorAll('.no-print, .close-modal').forEach(e=>e.style.display='none');
-        html2pdf().set({ margin: 5, filename: 'Dossie.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, backgroundColor: "#141619", useCORS: true }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } }).from(el).save().then(()=>{
-            document.querySelectorAll('.no-print, .close-modal').forEach(e=>e.style.display='flex');
+        // Configuração para PDF Escuro Profissional
+        const opt = { 
+            margin: 5, filename: 'Dossie_Confidencial.pdf', 
+            image: { type: 'jpeg', quality: 0.98 }, 
+            html2canvas: { scale: 2, backgroundColor: "#0a0a0a", useCORS: true }, 
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } 
+        };
+        html2pdf().set(opt).from(el).save().then(()=>{
+            document.querySelectorAll('.no-print, .close-modal').forEach(e=>e.style.display='flex'); // Botão Fechar é flex ou block? Ajuste se sumir
+            document.querySelector('.close-modal').style.display = 'block';
         });
     }
 
-    // --- EDIÇÃO E EXCLUSÃO ---
+    // --- CRUD ---
     function prepararEdicao(cpf) {
         const i = dadosCache.find(x=>x.cpf==cpf); modoEdicao=true;
         const s = (id, v) => document.getElementById(id).value = v || "";
@@ -256,10 +370,11 @@
         s('nivel', i.nivel); s('afiliacao', i.afiliacao); s('profissao', i.profissao);
         s('associados', i.associados); s('endereco', i.endereco); s('telefone', i.telefone);
         s('email', i.email); s('detalhes', i.detalhes); s('tags', i.tags); s('idade', i.idade);
+        s('fisico', i.fisico);
         if(i.nascimento) document.getElementById('nascimento').value = new Date(i.nascimento).toISOString().split('T')[0];
 
         document.getElementById('cpf').disabled = true;
-        document.getElementById('btnEnviar').innerText = "ATUALIZAR";
+        document.getElementById('btnEnviar').innerText = "ATUALIZAR DADOS";
         document.getElementById('edit-bar').style.display = 'block';
         document.getElementById('btnCancelar').classList.remove('hidden');
         document.getElementById('btnExcluir').classList.remove('hidden');
@@ -270,21 +385,23 @@
 
     function cancelarEdicao() {
         modoEdicao=false; document.getElementById('cpf').disabled = false;
-        document.getElementById('btnEnviar').innerText = "SALVAR";
+        document.getElementById('btnEnviar').innerText = "SALVAR NO BANCO DE DADOS";
         document.getElementById('edit-bar').style.display = 'none';
         document.getElementById('btnCancelar').classList.add('hidden');
         document.getElementById('btnExcluir').classList.add('hidden');
         document.querySelectorAll('#cadastro input, #cadastro textarea').forEach(i=>i.value="");
+        document.getElementById('previewBox').style.backgroundImage = "none";
+        document.getElementById('previewBox').innerText = "FOTO";
     }
 
     function excluirFicha() {
         const cpf = document.getElementById('cpf').value;
-        if(confirm("TEM CERTEZA QUE DESEJA EXCLUIR ESTE REGISTRO? NÃO HÁ VOLTA.")) {
+        if(confirm("CONFIRMA A EXCLUSÃO PERMANENTE DESTE REGISTRO?")) {
             document.getElementById('loading').style.display = 'block';
             fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ acao: "excluir", cpf: cpf, senhaacesso: sessionPass }) })
             .then(r=>r.json()).then(d=>{
-                if(d.status==="sucesso") { alert("Registro Apagado."); cancelarEdicao(); fazerLogin(); }
-                else alert("Erro: " + d.msg);
+                if(d.status==="sucesso") { alert("REGISTRO ELIMINADO."); cancelarEdicao(); fazerLogin(); }
+                else alert("ERRO: " + d.msg);
                 document.getElementById('loading').style.display = 'none';
             });
         }
@@ -305,21 +422,22 @@
             associados: document.getElementById('associados').value, endereco: document.getElementById('endereco').value,
             email: document.getElementById('email').value, telefone: document.getElementById('telefone').value,
             redes: document.getElementById('redes').value, detalhes: document.getElementById('detalhes').value,
+            fisico: document.getElementById('fisico').value,
             fotoBase64: foto.b64, fotoMime: foto.mime, fotoNome: foto.nome, arquivoBase64: ev.b64, arquivoMime: ev.mime, arquivoNome: ev.nome,
             urlFotoExistente: urlFotoAntiga, urlEvidenciaExistente: urlEvidenciaAntiga, urlAudioExistente: urlAudioAntiga
         };
 
         fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(dados) }).then(r=>r.json()).then(d=>{
-            if(d.status==="sucesso"){ alert("Salvo!"); cancelarEdicao(); fazerLogin(); }
-            else alert("Erro: " + d.msg);
+            if(d.status==="sucesso"){ alert("DADOS SALVOS."); cancelarEdicao(); fazerLogin(); }
+            else alert("ERRO: " + d.msg);
             document.getElementById('loading').style.display='none'; document.getElementById('btnEnviar').disabled=false;
         });
     }
 
-    function atualizarDashboard() { renderizarCards(dadosCache.slice(-10).reverse()); }
     function buscarDados() { const t = document.getElementById('termoBusca').value.toLowerCase(); renderizarCards(dadosCache.filter(i => (i.nome+i.cpf+i.vulgo).toLowerCase().includes(t))); }
-    function mudarAba(aba) { document.getElementById('dashboard').classList.add('hidden'); document.getElementById('cadastro').classList.add('hidden'); document.getElementById(aba).classList.remove('hidden'); document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); event.target.classList.add('active'); }
+    function mudarAba(aba) { document.getElementById('dashboard').classList.add('hidden'); document.getElementById('cadastro').classList.add('hidden'); document.getElementById(aba).classList.remove('hidden'); }
     function calcularIdade() { const n = new Date(document.getElementById('nascimento').value); const h = new Date(); let i = h.getFullYear() - n.getFullYear(); if (h.getMonth() < n.getMonth()) i--; document.getElementById('idade').value = i; }
+    function previewImagem(i) { if(i.files[0]) { const r = new FileReader(); r.onload=e=>{document.getElementById('previewBox').style.backgroundImage=`url(${e.target.result})`; document.getElementById('previewBox').innerText=""}; r.readAsDataURL(i.files[0]); } }
     const toBase64 = f => new Promise((res, rej) => { const r = new FileReader(); r.readAsDataURL(f); r.onload = () => res(r.result.split(',')[1]); r.onerror = rej; });
 </script>
 

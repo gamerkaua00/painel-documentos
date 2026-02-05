@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SISTEMA V16 (STABLE)</title>
+    <title>SISTEMA V18</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <style>
         :root {
@@ -16,7 +14,7 @@
             --border: #2d323b; --danger: #ef4444; --warning: #f59e0b; --success: #10b981;
         }
         body { background-color: var(--bg-body); color: var(--text-main); font-family: 'Roboto', sans-serif; margin: 0; padding: 20px; font-size: 14px; }
-        .container { max-width: 1100px; margin: 0 auto; }
+        .container { max-width: 900px; margin: 0 auto; }
 
         header { border-bottom: 2px solid var(--primary); padding-bottom: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end; }
         h1 { margin: 0; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 1px; font-size: 1.5rem; }
@@ -24,58 +22,42 @@
         .card { 
             background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; 
             padding: 15px; margin-bottom: 15px; display: flex; gap: 20px;
-            border-left: 4px solid #555; transition: 0.2s; align-items: start;
+            border-left: 4px solid #555; align-items: center;
         }
-        .card:hover { background: #1a1d21; border-color: #444; }
-        
-        .card-mugshot { width: 90px; height: 110px; background: #000; object-fit: cover; border: 1px solid #444; flex-shrink: 0; }
+        .card-mugshot { width: 80px; height: 100px; background: #000; object-fit: cover; border: 1px solid #444; flex-shrink: 0; }
         .card-info { flex: 1; }
         .card-title { font-size: 1.2rem; font-weight: bold; color: #fff; margin: 0 0 5px 0; }
-        .card-vulgo { color: var(--primary); font-size: 0.8rem; font-weight: bold; text-transform: uppercase; margin-bottom: 8px; }
-        .card-meta { font-size: 0.8rem; color: #888; display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
-        .card-actions { display: flex; flex-direction: column; gap: 5px; justify-content: center; }
-
-        .status-ativo { border-left-color: var(--success); } 
-        .status-preso { border-left-color: var(--danger); }
-        .status-vigilancia { border-left-color: var(--warning); }
+        .card-meta { font-size: 0.8rem; color: #888; }
         
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
-        .stat-card { background: var(--bg-card); padding: 15px; border-radius: 4px; border: 1px solid var(--border); text-align: center; }
-        .stat-num { font-size: 2rem; font-weight: 700; color: #fff; display: block; }
-        .stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
-
+        .status-ativo { border-left-color: var(--success); } .status-preso { border-left-color: var(--danger); }
+        
         input, textarea, select { width: 100%; box-sizing: border-box; background: var(--bg-input); border: 1px solid var(--border); color: #fff; padding: 10px; margin-bottom: 12px; border-radius: 3px; font-family: 'Roboto', sans-serif; }
         input:focus, textarea:focus, select:focus { border-color: var(--primary); outline: none; background: #252a33; }
         label { display: block; font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; font-weight: 600; }
         .row { display: flex; gap: 15px; } .col { flex: 1; }
 
-        button { background: var(--primary); color: #fff; border: none; padding: 10px 15px; border-radius: 3px; font-weight: 600; cursor: pointer; text-transform: uppercase; transition: 0.2s; font-size: 0.8rem; }
-        button:hover { background: #1e54b3; }
-        .btn-sm { padding: 5px 10px; font-size: 0.7rem; width: 100%; text-align: center; }
-        .btn-record { background: #cc0000; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .btn-record.recording { animation: pulse 1.5s infinite; background: #ff0000; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        button { background: var(--primary); color: #fff; border: none; padding: 10px 15px; border-radius: 3px; font-weight: 600; cursor: pointer; text-transform: uppercase; margin-bottom: 5px; width: 100%; }
+        .btn-sm { padding: 5px 10px; font-size: 0.7rem; width: 100%; text-align: center; background: #333; }
+        .btn-del { background: var(--danger); margin-top: 15px; }
+        .btn-del:hover { background: #cc0000; }
 
         .tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
-        .tab { padding: 12px 25px; cursor: pointer; color: var(--text-muted); font-weight: 500; border-bottom: 3px solid transparent; transition: 0.3s; }
+        .tab { padding: 12px 25px; cursor: pointer; color: var(--text-muted); font-weight: 500; border-bottom: 3px solid transparent; }
         .tab.active { color: var(--primary); border-bottom-color: var(--primary); color: #fff; }
 
+        /* Modal Dossiê */
         #modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; display: none; justify-content: center; align-items: center; overflow-y: auto; }
-        .dossier-paper { background: #141619; width: 850px; max-height: 95vh; overflow-y: auto; padding: 40px; border: 1px solid #333; position: relative; box-shadow: 0 0 50px #000; }
+        .dossier-paper { background: #141619; width: 800px; max-height: 90vh; overflow-y: auto; padding: 40px; border: 1px solid #333; position: relative; }
         .close-modal { position: absolute; top: 15px; right: 20px; font-size: 24px; color: #fff; cursor: pointer; z-index: 10; }
         
         .dossier-header { display: flex; border-bottom: 2px solid var(--text-muted); padding-bottom: 20px; margin-bottom: 20px; }
         .dossier-photo { width: 120px; height: 160px; background: #000; margin-right: 25px; object-fit: cover; border: 1px solid #555; }
-        .dossier-section { margin-bottom: 20px; border-bottom: 1px dashed #333; padding-bottom: 15px; }
         .dossier-value { color: #fff; font-size: 1rem; display: block; margin-bottom: 10px; }
         .dossier-text { white-space: pre-wrap; line-height: 1.5; color: #ccc; background: #0f1012; padding: 15px; border-radius: 4px; border: 1px solid #333; }
-        
-        #map-container { height: 200px; width: 100%; background: #000; margin-top: 10px; border: 1px solid #333; }
-        .associate-link { color: var(--primary); text-decoration: underline; cursor: pointer; margin-right: 10px; }
 
         .hidden { display: none !important; }
         .login-box { background: var(--bg-card); padding: 40px; border-radius: 8px; width: 320px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 3000; text-align: center; border-top: 4px solid var(--primary); }
-        @media print { .no-print { display: none !important; } #map-container { display: none; } }
+        @media print { .no-print { display: none !important; } }
     </style>
 </head>
 <body>
@@ -86,48 +68,39 @@
         
         <div class="dossier-header">
             <img id="view-foto" src="" class="dossier-photo" style="display:none" crossorigin="anonymous">
-            <div id="view-no-foto" class="dossier-photo" style="display:flex; align-items:center; justify-content:center; color:#555; font-size:0.7rem;">SEM FOTO</div>
+            <div id="view-no-foto" class="dossier-photo" style="display:flex;align-items:center;justify-content:center;color:#555;">SEM FOTO</div>
+            <div id="view-loading" class="dossier-photo" style="display:none;align-items:center;justify-content:center;color:var(--primary);border-color:var(--primary);">BAIXANDO...</div>
+
             <div style="flex:1">
                 <div style="display:flex; justify-content:space-between;">
                     <h1 style="margin:0; font-size:2rem; color:#fff;" id="view-nome">NOME</h1>
                     <div id="view-nivel" style="font-size:1.5rem"></div>
                 </div>
-                <div style="color:var(--primary); font-size:1rem; letter-spacing:2px; text-transform:uppercase;" id="view-vulgo">VULGO</div>
-                <div style="margin-top:15px; display:flex; gap:20px; flex-wrap: wrap;">
-                    <div><label>STATUS</label><span class="dossier-value" id="view-status" style="color:var(--primary); font-weight:bold">-</span></div>
+                <div style="color:var(--primary); font-size:1rem; letter-spacing:2px;" id="view-vulgo">VULGO</div>
+                <div style="margin-top:15px; display:flex; gap:20px; flex-wrap:wrap;">
+                    <div><label>STATUS</label><span class="dossier-value" id="view-status">-</span></div>
                     <div><label>CPF</label><span class="dossier-value" id="view-cpf">-</span></div>
                     <div><label>IDADE</label><span class="dossier-value" id="view-idade">-</span></div>
                 </div>
             </div>
         </div>
 
-        <div class="dossier-section">
-            <div class="row">
-                <div class="col"><label>AFILIAÇÃO</label><span class="dossier-value" id="view-afiliacao">-</span></div>
-                <div class="col"><label>PROFISSÃO</label><span class="dossier-value" id="view-profissao">-</span></div>
-            </div>
-            <div style="margin-top:10px;"><label>ASSOCIADOS</label><div id="view-associados" class="dossier-value">-</div></div>
+        <div class="row">
+            <div class="col"><label>AFILIAÇÃO</label><span class="dossier-value" id="view-afiliacao">-</span></div>
+            <div class="col"><label>PROFISSÃO</label><span class="dossier-value" id="view-profissao">-</span></div>
         </div>
+        
+        <label>LOCALIZAÇÃO</label><span class="dossier-value" id="view-endereco">-</span>
+        <div class="row"><div class="col"><label>TEL</label><span class="dossier-value" id="view-telefone">-</span></div><div class="col"><label>EMAIL</label><span class="dossier-value" id="view-email">-</span></div></div>
+        
+        <label>ASSOCIADOS</label><span class="dossier-value" id="view-associados">-</span>
+        <label>HISTÓRICO</label><div class="dossier-text" id="view-detalhes">...</div>
+        <div id="view-tags" style="margin-top:10px;"></div>
 
-        <div class="dossier-section">
-            <label>LOCALIZAÇÃO</label><span class="dossier-value" id="view-endereco">-</span>
-            <div id="map-container" class="no-print"></div>
-            <div class="row" style="margin-top:10px;">
-                <div class="col"><label>TELEFONE</label><span class="dossier-value" id="view-telefone">-</span></div>
-                <div class="col"><label>EMAIL</label><span class="dossier-value" id="view-email">-</span></div>
-            </div>
-        </div>
-
-        <div class="dossier-section">
-            <label>ÁUDIO / OBSERVAÇÕES</label><div id="view-audio-container">Nenhum.</div>
-            <label style="margin-top:15px;">HISTÓRICO</label><div class="dossier-text" id="view-detalhes">...</div>
-            <div id="view-tags" style="margin-top:10px;"></div>
-        </div>
-
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px;" class="no-print">
+        <div style="margin-top:20px; display:flex; justify-content:space-between;" class="no-print">
             <div style="font-size:0.7rem; color:#666;">ATT: <span id="view-update"></span></div>
             <div>
-                <a id="view-evidencia-btn" href="#" target="_blank" class="btn-sm" style="background:#333; text-decoration:none; display:none; padding:8px 15px; color:#fff; border-radius:3px; margin-right:10px;">EVIDÊNCIA</a>
+                <a id="view-evidencia-btn" href="#" target="_blank" class="btn-sm" style="display:none; padding:10px; background:#333; color:#fff; text-decoration:none; margin-right:10px;">EVIDÊNCIA</a>
                 <button onclick="imprimirFicha()" style="width:auto; background:#fff; color:#000;">🖨️ PDF</button>
             </div>
         </div>
@@ -136,18 +109,17 @@
 
 <div id="login-screen">
     <div class="login-box">
-        <h2 style="color:#fff; margin-bottom:20px;">SYSTEM V15</h2>
-        <input type="text" id="loginUser" placeholder="ID AGENTE">
+        <h2 style="color:#fff;">SYSTEM V18</h2>
         <input type="password" id="loginPass" placeholder="SENHA">
         <button onclick="fazerLogin()">ACESSAR</button>
-        <p id="loginError" style="color:var(--danger); display:none; margin-top:15px; font-size:0.8rem;">NEGADO</p>
+        <p id="loginError" style="color:var(--danger); display:none;">NEGADO</p>
     </div>
 </div>
 
 <div id="app-system" class="container hidden">
     <header>
-        <div><h1>INTELLIGENCE</h1><span style="font-size:0.8rem; color:var(--primary);">GLOBAL SURVEILLANCE</span></div>
-        <div class="meta-info">AGENTE: <strong id="displayUser" style="color:#fff">...</strong><br>ONLINE</div>
+        <div><h1>INTELLIGENCE</h1><span style="font-size:0.8rem; color:var(--primary);">BASE DE DADOS</span></div>
+        <div class="meta-info">ONLINE</div>
     </header>
 
     <div class="tabs">
@@ -156,50 +128,31 @@
     </div>
 
     <div id="dashboard">
-        <div class="stats-grid">
-            <div class="stat-card"><span class="stat-num" id="stat-total">0</span><span class="stat-label">TOTAL</span></div>
-            <div class="stat-card" style="border-color:var(--success)"><span class="stat-num" id="stat-ativos" style="color:var(--success)">0</span><span class="stat-label">ATIVOS</span></div>
-            <div class="stat-card" style="border-color:var(--danger)"><span class="stat-num" id="stat-danger" style="color:var(--danger)">0</span><span class="stat-label">ALTO RISCO</span></div>
-            <div class="stat-card" style="border-color:var(--warning)"><span class="stat-num" id="stat-presos" style="color:var(--warning)">0</span><span class="stat-label">PRESOS</span></div>
-        </div>
-        
         <div class="row" style="margin-bottom:20px;">
-            <input type="text" id="termoBusca" placeholder="Pesquisar por Nome, CPF ou Vulgo..." style="margin-bottom:0">
+            <input type="text" id="termoBusca" placeholder="Pesquisar..." style="margin-bottom:0">
             <button onclick="buscarDados()" style="width:auto; margin-left:10px;">🔍 BUSCAR</button>
         </div>
-
         <div id="dashboard-results"></div>
     </div>
 
     <div id="cadastro" class="hidden">
-        <div id="edit-bar" style="background: #2a3b4d; padding: 10px; margin-bottom: 20px; display:none; border-left: 4px solid var(--warning);"><strong style="color:var(--warning)">EDICAO</strong></div>
+        <div id="edit-bar" style="background: #2a3b4d; padding: 10px; margin-bottom: 20px; display:none; border-left: 4px solid var(--warning);"><strong style="color:var(--warning)">EDITANDO</strong></div>
         
-        <div class="row">
-            <div class="col"><label>Status</label><select id="status"><option value="ATIVO">ATIVO</option><option value="VIGILANCIA">VIGILÂNCIA</option><option value="PRESO">PRESO</option><option value="FORAGIDO">FORAGIDO</option><option value="ARQUIVADO">ARQUIVADO</option><option value="OBITO">ÓBITO</option></select></div>
-            <div class="col"><label>Nível</label><select id="nivel"><option value="0">0 - NULO</option><option value="1">1 - BAIXO</option><option value="2">2 - MODERADO</option><option value="3">3 - ATENÇÃO</option><option value="4">4 - ALTO</option><option value="5">5 - EXTREMO</option></select></div>
-        </div>
-
-        <div class="photo-area"><div id="previewBox" class="preview-box" style="width:100px; height:130px; display:flex; align-items:center; justify-content:center; color:#555; border:1px solid #444;">FOTO</div><div style="flex:1"><label>Foto (3x4)</label><input type="file" id="fotoPerfil" accept="image/*" onchange="previewImagem(this)" style="border:none; padding:0;"></div></div>
-
+        <div class="row"><div class="col"><label>Status</label><select id="status"><option value="ATIVO">ATIVO</option><option value="PRESO">PRESO</option><option value="FORAGIDO">FORAGIDO</option><option value="ARQUIVADO">ARQUIVADO</option><option value="OBITO">ÓBITO</option></select></div><div class="col"><label>Nível</label><select id="nivel"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></div></div>
+        
         <div class="row"><div class="col" style="flex:2"><label>Nome</label><input type="text" id="nome"></div><div class="col"><label>Vulgo</label><input type="text" id="vulgo"></div></div>
         <div class="row"><div class="col"><label>CPF</label><input type="number" id="cpf"></div><div class="col"><label>Nasc</label><input type="date" id="nascimento" onchange="calcularIdade()"></div><div class="col" style="flex:0.5"><label>Idade</label><input type="number" id="idade" readonly style="background:#222;"></div></div>
-        <div class="row"><div class="col"><label>Grupo</label><input type="text" id="afiliacao"></div><div class="col"><label>Profissão</label><input type="text" id="profissao"></div></div>
-        <label>Associados (CPFs separados por vírgula)</label><input type="text" id="associados">
-        <label>Endereço</label><input type="text" id="endereco">
-        <div class="row"><div class="col"><label>Tel</label><input type="text" id="telefone"></div><div class="col"><label>Email</label><input type="email" id="email"></div></div>
         
-        <div style="display:flex; gap:10px; align-items:center; margin-bottom:12px;">
-            <button id="btnRecord" class="btn-record" onclick="toggleGravacao()" style="width:auto;">🎙️ GRAVAR ÁUDIO</button>
-            <span id="recordStatus" style="font-size:0.8rem; color:#666;">Pronto</span>
-            <audio id="audioPreview" controls style="display:none; height:30px;"></audio>
-        </div>
-
+        <label>Foto (3x4)</label><input type="file" id="fotoPerfil" accept="image/*">
+        <div class="row"><div class="col"><label>Grupo</label><input type="text" id="afiliacao"></div><div class="col"><label>Profissão</label><input type="text" id="profissao"></div></div>
+        <label>Associados</label><input type="text" id="associados"><label>Endereço</label><input type="text" id="endereco">
+        <div class="row"><div class="col"><label>Tel</label><input type="text" id="telefone"></div><div class="col"><label>Email</label><input type="email" id="email"></div></div>
         <label>Histórico</label><textarea id="detalhes" rows="6"></textarea>
-        <label>Evidência</label><input type="file" id="arquivoEvidencia">
-        <label>Tags</label><input type="text" id="tags">
+        <label>Evidência</label><input type="file" id="arquivoEvidencia"><label>Tags</label><input type="text" id="tags">
 
         <button onclick="enviarDados()" id="btnEnviar">SALVAR</button>
         <button onclick="cancelarEdicao()" id="btnCancelar" class="hidden" style="background:transparent; border:1px solid #666; color:#888;">CANCELAR</button>
+        <button onclick="excluirFicha()" id="btnExcluir" class="btn-del hidden">EXCLUIR REGISTRO PERMANENTEMENTE</button>
     </div>
     <p id="loading" style="text-align: center; display: none; color: var(--primary); font-weight:bold; margin-top:20px;">PROCESSANDO...</p>
 </div>
@@ -210,201 +163,164 @@
     
     let sessionPass = ""; let modoEdicao = false; let dadosCache = []; 
     let urlFotoAntiga = "", urlEvidenciaAntiga = "", urlAudioAntiga = "";
-    let mediaRecorder; let audioChunks = []; let audioBlob = null; let audioBase64 = null;
 
     function fazerLogin() {
-        const user = document.getElementById('loginUser').value.trim();
         const pass = document.getElementById('loginPass').value.trim();
-        const btn = document.querySelector('.login-box button');
-        if (user.toLowerCase() !== VALID_USER) return alert("ID Desconhecido");
-        btn.innerText = "..."; btn.disabled = true;
-        fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ acao: "busca", termo: "*", senhaacesso: pass, agente: user }) })
-        .then(res => res.json()).then(data => {
-            if(data[0] && data[0].erro) {
-                document.getElementById('loginError').style.display = 'block'; btn.innerText = "AUTENTICAR"; btn.disabled = false;
-            } else {
-                sessionPass = pass; dadosCache = data; atualizarDashboard();
-                document.getElementById('login-screen').style.display = 'none';
-                document.getElementById('app-system').classList.remove('hidden');
-                document.getElementById('displayUser').innerText = user.toUpperCase();
-            }
-        }).catch(e => { alert("Erro de Conexão."); btn.disabled = false; });
+        if(pass === "") return;
+        document.querySelector('.login-box button').innerText = "...";
+        fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ acao: "busca", termo: "*", senhaacesso: pass }) })
+        .then(r=>r.json()).then(d=>{
+            if(d[0] && d[0].erro) { alert("Senha Incorreta"); location.reload(); }
+            else { sessionPass=pass; dadosCache=d; atualizarDashboard(); document.getElementById('login-screen').style.display='none'; document.getElementById('app-system').classList.remove('hidden'); }
+        });
     }
 
     function renderizarCards(lista) {
-        const container = document.getElementById('dashboard-results');
-        container.innerHTML = "";
-        if(lista.length === 0) { container.innerHTML = "<p align='center'>Vazio.</p>"; return; }
-        
-        lista.forEach((item) => {
-            let nivelIcon = item.nivel > 0 ? "💀".repeat(parseInt(item.nivel)) : "🛡️";
-            let statusClass = "status-" + (item.status || "ativo").toLowerCase();
-            
+        const div = document.getElementById('dashboard-results'); div.innerHTML = "";
+        lista.forEach(i => {
+            let nivel = i.nivel > 0 ? "💀".repeat(parseInt(i.nivel)) : "🛡️";
+            let status = "status-" + (i.status||"ativo").toLowerCase();
             let html = `
-                <div class="card ${statusClass}">
-                    <img id="card-img-${item.cpf}" src="" class="card-mugshot" style="display:none">
-                    <div id="card-no-img-${item.cpf}" class="card-mugshot" style="display:flex;align-items:center;justify-content:center;color:#555;font-size:0.6rem;">FOTO</div>
-                    
+                <div class="card ${status}">
                     <div class="card-info">
-                        <div style="display:flex; justify-content:space-between;">
-                            <h3 class="card-title">${item.nome}</h3>
-                            <span style="color:var(--danger)">${nivelIcon}</span>
-                        </div>
-                        <div class="card-vulgo">${item.vulgo || ""}</div>
-                        
-                        <div class="card-meta">
-                            <span>ID: ${item.cpf}</span>
-                            <span>STATUS: ${item.status}</span>
-                            <span>IDADE: ${item.idade}</span>
-                            <span>GRUPO: ${item.afiliacao || "-"}</span>
-                        </div>
+                        <div class="card-title">${i.nome} <span style="font-size:0.8rem; color:#666">${nivel}</span></div>
+                        <div style="font-size:0.8rem; color:var(--primary); font-weight:bold; margin-bottom:5px;">${i.vulgo||""}</div>
+                        <div class="card-meta"><span>${i.cpf}</span><span>${i.status}</span></div>
                     </div>
-                    
-                    <div class="card-actions">
-                        <button onclick="abrirFicha('${item.cpf}')" class="btn-sm">ABRIR</button>
-                        <button onclick="prepararEdicao('${item.cpf}')" class="btn-sm" style="background:#222; border:1px solid #444;">EDITAR</button>
+                    <div>
+                        <button onclick="abrirFicha('${i.cpf}')" class="btn-sm">ABRIR</button>
+                        <button onclick="prepararEdicao('${i.cpf}')" class="btn-sm" style="background:#222; margin-top:5px;">EDITAR</button>
                     </div>
                 </div>`;
-            container.innerHTML += html;
-            
-            carregarFotoCard(item.cpf, item.foto);
+            div.innerHTML += html;
         });
     }
 
-    function carregarFotoCard(cpf, url) {
-        if(!url || url === "Sem anexo") return;
-        let fileId = "";
-        try { if (url.includes("/file/d/")) fileId = url.split("/file/d/")[1].split("/")[0]; else if (url.includes("id=")) fileId = url.split("id=")[1].split("&")[0]; } catch(e){}
-        
-        if(fileId) {
-            fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ acao: "getFoto", id: fileId, senhaacesso: sessionPass }) })
-            .then(r => r.json()).then(d => {
-                if(d.status === "sucesso") {
-                    document.getElementById(`card-img-${cpf}`).src = d.base64;
-                    document.getElementById(`card-img-${cpf}`).style.display = 'block';
-                    document.getElementById(`card-no-img-${cpf}`).style.display = 'none';
-                }
-            });
-        }
-    }
-
-    let map = null;
-    function carregarMapa(endereco) {
-        const container = document.getElementById('map-container');
-        if (map) { map.remove(); map = null; } 
-        container.innerHTML = ""; 
-        if (!endereco) { container.innerHTML = "<p style='color:#666;text-align:center;padding-top:80px;'>Sem endereço.</p>"; return; }
-        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(endereco)}`)
-        .then(r => r.json()).then(data => {
-            if (data && data.length > 0) {
-                map = L.map('map-container').setView([data[0].lat, data[0].lon], 15);
-                L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
-                L.marker([data[0].lat, data[0].lon]).addTo(map).bindPopup(endereco).openPopup();
-            } else container.innerHTML = "<p style='color:#666;text-align:center;padding-top:80px;'>Local não encontrado.</p>";
-        });
-    }
-
-    function toggleGravacao() {
-        const btn = document.getElementById('btnRecord');
-        const status = document.getElementById('recordStatus');
-        if (btn.classList.contains('recording')) {
-            mediaRecorder.stop(); btn.classList.remove('recording'); btn.innerText = "🎙️ GRAVAR ÁUDIO"; status.innerText = "Processando...";
-        } else {
-            navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-                mediaRecorder = new MediaRecorder(stream);
-                mediaRecorder.start(); audioChunks = [];
-                mediaRecorder.addEventListener("dataavailable", event => { audioChunks.push(event.data); });
-                mediaRecorder.addEventListener("stop", () => {
-                    audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                    const player = document.getElementById('audioPreview'); player.src = URL.createObjectURL(audioBlob); player.style.display = 'block';
-                    status.innerText = "Pronto";
-                    const reader = new FileReader(); reader.readAsDataURL(audioBlob); reader.onloadend = () => { audioBase64 = reader.result.split(',')[1]; };
-                });
-                btn.classList.add('recording'); btn.innerText = "⏹ PARAR"; status.innerText = "Gravando...";
-            });
-        }
-    }
-
+    // --- ABERTURA COM BASE64 ---
     function abrirFicha(cpf) {
-        fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ acao: "log_view", agente: document.getElementById('loginUser').value, alvo: cpf, senhaacesso: sessionPass }) });
         const item = dadosCache.find(i => i.cpf == cpf);
         if(!item) return;
 
-        const setTxt = (id, val) => document.getElementById(id).innerText = val || "-";
-        setTxt('view-nome', item.nome); setTxt('view-vulgo', item.vulgo || "N/A"); setTxt('view-cpf', item.cpf);
-        setTxt('view-idade', item.idade + " ANOS"); setTxt('view-status', item.status); setTxt('view-afiliacao', item.afiliacao);
-        setTxt('view-profissao', item.profissao); setTxt('view-fisico', item.fisico); setTxt('view-endereco', item.endereco);
-        setTxt('view-telefone', item.telefone); setTxt('view-email', item.email); setTxt('view-detalhes', item.detalhes);
-        
-        document.getElementById('view-nivel').innerText = item.nivel > 0 ? "💀".repeat(parseInt(item.nivel)) : "🛡️";
-        
-        const audioDiv = document.getElementById('view-audio-container');
-        if(item.audio) { audioDiv.innerHTML = `<audio controls src="${item.audio}" style="width:100%"></audio>`; } else audioDiv.innerText = "Nenhum.";
+        // Preenche Textos
+        const set = (id, val) => document.getElementById(id).innerText = val || "-";
+        set('view-nome', item.nome); set('view-vulgo', item.vulgo); set('view-cpf', item.cpf);
+        set('view-idade', item.idade); set('view-status', item.status); set('view-afiliacao', item.afiliacao);
+        set('view-profissao', item.profissao); set('view-endereco', item.endereco); set('view-telefone', item.telefone);
+        set('view-email', item.email); set('view-detalhes', item.detalhes); set('view-associados', item.associados);
+        document.getElementById('view-nivel').innerText = item.nivel > 0 ? "💀".repeat(item.nivel) : "🛡️";
+        document.getElementById('view-tags').innerText = item.tags;
+        document.getElementById('view-update').innerText = item.dataUpdate ? new Date(item.dataUpdate).toLocaleString() : "-";
 
-        const assocDiv = document.getElementById('view-associados');
-        assocDiv.innerHTML = item.associados ? item.associados.split(',').map(a => `<span class="associate-link" onclick="abrirFicha('${a.trim()}')">🔗 ${a.trim()}</span>`).join(' ') : "-";
+        // Botão Evidencia
+        const btnEv = document.getElementById('view-evidencia-btn');
+        if(item.evidencia && item.evidencia !== "Sem anexo") { btnEv.href = item.evidencia; btnEv.style.display = 'inline-block'; } else btnEv.style.display = 'none';
 
-        // Carrega foto no modal via proxy
-        const imgModal = document.getElementById('view-foto'); imgModal.style.display = 'none';
-        const noImgModal = document.getElementById('view-no-foto'); noImgModal.style.display = 'flex';
+        // TRATAMENTO FOTO (BAIXA BASE64)
+        const img = document.getElementById('view-foto');
+        const noImg = document.getElementById('view-no-foto');
+        const load = document.getElementById('view-loading');
         
+        img.style.display = 'none'; noImg.style.display = 'none'; load.style.display = 'none';
+
         if(item.foto && item.foto !== "Sem anexo") {
-             let fileId = ""; try { if (item.foto.includes("/file/d/")) fileId = item.foto.split("/file/d/")[1].split("/")[0]; else if (item.foto.includes("id=")) fileId = item.foto.split("id=")[1].split("&")[0]; } catch(e){}
-             if(fileId) {
-                 fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ acao: "getFoto", id: fileId, senhaacesso: sessionPass }) })
-                 .then(r => r.json()).then(d => { if(d.status === "sucesso") { imgModal.src = d.base64; imgModal.style.display = 'block'; noImgModal.style.display = 'none'; } });
-             }
-        }
+            let id = "";
+            try { if(item.foto.includes("id=")) id = item.foto.split("id=")[1].split("&")[0]; else if(item.foto.includes("/file/d/")) id = item.foto.split("/file/d/")[1].split("/")[0]; } catch(e){}
+            
+            if(id) {
+                load.style.display = 'flex'; // Mostra carregando
+                fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ acao: "getFoto", id: id, senhaacesso: sessionPass }) })
+                .then(r=>r.json()).then(d=>{
+                    load.style.display = 'none';
+                    if(d.status==="sucesso") { img.src = d.base64; img.style.display='block'; } else noImg.style.display='flex';
+                }).catch(()=>{ load.style.display='none'; noImg.style.display='flex'; });
+            } else noImg.style.display='flex';
+        } else noImg.style.display='flex';
 
-        carregarMapa(item.endereco);
         document.getElementById('modal-overlay').style.display = 'flex';
     }
 
-    function fecharModal() { document.getElementById('modal-overlay').style.display = 'none'; if(map) { map.remove(); map=null; } }
-    function imprimirFicha() { const el = document.getElementById('ficha-impressao'); document.querySelectorAll('.no-print, .close-modal').forEach(e=>e.style.display='none'); html2pdf().from(el).save().then(()=>{ document.querySelectorAll('.no-print, .close-modal').forEach(e=>e.style.display='flex'); }); }
-    function atualizarDashboard() { renderizarCards(dadosCache.slice(-10).reverse()); 
-        document.getElementById('stat-total').innerText = dadosCache.length;
-        document.getElementById('stat-ativos').innerText = dadosCache.filter(i => i.status === "ATIVO").length;
-        document.getElementById('stat-presos').innerText = dadosCache.filter(i => i.status === "PRESO").length;
-        document.getElementById('stat-danger').innerText = dadosCache.filter(i => parseInt(i.nivel) >= 4).length;
+    function fecharModal() { document.getElementById('modal-overlay').style.display = 'none'; }
+    function imprimirFicha() {
+        const el = document.getElementById('ficha-impressao');
+        document.querySelectorAll('.no-print, .close-modal').forEach(e=>e.style.display='none');
+        html2pdf().set({ margin: 5, filename: 'Dossie.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, backgroundColor: "#141619", useCORS: true }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } }).from(el).save().then(()=>{
+            document.querySelectorAll('.no-print, .close-modal').forEach(e=>e.style.display='flex');
+        });
     }
-    function buscarDados() { const t = document.getElementById('termoBusca').value.toLowerCase(); renderizarCards(dadosCache.filter(i => (i.nome+i.cpf+i.vulgo).toLowerCase().includes(t))); }
-    function mudarAba(aba) { document.getElementById('dashboard').classList.add('hidden'); document.getElementById('cadastro').classList.add('hidden'); document.getElementById(aba).classList.remove('hidden'); document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); event.target.classList.add('active'); }
-    function calcularIdade() { const nasc = new Date(document.getElementById('nascimento').value); const hoje = new Date(); let idade = hoje.getFullYear() - nasc.getFullYear(); if (hoje.getMonth() < nasc.getMonth()) idade--; document.getElementById('idade').value = idade; }
-    function previewImagem(i) { if(i.files[0]) { const r = new FileReader(); r.onload=e=>{document.getElementById('previewBox').style.backgroundImage=`url(${e.target.result})`; document.getElementById('previewBox').innerText=""}; r.readAsDataURL(i.files[0]); } }
-    
-    function prepararEdicao(cpf) { 
-        const i = dadosCache.find(x=>x.cpf==cpf); modoEdicao=true; 
-        document.getElementById('nome').value=i.nome||""; document.getElementById('cpf').value=i.cpf||""; 
-        document.getElementById('vulgo').value=i.vulgo||""; document.getElementById('endereco').value=i.endereco||""; 
-        document.getElementById('detalhes').value=i.detalhes||""; document.getElementById('status').value=i.status||"ATIVO"; 
-        document.getElementById('nivel').value=i.nivel||"0"; document.getElementById('afiliacao').value=i.afiliacao||""; 
-        document.getElementById('associados').value=i.associados||""; 
+
+    // --- EDIÇÃO E EXCLUSÃO ---
+    function prepararEdicao(cpf) {
+        const i = dadosCache.find(x=>x.cpf==cpf); modoEdicao=true;
+        const s = (id, v) => document.getElementById(id).value = v || "";
+        s('nome', i.nome); s('cpf', i.cpf); s('vulgo', i.vulgo); s('status', i.status);
+        s('nivel', i.nivel); s('afiliacao', i.afiliacao); s('profissao', i.profissao);
+        s('associados', i.associados); s('endereco', i.endereco); s('telefone', i.telefone);
+        s('email', i.email); s('detalhes', i.detalhes); s('tags', i.tags); s('idade', i.idade);
+        if(i.nascimento) document.getElementById('nascimento').value = new Date(i.nascimento).toISOString().split('T')[0];
+
+        document.getElementById('cpf').disabled = true;
+        document.getElementById('btnEnviar').innerText = "ATUALIZAR";
+        document.getElementById('edit-bar').style.display = 'block';
+        document.getElementById('btnCancelar').classList.remove('hidden');
+        document.getElementById('btnExcluir').classList.remove('hidden');
         
-        document.getElementById('btnEnviar').innerText="ATUALIZAR"; document.getElementById('edit-bar').style.display='block'; document.getElementById('btnCancelar').classList.remove('hidden'); 
-        urlFotoAntiga=i.foto; urlEvidenciaAntiga=i.evidencia; urlAudioAntiga=i.audio; mudarAba('cadastro'); 
+        urlFotoAntiga=i.foto; urlEvidenciaAntiga=i.evidencia; urlAudioAntiga=i.audio;
+        mudarAba('cadastro');
     }
-    
-    function cancelarEdicao() { modoEdicao=false; document.getElementById('btnEnviar').innerText="SALVAR"; document.getElementById('edit-bar').style.display='none'; document.getElementById('btnCancelar').classList.add('hidden'); document.querySelectorAll('#cadastro input, #cadastro textarea').forEach(i=>i.value=""); }
-    
-    async function enviarDados() { 
-        document.getElementById('btnEnviar').disabled=true; document.getElementById('loading').style.display='block';
+
+    function cancelarEdicao() {
+        modoEdicao=false; document.getElementById('cpf').disabled = false;
+        document.getElementById('btnEnviar').innerText = "SALVAR";
+        document.getElementById('edit-bar').style.display = 'none';
+        document.getElementById('btnCancelar').classList.add('hidden');
+        document.getElementById('btnExcluir').classList.add('hidden');
+        document.querySelectorAll('#cadastro input, #cadastro textarea').forEach(i=>i.value="");
+    }
+
+    function excluirFicha() {
+        const cpf = document.getElementById('cpf').value;
+        if(confirm("TEM CERTEZA QUE DESEJA EXCLUIR ESTE REGISTRO? NÃO HÁ VOLTA.")) {
+            document.getElementById('loading').style.display = 'block';
+            fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ acao: "excluir", cpf: cpf, senhaacesso: sessionPass }) })
+            .then(r=>r.json()).then(d=>{
+                if(d.status==="sucesso") { alert("Registro Apagado."); cancelarEdicao(); fazerLogin(); }
+                else alert("Erro: " + d.msg);
+                document.getElementById('loading').style.display = 'none';
+            });
+        }
+    }
+
+    async function enviarDados() {
+        document.getElementById('loading').style.display = 'block'; document.getElementById('btnEnviar').disabled = true;
         const getB64 = async (id) => { const f = document.getElementById(id).files[0]; return f ? { b64: await toBase64(f), mime: f.type, nome: f.name } : { b64:"", mime:"", nome:"" }; };
         const foto = await getB64('fotoPerfil'); const ev = await getB64('arquivoEvidencia');
-        const dados = { 
-            senhaacesso: sessionPass, acao: modoEdicao ? "editar" : "criar", agente: document.getElementById('displayUser').innerText,
-            nome: document.getElementById('nome').value, cpf: document.getElementById('cpf').value, status: document.getElementById('status').value, 
-            nivel: document.getElementById('nivel').value, tags: document.getElementById('tags').value, vulgo: document.getElementById('vulgo').value,
-            profissao: document.getElementById('profissao').value, idade: document.getElementById('idade').value, nascimento: document.getElementById('nascimento').value, 
-            afiliacao: document.getElementById('afiliacao').value, associados: document.getElementById('associados').value, endereco: document.getElementById('endereco').value,
-            email: document.getElementById('email').value, telefone: document.getElementById('telefone').value, redes: document.getElementById('redes').value, 
-            detalhes: document.getElementById('detalhes').value, fotoBase64: foto.b64, fotoMime: foto.mime, fotoNome: foto.nome, 
-            arquivoBase64: ev.b64, arquivoMime: ev.mime, arquivoNome: ev.nome, audioBase64: audioBase64, 
+        
+        const dados = {
+            senhaacesso: sessionPass, acao: modoEdicao ? "editar" : "criar",
+            nome: document.getElementById('nome').value, cpf: document.getElementById('cpf').value,
+            status: document.getElementById('status').value, nivel: document.getElementById('nivel').value,
+            tags: document.getElementById('tags').value, vulgo: document.getElementById('vulgo').value,
+            profissao: document.getElementById('profissao').value, idade: document.getElementById('idade').value,
+            nascimento: document.getElementById('nascimento').value, afiliacao: document.getElementById('afiliacao').value,
+            associados: document.getElementById('associados').value, endereco: document.getElementById('endereco').value,
+            email: document.getElementById('email').value, telefone: document.getElementById('telefone').value,
+            redes: document.getElementById('redes').value, detalhes: document.getElementById('detalhes').value,
+            fotoBase64: foto.b64, fotoMime: foto.mime, fotoNome: foto.nome, arquivoBase64: ev.b64, arquivoMime: ev.mime, arquivoNome: ev.nome,
             urlFotoExistente: urlFotoAntiga, urlEvidenciaExistente: urlEvidenciaAntiga, urlAudioExistente: urlAudioAntiga
         };
-        fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(dados) }).then(r=>r.json()).then(d=>{ if(d.status==="sucesso"){ alert("Sucesso!"); cancelarEdicao(); fazerLogin(); } else alert("Erro!"); document.getElementById('loading').style.display='none'; document.getElementById('btnEnviar').disabled=false; });
+
+        fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(dados) }).then(r=>r.json()).then(d=>{
+            if(d.status==="sucesso"){ alert("Salvo!"); cancelarEdicao(); fazerLogin(); }
+            else alert("Erro: " + d.msg);
+            document.getElementById('loading').style.display='none'; document.getElementById('btnEnviar').disabled=false;
+        });
     }
-    const toBase64 = file => new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = () => resolve(reader.result.split(',')[1]); reader.onerror = error => reject(error); });
+
+    function atualizarDashboard() { renderizarCards(dadosCache.slice(-10).reverse()); }
+    function buscarDados() { const t = document.getElementById('termoBusca').value.toLowerCase(); renderizarCards(dadosCache.filter(i => (i.nome+i.cpf+i.vulgo).toLowerCase().includes(t))); }
+    function mudarAba(aba) { document.getElementById('dashboard').classList.add('hidden'); document.getElementById('cadastro').classList.add('hidden'); document.getElementById(aba).classList.remove('hidden'); document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); event.target.classList.add('active'); }
+    function calcularIdade() { const n = new Date(document.getElementById('nascimento').value); const h = new Date(); let i = h.getFullYear() - n.getFullYear(); if (h.getMonth() < n.getMonth()) i--; document.getElementById('idade').value = i; }
+    const toBase64 = f => new Promise((res, rej) => { const r = new FileReader(); r.readAsDataURL(f); r.onload = () => res(r.result.split(',')[1]); r.onerror = rej; });
 </script>
 
 </body>

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAZUR DATABASE // PROFILE V4</title>
+    <title>MAZUR DATABASE // PROFILE V5</title>
     <style>
         :root {
             --bg-color: #050505;
@@ -20,7 +20,7 @@
             background-image: radial-gradient(circle, #0a0a0a 0%, #000000 100%);
         }
 
-        /* Efeito de linhas na tela (Scanlines) */
+        /* Efeito de Scanline */
         body::before {
             content: " "; display: block; position: fixed;
             top: 0; left: 0; bottom: 0; right: 0;
@@ -29,52 +29,55 @@
         }
 
         .container { max-width: 650px; margin: 0 auto; position: relative; z-index: 3; }
-
         h1, h2 { text-align: center; border-bottom: 1px solid var(--terminal-dim); padding-bottom: 10px; letter-spacing: 2px; }
 
+        /* Estilo dos Inputs */
         input, textarea, button {
             width: 100%; box-sizing: border-box; background: #000;
             border: 1px solid var(--terminal-dim); color: var(--terminal-green);
             padding: 12px; margin-bottom: 10px; font-family: 'Courier New', monospace;
         }
         input:focus, textarea:focus { outline: none; border-color: var(--terminal-green); }
+        
+        /* Grid para inputs pequenos (Idade/Tel) */
+        .row-inputs { display: flex; gap: 10px; }
+        .row-inputs input { flex: 1; }
 
         button { font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 10px; border: 1px solid var(--terminal-green); transition: 0.2s; }
         button:hover { background: var(--terminal-green); color: #000; }
 
-        /* UPLOAD DE FOTO 3x4 ESTILIZADO */
+        /* Upload de Foto */
         .photo-upload-container {
             display: flex; align-items: center; gap: 15px; margin-bottom: 15px; border: 1px dashed var(--terminal-dim); padding: 10px; background: rgba(0,50,0,0.1);
         }
         .photo-preview {
-            width: 80px; height: 100px; /* Proporção 3x4 */
-            background: #111; border: 1px solid var(--terminal-dim);
+            width: 80px; height: 100px; background: #111; border: 1px solid var(--terminal-dim);
             background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #555; text-align: center;
         }
 
-        /* CARD DE RESULTADO (LAYOUT NOVO) */
+        /* CARD DE RESULTADO */
         .card {
             border: 1px solid var(--terminal-dim); padding: 15px; margin-bottom: 15px;
-            background: rgba(0, 20, 0, 0.4); display: flex; gap: 15px;
-            align-items: start;
+            background: rgba(0, 20, 0, 0.4); display: flex; gap: 15px; align-items: start;
         }
         .mugshot {
-            width: 100px; height: 130px; /* Foto no resultado um pouco maior */
-            background: #000; border: 1px solid #fff;
+            width: 100px; height: 130px; background: #000; border: 1px solid #fff;
             object-fit: cover; flex-shrink: 0; 
         }
         .card-info { flex-grow: 1; }
         .card h3 { margin: 0 0 5px 0; color: #fff; text-transform: uppercase; font-size: 1.2em; }
-        .label { font-size: 10px; color: #aaa; display: block; margin-bottom: 2px; margin-top: 8px; }
-        .data-text { font-size: 14px; margin-bottom: 5px; display: block; color: #ddd; }
         
+        .label { font-size: 10px; color: #aaa; display: block; margin-top: 8px; margin-bottom: 2px; text-transform: uppercase; }
+        .data-text { font-size: 14px; margin-bottom: 5px; display: block; color: #ddd; }
+        .optional-info { font-size: 12px; color: var(--terminal-green); margin-bottom: 4px; display: block; }
+
         .link-btn {
             display: inline-block; padding: 5px 10px; border: 1px solid var(--terminal-green);
             color: var(--terminal-green); text-decoration: none; font-size: 11px; margin-top: 10px;
         }
         .link-btn:hover { background: var(--terminal-green); color: #000; }
         
-        /* LOGIN E ABAS */
+        /* Login e Abas */
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 999; display: flex; justify-content: center; align-items: center; }
         .login-box { border: 1px solid var(--terminal-green); padding: 30px; width: 300px; background: #000; box-shadow: 0 0 20px rgba(0,255,65,0.2); }
         #app-system { display: none; }
@@ -83,7 +86,6 @@
         .tab { flex: 1; padding: 10px; text-align: center; border-right: 1px solid var(--terminal-dim); cursor: pointer; background: #0a0a0a; }
         .tab:last-child { border: none; }
         .tab.active { background: var(--terminal-green); color: #000; font-weight: bold; }
-
     </style>
 </head>
 <body>
@@ -104,7 +106,7 @@
         <span>DB STATUS: ONLINE</span>
     </div>
     
-    <h1>DOSSIÊ CRIMINAL V4</h1>
+    <h1>DOSSIÊ CRIMINAL V5</h1>
 
     <div class="tabs">
         <div class="tab active" onclick="mudarAba('cadastro')">NOVO REGISTRO</div>
@@ -112,30 +114,38 @@
     </div>
 
     <div id="cadastro">
-        <p class="label" style="color:#fff; border-bottom:1px dashed #333; padding-bottom:5px;">// DADOS BIOMÉTRICOS (FOTO 3x4)</p>
+        <p class="label" style="color:#fff; border-bottom:1px dashed #333;">// DADOS BIOMÉTRICOS</p>
         <div class="photo-upload-container">
             <div id="previewBox" class="photo-preview">SEM FOTO</div>
             <div style="flex-grow:1">
                 <input type="file" id="fotoPerfil" accept="image/*" onchange="previewImagem(this)" style="border:none; padding:0;">
-                <span style="font-size:10px; color:#666;">CLIQUE ACIMA PARA SELECIONAR A FOTO DO ROSTO</span>
+                <span style="font-size:10px; color:#666;">CLIQUE PARA SELECIONAR FOTO 3x4</span>
             </div>
         </div>
 
-        <p class="label" style="color:#fff; border-bottom:1px dashed #333; padding-bottom:5px;">// DADOS DE IDENTIFICAÇÃO</p>
-        <input type="text" id="nome" placeholder="NOME COMPLETO">
-        <input type="number" id="cpf" placeholder="CPF / ID (SOMENTE NÚMEROS)">
+        <p class="label" style="color:#fff; border-bottom:1px dashed #333;">// IDENTIFICAÇÃO BÁSICA</p>
+        <input type="text" id="nome" placeholder="NOME COMPLETO *">
         
-        <p class="label" style="color:#fff; border-bottom:1px dashed #333; padding-bottom:5px;">// ANTECEDENTES & HISTÓRICO</p>
-        <textarea id="detalhes" rows="6" placeholder="DIGITE O DOSSIÊ COMPLETO..."></textarea>
+        <div class="row-inputs">
+            <input type="number" id="cpf" placeholder="CPF / RG">
+            <input type="number" id="idade" placeholder="IDADE (Opcional)">
+        </div>
+
+        <p class="label" style="color:#fff; border-bottom:1px dashed #333;">// DADOS DE CONTATO (OPCIONAL)</p>
+        <input type="text" id="telefone" placeholder="TELEFONE / WHATSAPP">
+        <input type="email" id="email" placeholder="EMAIL">
+        <input type="text" id="redes" placeholder="REDES SOCIAIS / LINKS">
         
-        <p class="label" style="color:#fff; border-bottom:1px dashed #333; padding-bottom:5px;">// EVIDÊNCIAS / PROVAS (ARQUIVO)</p>
+        <p class="label" style="color:#fff; border-bottom:1px dashed #333;">// DOSSIÊ & PROVAS</p>
+        <textarea id="detalhes" rows="6" placeholder="DIGITE O HISTÓRICO COMPLETO..."></textarea>
+        <p class="label">ARQUIVO DE EVIDÊNCIA</p>
         <input type="file" id="arquivoEvidencia">
 
         <button onclick="enviarDados()" id="btnEnviar">ARQUIVAR FICHA COMPLETA</button>
     </div>
 
     <div id="busca" class="hidden">
-        <input type="text" id="termoBusca" placeholder="DIGITE NOME OU CPF DO ALVO...">
+        <input type="text" id="termoBusca" placeholder="DIGITE NOME OU CPF...">
         <button onclick="buscarDados()" id="btnBuscar">INICIAR VARREDURA</button>
         <div id="resultados" style="margin-top:20px;"></div>
     </div>
@@ -144,64 +154,55 @@
 </div>
 
 <script>
-    // --- CONFIGURAÇÃO (SUA NOVA URL AQUI) ---
+    // URL INTEGRADA CORRETAMENTE:
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw-N38fOeT3BG_GAVWug3FNa52zmVTRWpCPSOgdSzRTsDGsTLGNf5i6wRU-Ntrhgto4yg/exec";
     
-    const VALID_USER = "mazur"; // Usuário do Login
-    let sessionPass = ""; // Senha temporária
+    const VALID_USER = "mazur";
+    let sessionPass = ""; 
 
-    // 1. SISTEMA DE LOGIN
     function fazerLogin() {
         const user = document.getElementById('loginUser').value.trim();
         const pass = document.getElementById('loginPass').value.trim();
         const btn = document.querySelector('.login-box button');
 
-        // Validação simples de usuário (Case insensitive)
         if (user.toLowerCase() !== VALID_USER) return erroLogin();
 
-        btn.innerText = "VERIFICANDO...";
-        btn.disabled = true;
+        btn.innerText = "VERIFICANDO..."; btn.disabled = true;
 
-        // Testa a senha fazendo uma chamada leve ao Google
         fetch(`${SCRIPT_URL}?q=login_check&auth=${encodeURIComponent(pass)}`)
         .then(res => res.json())
         .then(data => {
-            // Se o Google recusar a senha
             if(data[0] && data[0].erro === "ACESSO NEGADO") {
                 erroLogin();
             } else {
-                // Sucesso
                 sessionPass = pass;
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('app-system').style.display = 'block';
                 document.getElementById('displayUser').innerText = user.toUpperCase();
             }
-        }).catch(e => {
-            alert("Erro de conexão. Verifique sua internet.");
-            erroLogin();
+        }).catch(e => { 
+            alert("Erro de conexão. Verifique se publicou como NOVA VERSÃO no Apps Script."); 
+            erroLogin(); 
         });
 
         function erroLogin() {
             document.getElementById('loginError').style.display = 'block';
-            btn.innerText = "ACESSAR SISTEMA";
-            btn.disabled = false;
+            btn.innerText = "ACESSAR SISTEMA"; btn.disabled = false;
         }
     }
 
-    // 2. FUNÇÃO VISUAL: PREVIEW DA FOTO 3X4
     function previewImagem(input) {
         const preview = document.getElementById('previewBox');
         if (input.files && input.files[0]) {
             const reader = new FileReader();
             reader.onload = function(e) {
                 preview.style.backgroundImage = `url(${e.target.result})`;
-                preview.innerText = ""; // Remove o texto "SEM FOTO"
+                preview.innerText = "";
             }
             reader.readAsDataURL(input.files[0]);
         }
     }
 
-    // 3. NAVEGAÇÃO ENTRE ABAS
     function mudarAba(aba) {
         document.getElementById('cadastro').classList.add('hidden');
         document.getElementById('busca').classList.add('hidden');
@@ -211,21 +212,23 @@
         if(aba==='cadastro') document.getElementById('resultados').innerHTML = "";
     }
 
-    // 4. ENVIAR DADOS (UPLOAD DUPLO: FOTO + EVIDENCIA)
     async function enviarDados() {
         const nome = document.getElementById('nome').value;
         const cpf = document.getElementById('cpf').value;
+        const idade = document.getElementById('idade').value;
+        const email = document.getElementById('email').value;
+        const telefone = document.getElementById('telefone').value;
+        const redes = document.getElementById('redes').value;
         const detalhes = document.getElementById('detalhes').value;
         const fotoInput = document.getElementById('fotoPerfil');
         const evidenciaInput = document.getElementById('arquivoEvidencia');
         const btn = document.getElementById('btnEnviar');
         
-        if(!nome) return alert("ERRO: NOME É OBRIGATÓRIO PARA ABRIR A FICHA.");
+        if(!nome) return alert("ERRO: NOME É OBRIGATÓRIO.");
 
-        btn.disabled = true; btn.innerText = "UPLOADING E CRIPTOGRAFIA...";
+        btn.disabled = true; btn.innerText = "UPLOADING...";
         document.getElementById('loading').style.display = 'block';
 
-        // Prepara Foto de Perfil
         let fotoB64 = "", fotoMime = "", fotoNome = "";
         if (fotoInput.files.length > 0) {
             fotoB64 = await toBase64(fotoInput.files[0]);
@@ -233,7 +236,6 @@
             fotoNome = fotoInput.files[0].name;
         }
 
-        // Prepara Evidência (Print/PDF/Vídeo)
         let evB64 = "", evMime = "", evNome = "";
         if (evidenciaInput.files.length > 0) {
             evB64 = await toBase64(evidenciaInput.files[0]);
@@ -242,8 +244,7 @@
         }
 
         const dados = { 
-            senhaacesso: sessionPass, 
-            nome, cpf, detalhes, 
+            senhaacesso: sessionPass, nome, cpf, idade, email, telefone, redes, detalhes, 
             fotoBase64: fotoB64, fotoMime: fotoMime, fotoNome: fotoNome,
             arquivoBase64: evB64, arquivoMime: evMime, arquivoNome: evNome
         };
@@ -255,24 +256,14 @@
             btn.disabled = false; btn.innerText = "ARQUIVAR FICHA COMPLETA";
             
             if(data.status === "sucesso") {
-                alert("SUCESSO: INDIVÍDUO FICHADO.");
-                // Limpar campos
-                document.getElementById('nome').value = "";
-                document.getElementById('cpf').value = "";
-                document.getElementById('detalhes').value = "";
-                fotoInput.value = ""; evidenciaInput.value = "";
+                alert("SUCESSO: FICHA ATUALIZADA.");
+                document.querySelectorAll('input, textarea').forEach(i => i.value = "");
                 document.getElementById('previewBox').style.backgroundImage = "none";
                 document.getElementById('previewBox').innerText = "SEM FOTO";
-            } else { 
-                alert("ERRO NO SERVIDOR: " + data.msg); 
-            }
-        }).catch(e => {
-            alert("FALHA CRÍTICA DE CONEXÃO.");
-            btn.disabled = false;
-        });
+            } else { alert("ERRO NO SERVIDOR: " + data.msg); }
+        }).catch(e => { alert("FALHA DE CONEXÃO. Verifique se o Script foi publicado como 'Nova Versão'."); btn.disabled = false; });
     }
 
-    // 5. BUSCAR DADOS
     function buscarDados() {
         const termo = document.getElementById('termoBusca').value;
         const btn = document.getElementById('btnBuscar');
@@ -289,20 +280,30 @@
             document.getElementById('loading').style.display = 'none';
             btn.disabled = false; btn.innerText = "INICIAR VARREDURA";
             
-            if(data[0] && data[0].erro) { alert("SESSÃO EXPIRADA. FAÇA LOGIN NOVAMENTE."); location.reload(); return; }
-            if(data.length === 0) { document.getElementById('resultados').innerHTML = "<p align='center' style='color:#888'>// NENHUM REGISTRO ENCONTRADO.</p>"; return; }
+            if(data[0] && data[0].erro) { alert("SESSÃO EXPIRADA."); location.reload(); return; }
+            if(data.length === 0) { document.getElementById('resultados').innerHTML = "<p align='center' style='color:#888'>NADA ENCONTRADO.</p>"; return; }
 
             data.forEach(item => {
-                // Lógica: Se tem foto, mostra ela. Se não, mostra caixa preta.
                 let imgHtml = item.foto ? `<img src="${item.foto}" class="mugshot">` : `<div class="mugshot" style="display:flex;align-items:center;justify-content:center;color:#555;font-size:10px;">SEM FOTO</div>`;
+
+                let extrasHtml = "";
+                if(item.idade) extrasHtml += `<span class="optional-info">IDADE: ${item.idade} ANOS</span>`;
+                if(item.telefone) extrasHtml += `<span class="optional-info">TEL: ${item.telefone}</span>`;
+                if(item.email) extrasHtml += `<span class="optional-info">EMAIL: ${item.email}</span>`;
+                if(item.redes) extrasHtml += `<span class="optional-info">SOCIAL: ${item.redes}</span>`;
 
                 let html = `
                     <div class="card">
                         ${imgHtml}
                         <div class="card-info">
                             <h3>${item.nome}</h3>
-                            <span class="label">IDENTIDADE (CPF):</span>
+                            <span class="label">IDENTIDADE:</span>
                             <span class="data-text">${item.cpf || 'N/A'}</span>
+                            
+                            <div style="margin: 10px 0; border-top: 1px dashed #333; padding-top:5px;">
+                                ${extrasHtml}
+                            </div>
+
                             <span class="label">HISTÓRICO:</span>
                             <div style="font-size:13px; color:#ddd; white-space: pre-wrap; margin-bottom:10px;">${item.detalhes}</div>
                 `;
@@ -317,7 +318,6 @@
         .catch(e => { alert("ERRO NA BUSCA."); btn.disabled = false; });
     }
 
-    // Utilitário para converter arquivo em Base64
     const toBase64 = file => new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);

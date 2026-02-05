@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SISTEMA DE INTELIGÊNCIA // V13</title>
+    <title>SISTEMA DE INTELIGÊNCIA // V14 GLOBAL</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <style>
         :root {
@@ -19,59 +21,66 @@
         header { border-bottom: 2px solid var(--primary); padding-bottom: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end; }
         h1 { margin: 0; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 1px; font-size: 1.5rem; }
         
+        /* Dashboard */
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
         .stat-card { background: var(--bg-card); padding: 15px; border-radius: 6px; border: 1px solid var(--border); text-align: center; }
         .stat-num { font-size: 2rem; font-weight: 700; color: #fff; display: block; }
-        .stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-        .filter-box { background: #16191d; padding: 15px; border-radius: 6px; border: 1px solid var(--border); margin-bottom: 20px; }
-
-        label { display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; font-weight: 500; }
+        .stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
+        
+        /* Formulários e Inputs */
         input, textarea, select { width: 100%; box-sizing: border-box; background: var(--bg-input); border: 1px solid var(--border); color: #fff; padding: 10px; margin-bottom: 12px; border-radius: 4px; transition: 0.3s; font-family: 'Roboto', sans-serif; }
         input:focus, textarea:focus, select:focus { border-color: var(--primary); outline: none; background: #2f3642; }
-        input:disabled { background: #1a1a1a; color: #777; border: 1px dotted #444; }
+        label { display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; font-weight: 500; }
         .row { display: flex; gap: 15px; } .col { flex: 1; }
 
-        button { background: var(--primary); color: #fff; border: none; padding: 12px 20px; border-radius: 4px; font-weight: 600; cursor: pointer; text-transform: uppercase; transition: 0.2s; width: 100%; }
+        /* Mobile Responsividade */
+        @media (max-width: 768px) {
+            .row { flex-direction: column; gap: 0; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .dossier-header { flex-direction: column; text-align: center; }
+            .dossier-photo { margin: 0 auto 15px auto; }
+            .dossier-paper { width: 95%; padding: 20px; }
+        }
+
+        /* Botões */
+        button { background: var(--primary); color: #fff; border: none; padding: 12px 20px; border-radius: 4px; font-weight: 600; cursor: pointer; text-transform: uppercase; transition: 0.2s; width: 100%; margin-bottom: 5px; }
         button:hover { background: #1e54b3; }
-        .btn-cancel { background: transparent; border: 1px solid var(--text-muted); color: var(--text-muted); margin-top: 10px; }
         .btn-sm { padding: 6px 12px; font-size: 0.75rem; width: auto; display: inline-block; border-radius: 3px; cursor: pointer; border: none; color: #fff; }
-        
-        .tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
-        .tab { padding: 12px 25px; cursor: pointer; color: var(--text-muted); font-weight: 500; border-bottom: 3px solid transparent; transition: 0.3s; }
+        .btn-record { background: #cc0000; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .btn-record.recording { animation: pulse 1.5s infinite; background: #ff0000; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+        /* Tabs */
+        .tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 20px; overflow-x: auto; }
+        .tab { padding: 12px 25px; cursor: pointer; color: var(--text-muted); font-weight: 500; border-bottom: 3px solid transparent; white-space: nowrap; }
         .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
 
-        .photo-area { display: flex; gap: 15px; background: var(--bg-card); padding: 15px; border-radius: 6px; border: 1px solid var(--border); margin-bottom: 15px; }
-        .preview-box { width: 100px; height: 130px; background: #000; border-radius: 4px; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; color: #555; border: 1px solid #444; }
-
-        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 20px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid #555; transition: 0.2s; }
-        .card:hover { background: #222; }
+        /* Cards */
+        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 20px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid #555; }
         .card-status-ativo { border-left-color: var(--success); } .card-status-preso { border-left-color: var(--danger); }
-        .card-status-vigilancia { border-left-color: var(--warning); } .card-status-foragido { border-left-color: #ff0000; }
+        .card-status-vigilancia { border-left-color: var(--warning); } 
 
-        /* MODAL */
-        #modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 2000; display: none; justify-content: center; align-items: center; overflow-y: auto; }
-        .dossier-paper { 
-            background: #1a1a1a; width: 800px; max-height: 90vh; overflow-y: auto; 
-            padding: 40px; box-shadow: 0 0 30px rgba(0,0,0,0.8); border: 1px solid #333; position: relative;
-        }
-        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 24px; color: #fff; cursor: pointer; }
+        /* MODAL DOSSIE */
+        #modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; display: none; justify-content: center; align-items: center; overflow-y: auto; }
+        .dossier-paper { background: #1a1a1a; width: 850px; max-height: 95vh; overflow-y: auto; padding: 40px; border: 1px solid #333; position: relative; box-shadow: 0 0 50px #000; }
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 24px; color: #fff; cursor: pointer; z-index: 10; }
         
         .dossier-header { display: flex; border-bottom: 2px solid var(--text-muted); padding-bottom: 20px; margin-bottom: 20px; }
         .dossier-photo { width: 120px; height: 160px; background: #000; margin-right: 25px; object-fit: cover; border: 1px solid #555; }
-        .dossier-title { font-size: 2rem; font-weight: bold; color: #fff; margin: 0; }
-        .dossier-subtitle { color: var(--primary); font-size: 1rem; text-transform: uppercase; letter-spacing: 2px; }
-        
         .dossier-section { margin-bottom: 20px; border-bottom: 1px dashed #333; padding-bottom: 15px; }
         .dossier-label { color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase; display: block; margin-bottom: 3px; }
         .dossier-value { color: #fff; font-size: 1rem; display: block; margin-bottom: 10px; font-weight: 400; }
         .dossier-text { white-space: pre-wrap; line-height: 1.5; color: #ddd; background: #111; padding: 15px; border-radius: 4px; border: 1px solid #333; }
         
+        /* Elementos Especiais */
+        #map-container { height: 200px; width: 100%; background: #000; margin-top: 10px; border: 1px solid #333; z-index: 1; }
+        .audio-player { width: 100%; margin-top: 5px; height: 30px; }
         .tag-badge { background: #333; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; margin-right: 5px; color: #ccc; }
+        .associate-link { color: var(--accent); text-decoration: underline; cursor: pointer; margin-right: 10px; }
 
-        #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f0f0f; z-index: 999; display: flex; justify-content: center; align-items: center; }
-        .login-box { background: var(--bg-card); padding: 40px; border-radius: 8px; width: 320px; text-align: center; border-top: 4px solid var(--primary); }
         .hidden { display: none !important; }
-        @media print { .no-print { display: none !important; } }
+        .login-box { background: var(--bg-card); padding: 40px; border-radius: 8px; width: 320px; text-align: center; border-top: 4px solid var(--primary); position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 3000; }
+        @media print { .no-print { display: none !important; } #map-container { display: none; } }
     </style>
 </head>
 <body>
@@ -81,23 +90,20 @@
         <span class="close-modal no-print" onclick="fecharModal()">&times;</span>
         
         <div class="dossier-header">
-            <img id="view-foto" src="" class="dossier-photo" style="display:none">
+            <img id="view-foto" src="" class="dossier-photo" style="display:none" crossorigin="anonymous">
             <div id="view-no-foto" class="dossier-photo" style="display:flex; align-items:center; justify-content:center; color:#555; font-size:0.7rem;">SEM FOTO</div>
-            
-            <div id="view-loading-foto" class="dossier-photo" style="display:none; align-items:center; justify-content:center; color:var(--primary); font-size:0.7rem; border-color:var(--primary);">
-                BAIXANDO...
-            </div>
+            <div id="view-loading-foto" class="dossier-photo" style="display:none; align-items:center; justify-content:center; color:var(--primary); font-size:0.7rem; border-color:var(--primary);">BAIXANDO...</div>
 
             <div style="flex:1">
                 <div style="display:flex; justify-content:space-between;">
-                    <h1 class="dossier-title" id="view-nome">NOME</h1>
+                    <h1 style="margin:0; font-size:2rem; color:#fff;" id="view-nome">NOME</h1>
                     <div id="view-nivel" style="font-size:1.5rem"></div>
                 </div>
-                <div class="dossier-subtitle" id="view-vulgo">VULGO DESCONHECIDO</div>
-                <div style="margin-top:15px; display:flex; gap:20px;">
-                    <div><span class="dossier-label">STATUS</span><span class="dossier-value" id="view-status" style="color:var(--primary); font-weight:bold">ATIVO</span></div>
-                    <div><span class="dossier-label">CPF</span><span class="dossier-value" id="view-cpf">000</span></div>
-                    <div><span class="dossier-label">IDADE</span><span class="dossier-value" id="view-idade">00 ANOS</span></div>
+                <div style="color:var(--primary); font-size:1rem; letter-spacing:2px; text-transform:uppercase;" id="view-vulgo">VULGO</div>
+                <div style="margin-top:15px; display:flex; gap:20px; flex-wrap: wrap;">
+                    <div><span class="dossier-label">STATUS</span><span class="dossier-value" id="view-status" style="color:var(--primary); font-weight:bold">-</span></div>
+                    <div><span class="dossier-label">CPF</span><span class="dossier-value" id="view-cpf">-</span></div>
+                    <div><span class="dossier-label">IDADE</span><span class="dossier-value" id="view-idade">-</span></div>
                 </div>
             </div>
         </div>
@@ -108,38 +114,36 @@
                 <div class="col"><span class="dossier-label">PROFISSÃO</span><span class="dossier-value" id="view-profissao">-</span></div>
             </div>
             <div style="margin-top:10px;">
-                <span class="dossier-label">CARACTERÍSTICAS FÍSICAS</span>
-                <span class="dossier-value" id="view-fisico">-</span>
+                <span class="dossier-label">ASSOCIADOS / VÍNCULOS (CPFs)</span>
+                <div id="view-associados" class="dossier-value">-</div>
             </div>
         </div>
 
         <div class="dossier-section">
-            <span class="dossier-label">ENDEREÇO</span>
+            <span class="dossier-label">LOCALIZAÇÃO</span>
             <span class="dossier-value" id="view-endereco">-</span>
+            <div id="map-container" class="no-print"></div>
+
             <div class="row" style="margin-top:10px;">
                 <div class="col"><span class="dossier-label">TELEFONE</span><span class="dossier-value" id="view-telefone">-</span></div>
                 <div class="col"><span class="dossier-label">EMAIL</span><span class="dossier-value" id="view-email">-</span></div>
             </div>
-            <div style="margin-top:10px;">
-                <span class="dossier-label">REDES SOCIAIS</span>
-                <span class="dossier-value" id="view-redes">-</span>
-            </div>
         </div>
 
         <div class="dossier-section">
-            <span class="dossier-label">TAGS</span>
-            <div id="view-tags" style="margin-bottom:15px;"></div>
-            <span class="dossier-label">HISTÓRICO</span>
+            <span class="dossier-label">ANOTAÇÕES DE ÁUDIO (VOICE NOTE)</span>
+            <div id="view-audio-container">Nenhuma gravação.</div>
+
+            <span class="dossier-label" style="margin-top:15px;">HISTÓRICO</span>
             <div class="dossier-text" id="view-detalhes">...</div>
+            <div id="view-tags" style="margin-top:10px;"></div>
         </div>
 
         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px;" class="no-print">
-            <div style="font-size:0.7rem; color:#666;">
-                ATUALIZADO EM: <span id="view-update"></span>
-            </div>
+            <div style="font-size:0.7rem; color:#666;">ATUALIZADO: <span id="view-update"></span></div>
             <div>
-                <a id="view-evidencia-btn" href="#" target="_blank" class="btn-sm" style="background:#333; text-decoration:none; display:none; margin-right:10px;">ABRIR EVIDÊNCIA</a>
-                <button onclick="imprimirFicha()" class="btn-sm" style="background:#fff; color:#000;">🖨️ IMPRIMIR PDF</button>
+                <a id="view-evidencia-btn" href="#" target="_blank" class="btn-sm" style="background:#333; text-decoration:none; display:none; margin-right:10px;">EVIDÊNCIA</a>
+                <button onclick="imprimirFicha()" class="btn-sm" style="background:#fff; color:#000;">🖨️ PDF</button>
             </div>
         </div>
     </div>
@@ -147,24 +151,24 @@
 
 <div id="login-screen">
     <div class="login-box">
-        <h2 style="color:#fff; margin-bottom:20px;">SISTEMA CENTRAL</h2>
+        <h2 style="color:#fff; margin-bottom:20px;">SYSTEM V14</h2>
         <input type="text" id="loginUser" placeholder="ID AGENTE">
         <input type="password" id="loginPass" placeholder="SENHA">
-        <button onclick="fazerLogin()">AUTENTICAR</button>
+        <button onclick="fazerLogin()">ACESSAR</button>
         <p id="loginError" style="color:var(--danger); display:none; margin-top:15px; font-size:0.8rem;">NEGADO</p>
     </div>
 </div>
 
 <div id="app-system" class="container hidden">
     <header>
-        <div><h1>COMMAND CENTER</h1><span style="font-size:0.8rem; color:var(--primary);">BASE DE DADOS V13</span></div>
-        <div class="meta-info">AGENTE: <strong id="displayUser" style="color:#fff">...</strong><br>STATUS: ONLINE</div>
+        <div><h1>INTELLIGENCE</h1><span style="font-size:0.8rem; color:var(--primary);">GLOBAL SURVEILLANCE</span></div>
+        <div class="meta-info">AGENTE: <strong id="displayUser" style="color:#fff">...</strong><br>ONLINE</div>
     </header>
 
     <div class="tabs">
-        <div class="tab active" onclick="mudarAba('dashboard')">VISÃO GERAL</div>
-        <div class="tab" onclick="mudarAba('cadastro')">NOVA FICHA</div>
-        <div class="tab" onclick="mudarAba('busca')">BUSCA TEXTUAL</div>
+        <div class="tab active" onclick="mudarAba('dashboard')">DASHBOARD</div>
+        <div class="tab" onclick="mudarAba('cadastro')">NOVO ALVO</div>
+        <div class="tab" onclick="mudarAba('busca')">BUSCA</div>
     </div>
 
     <div id="dashboard">
@@ -174,28 +178,41 @@
             <div class="stat-card" style="border-color:var(--danger)"><span class="stat-num" id="stat-danger" style="color:var(--danger)">0</span><span class="stat-label">ALTO RISCO</span></div>
             <div class="stat-card" style="border-color:var(--warning)"><span class="stat-num" id="stat-presos" style="color:var(--warning)">0</span><span class="stat-label">PRESOS</span></div>
         </div>
-        <div class="filter-box">
-            <span style="color:var(--primary); font-weight:bold; display:block; margin-bottom:10px;">FILTRAGEM RÁPIDA</span>
-            <div class="row">
-                <div class="col"><select id="filtroStatus"><option value="">TODOS STATUS</option><option value="ATIVO">ATIVO</option><option value="PRESO">PRESO</option><option value="FORAGIDO">FORAGIDO</option></select></div>
-                <div class="col"><input type="text" id="filtroRegiao" placeholder="Região / Endereço..."></div>
-                <div class="col" style="flex:0.5"><button onclick="aplicarFiltros()" style="background:#444">FILTRAR</button></div>
-            </div>
-        </div>
         <div id="dashboard-results"></div>
     </div>
 
     <div id="cadastro" class="hidden">
-        <div id="edit-bar" style="background: #2a3b4d; padding: 10px; margin-bottom: 20px; display:none; border-left: 4px solid var(--warning);"><strong style="color:var(--warning)">MODO DE EDIÇÃO</strong></div>
-        <div class="row"><div class="col"><label>Status</label><select id="status"><option value="ATIVO">ATIVO</option><option value="VIGILANCIA">VIGILÂNCIA</option><option value="PRESO">PRESO</option><option value="FORAGIDO">FORAGIDO</option><option value="ARQUIVADO">ARQUIVADO</option><option value="OBITO">ÓBITO</option></select></div><div class="col"><label>Nível Risco</label><select id="nivel"><option value="0">0 - NULO</option><option value="1">1 - BAIXO</option><option value="2">2 - MODERADO</option><option value="3">3 - ATENÇÃO</option><option value="4">4 - ALTO</option><option value="5">5 - EXTREMO</option></select></div></div>
+        <div id="edit-bar" style="background: #2a3b4d; padding: 10px; margin-bottom: 20px; display:none; border-left: 4px solid var(--warning);"><strong style="color:var(--warning)">EDICAO</strong></div>
+        
+        <div class="row">
+            <div class="col"><label>Status</label><select id="status"><option value="ATIVO">ATIVO</option><option value="VIGILANCIA">VIGILÂNCIA</option><option value="PRESO">PRESO</option><option value="FORAGIDO">FORAGIDO</option><option value="ARQUIVADO">ARQUIVADO</option><option value="OBITO">ÓBITO</option></select></div>
+            <div class="col"><label>Nível</label><select id="nivel"><option value="0">0 - NULO</option><option value="1">1 - BAIXO</option><option value="2">2 - MODERADO</option><option value="3">3 - ATENÇÃO</option><option value="4">4 - ALTO</option><option value="5">5 - EXTREMO</option></select></div>
+        </div>
+
         <div class="photo-area"><div id="previewBox" class="preview-box">FOTO</div><div style="flex:1"><label>Foto (3x4)</label><input type="file" id="fotoPerfil" accept="image/*" onchange="previewImagem(this)" style="border:none; padding:0;"></div></div>
-        <div class="row"><div class="col" style="flex:2"><label>Nome Completo</label><input type="text" id="nome"></div><div class="col"><label>Vulgo / Apelido</label><input type="text" id="vulgo"></div></div>
-        <div class="row"><div class="col"><label>CPF</label><input type="number" id="cpf"></div><div class="col"><label>Data Nascimento</label><input type="date" id="nascimento" onchange="calcularIdade()"></div><div class="col" style="flex:0.5"><label>Idade</label><input type="number" id="idade" readonly style="background:#222;"></div></div>
-        <div class="row"><div class="col"><label>Grupo / Facção</label><input type="text" id="afiliacao"></div><div class="col"><label>Profissão</label><input type="text" id="profissao"></div></div>
-        <label>Marcas Físicas</label><input type="text" id="fisico"><label>Endereço Completo</label><input type="text" id="endereco">
-        <div class="row"><div class="col"><label>Telefone</label><input type="text" id="telefone"></div><div class="col"><label>Email</label><input type="email" id="email"></div></div>
-        <label>Tags</label><input type="text" id="tags"><label>Redes Sociais</label><input type="text" id="redes"><label>Histórico</label><textarea id="detalhes" rows="6"></textarea><label>Evidência</label><input type="file" id="arquivoEvidencia">
-        <button onclick="enviarDados()" id="btnEnviar">SALVAR FICHA</button>
+
+        <div class="row"><div class="col" style="flex:2"><label>Nome</label><input type="text" id="nome"></div><div class="col"><label>Vulgo</label><input type="text" id="vulgo"></div></div>
+        <div class="row"><div class="col"><label>CPF</label><input type="number" id="cpf"></div><div class="col"><label>Nasc</label><input type="date" id="nascimento" onchange="calcularIdade()"></div><div class="col" style="flex:0.5"><label>Idade</label><input type="number" id="idade" readonly style="background:#222;"></div></div>
+        
+        <div class="row"><div class="col"><label>Grupo</label><input type="text" id="afiliacao"></div><div class="col"><label>Profissão</label><input type="text" id="profissao"></div></div>
+        
+        <label>Associados (CPFs separados por vírgula)</label><input type="text" id="associados" placeholder="Ex: 12345678900, 98765432100">
+
+        <label>Endereço</label><input type="text" id="endereco">
+        <div class="row"><div class="col"><label>Tel</label><input type="text" id="telefone"></div><div class="col"><label>Email</label><input type="email" id="email"></div></div>
+        
+        <label>Gravação de Campo (Voice Note)</label>
+        <div style="display:flex; gap:10px; align-items:center; margin-bottom:12px;">
+            <button id="btnRecord" class="btn-record" onclick="toggleGravacao()" style="width:auto;">🎙️ GRAVAR</button>
+            <span id="recordStatus" style="font-size:0.8rem; color:#666;">Pronto</span>
+            <audio id="audioPreview" controls style="display:none; height:30px;"></audio>
+        </div>
+
+        <label>Histórico</label><textarea id="detalhes" rows="6"></textarea>
+        <label>Evidência</label><input type="file" id="arquivoEvidencia">
+        <label>Tags</label><input type="text" id="tags">
+
+        <button onclick="enviarDados()" id="btnEnviar">SALVAR</button>
         <button onclick="cancelarEdicao()" id="btnCancelar" class="btn-cancel hidden">CANCELAR</button>
     </div>
 
@@ -203,30 +220,29 @@
         <div class="row"><input type="text" id="termoBusca" placeholder="Pesquisar..." style="margin-bottom:0"><button onclick="buscarDados()" id="btnBuscar" style="width:auto; margin-left:10px;">BUSCAR</button></div>
         <div id="resultados" style="margin-top:20px;"></div>
     </div>
-    <p id="loading" style="text-align: center; display: none; color: var(--primary); font-weight:bold; margin-top:20px;">SINCRONIZANDO...</p>
+    <p id="loading" style="text-align: center; display: none; color: var(--primary); font-weight:bold; margin-top:20px;">PROCESSANDO...</p>
 </div>
 
 <script>
-    // --- SUA URL AQUI ---
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyVgkv76_NApSCN3_3Uf6B0hGdehSml6ZW109I6WYqF0OWyar8lQbaRf2_IklccdCNR8w/exec";
-    
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyVgkv76_NApSCN3_3Uf6B0hGdehSml6ZW109I6WYqF0OWyar8lQbaRf2_IklccdCNR8w/exec"; // ATUALIZE SE NECESSÁRIO
     const VALID_USER = "mazur";
-    let sessionPass = ""; 
-    let modoEdicao = false; 
-    let dadosCache = []; 
-    let urlFotoAntiga = "", urlEvidenciaAntiga = "";
+    
+    let sessionPass = ""; let modoEdicao = false; let dadosCache = []; 
+    let urlFotoAntiga = "", urlEvidenciaAntiga = "", urlAudioAntiga = "";
+    
+    // VARIÁVEIS DE ÁUDIO
+    let mediaRecorder; let audioChunks = []; let audioBlob = null; let audioBase64 = null;
 
     function fazerLogin() {
         const user = document.getElementById('loginUser').value.trim();
         const pass = document.getElementById('loginPass').value.trim();
         const btn = document.querySelector('.login-box button');
 
-        if (user.toLowerCase() !== VALID_USER) return alert("ID inválido.");
-        btn.innerText = "CARREGANDO..."; btn.disabled = true;
+        if (user.toLowerCase() !== VALID_USER) return alert("ID Desconhecido");
+        btn.innerText = "..."; btn.disabled = true;
 
-        fetch(SCRIPT_URL, {
-            method: 'POST', body: JSON.stringify({ acao: "busca", termo: "*", senhaacesso: pass })
-        }).then(res => res.json()).then(data => {
+        fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ acao: "busca", termo: "*", senhaacesso: pass, agente: user }) })
+        .then(res => res.json()).then(data => {
             if(data[0] && data[0].erro) {
                 document.getElementById('loginError').style.display = 'block'; btn.innerText = "AUTENTICAR"; btn.disabled = false;
             } else {
@@ -238,132 +254,160 @@
         }).catch(e => { alert("Erro de Conexão."); btn.disabled = false; });
     }
 
-    // --- FUNÇÃO DE ABRIR FICHA COM PROXY DE IMAGEM ---
-    function abrirFicha(index) {
-        const item = dadosCache[index];
-        const setTxt = (id, val) => document.getElementById(id).innerText = val || "-";
+    // --- SISTEMA DE GRAVAÇÃO ---
+    function toggleGravacao() {
+        const btn = document.getElementById('btnRecord');
+        const status = document.getElementById('recordStatus');
         
-        setTxt('view-nome', item.nome);
-        setTxt('view-vulgo', item.vulgo ? `VULGO: ${item.vulgo}` : "SEM VULGO");
-        setTxt('view-cpf', item.cpf);
-        setTxt('view-idade', item.idade + " ANOS");
-        setTxt('view-status', item.status);
-        setTxt('view-afiliacao', item.afiliacao);
-        setTxt('view-profissao', item.profissao);
-        setTxt('view-fisico', item.fisico);
-        setTxt('view-endereco', item.endereco);
-        setTxt('view-telefone', item.telefone);
-        setTxt('view-email', item.email);
-        setTxt('view-redes', item.redes);
+        if (btn.classList.contains('recording')) {
+            // Parar
+            mediaRecorder.stop();
+            btn.classList.remove('recording');
+            btn.innerText = "🎙️ GRAVAR";
+            status.innerText = "Processando...";
+        } else {
+            // Iniciar
+            navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.start();
+                audioChunks = [];
+                
+                mediaRecorder.addEventListener("dataavailable", event => { audioChunks.push(event.data); });
+                
+                mediaRecorder.addEventListener("stop", () => {
+                    audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    const player = document.getElementById('audioPreview');
+                    player.src = audioUrl; player.style.display = 'block';
+                    status.innerText = "Áudio Gravado (Pronto para envio)";
+                    
+                    // Converter para B64
+                    const reader = new FileReader();
+                    reader.readAsDataURL(audioBlob);
+                    reader.onloadend = () => { audioBase64 = reader.result.split(',')[1]; };
+                });
+
+                btn.classList.add('recording');
+                btn.innerText = "⏹ PARAR";
+                status.innerText = "Gravando...";
+            });
+        }
+    }
+
+    // --- MAPA LEAFLET ---
+    let map = null;
+    function carregarMapa(endereco) {
+        const container = document.getElementById('map-container');
+        if (map) { map.remove(); map = null; } // Limpa mapa anterior
+        container.innerHTML = ""; // Limpa div
+
+        if (!endereco) { container.innerHTML = "<p style='color:#666; text-align:center; padding-top:80px;'>Sem endereço para mapa.</p>"; return; }
+
+        // Usa Nominatim para Geocoding (Gratuito)
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(endereco)}`)
+        .then(r => r.json())
+        .then(data => {
+            if (data && data.length > 0) {
+                const lat = data[0].lat;
+                const lon = data[0].lon;
+                
+                map = L.map('map-container').setView([lat, lon], 15);
+                L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                    attribution: '©OpenStreetMap, ©CartoDB'
+                }).addTo(map);
+                L.marker([lat, lon]).addTo(map)
+                    .bindPopup(endereco)
+                    .openPopup();
+            } else {
+                container.innerHTML = "<p style='color:#666; text-align:center; padding-top:80px;'>Localização não encontrada no mapa.</p>";
+            }
+        });
+    }
+
+    // --- VISUALIZADOR DE FICHA ---
+    function abrirFicha(cpf) {
+        // Log de Auditoria
+        fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ acao: "log_view", agente: document.getElementById('loginUser').value, alvo: cpf, senhaacesso: sessionPass }) });
+
+        const item = dadosCache.find(i => i.cpf == cpf);
+        if(!item) return;
+
+        const setTxt = (id, val) => document.getElementById(id).innerText = val || "-";
+        setTxt('view-nome', item.nome); setTxt('view-vulgo', item.vulgo || "N/A");
+        setTxt('view-cpf', item.cpf); setTxt('view-idade', item.idade + " ANOS");
+        setTxt('view-status', item.status); setTxt('view-afiliacao', item.afiliacao);
+        setTxt('view-profissao', item.profissao); setTxt('view-fisico', item.fisico);
+        setTxt('view-endereco', item.endereco); setTxt('view-telefone', item.telefone);
+        setTxt('view-email', item.email); setTxt('view-redes', item.redes);
         setTxt('view-detalhes', item.detalhes);
         
+        // Associados
+        const assocDiv = document.getElementById('view-associados');
+        assocDiv.innerHTML = "";
+        if(item.associados) {
+            item.associados.split(',').forEach(a => {
+                let cleanCpf = a.trim();
+                let span = document.createElement('span');
+                span.className = 'associate-link';
+                span.innerText = `🔗 ${cleanCpf}`;
+                span.onclick = () => abrirFicha(cleanCpf); // Recursivo
+                assocDiv.appendChild(span);
+            });
+        } else assocDiv.innerText = "-";
+
         document.getElementById('view-nivel').innerText = item.nivel > 0 ? "💀".repeat(parseInt(item.nivel)) : "🛡️";
-        document.getElementById('view-tags').innerHTML = item.tags ? item.tags.split(',').map(t => `<span class="tag-badge">${t.trim()}</span>`).join('') : "-";
+        
+        // Audio
+        const audioDiv = document.getElementById('view-audio-container');
+        audioDiv.innerHTML = "";
+        if(item.audio) {
+            let player = document.createElement('audio');
+            player.src = item.audio; player.controls = true; player.className = 'audio-player';
+            audioDiv.appendChild(player);
+        } else audioDiv.innerText = "Nenhum áudio.";
+
+        // Foto Proxy
+        tratarFoto(item.foto);
+
+        // Mapa
+        carregarMapa(item.endereco);
+
         document.getElementById('view-update').innerText = item.dataUpdate ? new Date(item.dataUpdate).toLocaleString() : "-";
         
-        // TRATAMENTO DA FOTO (VIA PROXY APPS SCRIPT)
-        const imgEl = document.getElementById('view-foto');
-        const noFoto = document.getElementById('view-no-foto');
-        const loadingFoto = document.getElementById('view-loading-foto');
-
-        imgEl.style.display = 'none';
-        noFoto.style.display = 'none';
-        loadingFoto.style.display = 'none';
-
-        if(item.foto && item.foto !== "Sem anexo") {
-            // Extrai ID do arquivo Google Drive
-            let fileId = "";
-            try {
-                if (item.foto.includes("/file/d/")) fileId = item.foto.split("/file/d/")[1].split("/")[0];
-                else if (item.foto.includes("id=")) fileId = item.foto.split("id=")[1].split("&")[0];
-            } catch(e){}
-
-            if(fileId) {
-                loadingFoto.style.display = 'flex'; // Mostra "Baixando..."
-                
-                // Chama o Apps Script para pegar a imagem Base64
-                fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ acao: "getFoto", id: fileId, senhaacesso: sessionPass })
-                })
-                .then(r => r.json())
-                .then(d => {
-                    loadingFoto.style.display = 'none';
-                    if(d.status === "sucesso") {
-                        imgEl.src = d.base64; // Coloca o Base64 direto (sem link externo)
-                        imgEl.style.display = 'block';
-                    } else {
-                        noFoto.innerText = "ERRO NA FOTO";
-                        noFoto.style.display = 'flex';
-                    }
-                })
-                .catch(() => {
-                    loadingFoto.style.display = 'none';
-                    noFoto.innerText = "FALHA CONEXÃO";
-                    noFoto.style.display = 'flex';
-                });
-            } else {
-                noFoto.style.display = 'flex';
-            }
-        } else {
-            noFoto.style.display = 'flex';
-        }
-
         const btnEv = document.getElementById('view-evidencia-btn');
-        if(item.evidencia && item.evidencia !== "Sem anexo") {
-            btnEv.href = item.evidencia; btnEv.style.display = 'inline-block';
-        } else { btnEv.style.display = 'none'; }
+        if(item.evidencia && item.evidencia !== "Sem anexo") { btnEv.href = item.evidencia; btnEv.style.display = 'inline-block'; } 
+        else { btnEv.style.display = 'none'; }
 
         document.getElementById('modal-overlay').style.display = 'flex';
     }
 
-    function fecharModal() { document.getElementById('modal-overlay').style.display = 'none'; }
+    function tratarFoto(url) {
+        const imgEl = document.getElementById('view-foto');
+        const noFoto = document.getElementById('view-no-foto');
+        const loading = document.getElementById('view-loading-foto');
+        imgEl.style.display = 'none'; noFoto.style.display = 'none'; loading.style.display = 'none';
 
-    function imprimirFicha() {
-        const element = document.getElementById('ficha-impressao');
-        document.querySelector('.close-modal').style.display = 'none';
-        document.querySelectorAll('.no-print').forEach(e => e.style.display = 'none');
-
-        const opt = { 
-            margin: 5, filename: 'Dossie.pdf', 
-            image: { type: 'jpeg', quality: 0.98 }, 
-            html2canvas: { scale: 2, backgroundColor: "#1a1a1a" }, 
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } 
-        };
-        
-        html2pdf().set(opt).from(element).save().then(() => {
-            document.querySelector('.close-modal').style.display = 'block';
-            document.querySelectorAll('.no-print').forEach(e => e.style.display = 'flex');
-        });
-    }
-
-    function atualizarDashboard() {
-        document.getElementById('stat-total').innerText = dadosCache.length;
-        document.getElementById('stat-ativos').innerText = dadosCache.filter(i => i.status === "ATIVO").length;
-        document.getElementById('stat-presos').innerText = dadosCache.filter(i => i.status === "PRESO").length;
-        document.getElementById('stat-danger').innerText = dadosCache.filter(i => parseInt(i.nivel) >= 4).length;
-        renderizarCards(dadosCache.slice(-10).reverse(), 'dashboard-results');
-    }
-
-    function aplicarFiltros() {
-        const st = document.getElementById('filtroStatus').value;
-        const reg = document.getElementById('filtroRegiao').value.toLowerCase();
-        let filtrados = dadosCache.filter(item => {
-            let pass = true;
-            if (st && item.status !== st) pass = false;
-            if (reg && (!item.endereco || !item.endereco.toLowerCase().includes(reg))) pass = false;
-            return pass;
-        });
-        renderizarCards(filtrados, 'dashboard-results');
+        if(url && url !== "Sem anexo") {
+            let fileId = "";
+            try { if (url.includes("/file/d/")) fileId = url.split("/file/d/")[1].split("/")[0]; else if (url.includes("id=")) fileId = url.split("id=")[1].split("&")[0]; } catch(e){}
+            
+            if(fileId) {
+                loading.style.display = 'flex';
+                fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ acao: "getFoto", id: fileId, senhaacesso: sessionPass }) })
+                .then(r => r.json()).then(d => {
+                    loading.style.display = 'none';
+                    if(d.status === "sucesso") { imgEl.src = d.base64; imgEl.style.display = 'block'; } else { noFoto.style.display = 'flex'; }
+                }).catch(() => { loading.style.display = 'none'; noFoto.style.display = 'flex'; });
+            } else noFoto.style.display = 'flex';
+        } else noFoto.style.display = 'flex';
     }
 
     function renderizarCards(lista, divId) {
         const container = document.getElementById(divId);
         container.innerHTML = "";
-        if(lista.length === 0) { container.innerHTML = "<p align='center'>Sem resultados.</p>"; return; }
+        if(lista.length === 0) { container.innerHTML = "<p align='center'>Vazio.</p>"; return; }
         
         lista.forEach((item) => {
-            let realIndex = dadosCache.findIndex(x => x.cpf === item.cpf);
             let nivelIcon = item.nivel > 0 ? "💀".repeat(parseInt(item.nivel)) : "🛡️";
             let statusClass = "card-status-" + (item.status || "ativo").toLowerCase();
             
@@ -371,56 +415,28 @@
                 <div class="card ${statusClass}">
                     <div style="display:flex; align-items:center; gap:15px; flex:1">
                         <div style="font-size:1.5rem;">${nivelIcon}</div>
-                        <div>
-                            <div style="font-weight:bold; font-size:1.1rem; color:#fff">${item.nome}</div>
-                            <div style="font-size:0.8rem; color:#888">${item.cpf} • ${item.status}</div>
-                        </div>
+                        <div><div style="font-weight:bold; font-size:1.1rem; color:#fff">${item.nome}</div><div style="font-size:0.8rem; color:#888">${item.cpf}</div></div>
                     </div>
                     <div>
-                        <button onclick="abrirFicha(${realIndex})" class="btn-sm" style="background:var(--primary);">👁️ ABRIR DOSSIÊ</button>
-                        <button onclick="prepararEdicao(${realIndex})" class="btn-sm" style="background:#333; margin-left:5px;">✏️</button>
+                        <button onclick="abrirFicha('${item.cpf}')" class="btn-sm" style="background:var(--primary);">👁️</button>
+                        <button onclick="prepararEdicao('${item.cpf}')" class="btn-sm" style="background:#333; margin-left:5px;">✏️</button>
                     </div>
                 </div>`;
             container.innerHTML += html;
         });
     }
 
-    function mudarAba(aba) {
-        document.getElementById('dashboard').classList.add('hidden');
-        document.getElementById('cadastro').classList.add('hidden');
-        document.getElementById('busca').classList.add('hidden');
-        document.getElementById(aba).classList.remove('hidden');
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        event.target.classList.add('active');
-        if(aba==='cadastro' && !modoEdicao) document.getElementById('resultados').innerHTML = "";
+    function fecharModal() { document.getElementById('modal-overlay').style.display = 'none'; if(map) { map.remove(); map=null; } }
+    
+    function imprimirFicha() {
+        const element = document.getElementById('ficha-impressao');
+        document.querySelector('.close-modal').style.display = 'none'; document.querySelectorAll('.no-print').forEach(e => e.style.display = 'none');
+        const opt = { margin: 5, filename: 'Dossie.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, backgroundColor: "#1a1a1a", useCORS:true }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
+        html2pdf().set(opt).from(element).save().then(() => { document.querySelector('.close-modal').style.display = 'block'; document.querySelectorAll('.no-print').forEach(e => e.style.display = 'flex'); });
     }
 
-    function buscarDados() {
-        const termo = document.getElementById('termoBusca').value.toLowerCase();
-        const filtrados = dadosCache.filter(item => (item.nome + item.cpf + item.vulgo + item.tags).toLowerCase().includes(termo));
-        renderizarCards(filtrados, 'resultados');
-    }
-
-    function calcularIdade() {
-        const nascInput = document.getElementById('nascimento').value;
-        if(!nascInput) return;
-        const nasc = new Date(nascInput);
-        const hoje = new Date();
-        let idade = hoje.getFullYear() - nasc.getFullYear();
-        if (hoje.getMonth() < nasc.getMonth() || (hoje.getMonth() === nasc.getMonth() && hoje.getDate() < nasc.getDate())) idade--;
-        document.getElementById('idade').value = idade;
-    }
-
-    function previewImagem(input) {
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) { document.getElementById('previewBox').style.backgroundImage = `url(${e.target.result})`; document.getElementById('previewBox').innerText = ""; }
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    function prepararEdicao(index) {
-        const item = dadosCache[index];
+    function prepararEdicao(cpf) {
+        const item = dadosCache.find(i => i.cpf == cpf);
         modoEdicao = true;
         const setVal = (id, val) => document.getElementById(id).value = val || "";
         setVal('nome', item.nome); setVal('cpf', item.cpf); setVal('vulgo', item.vulgo);
@@ -430,39 +446,35 @@
         setVal('detalhes', item.detalhes); setVal('status', item.status);
         setVal('nivel', item.nivel); setVal('tags', item.tags);
         setVal('fisico', item.fisico); setVal('afiliacao', item.afiliacao);
+        setVal('associados', item.associados);
+        
         if(item.nascimento) document.getElementById('nascimento').value = new Date(item.nascimento).toISOString().split('T')[0];
-        document.getElementById('cpf').disabled = true;
-        document.getElementById('btnEnviar').innerText = "ATUALIZAR";
-        document.getElementById('edit-bar').style.display = 'block';
-        document.getElementById('btnCancelar').classList.remove('hidden');
-        urlFotoAntiga = item.foto; urlEvidenciaAntiga = item.evidencia;
-        if(item.foto) { document.getElementById('previewBox').style.backgroundImage = `url(${item.foto})`; document.getElementById('previewBox').innerText = ""; }
+        document.getElementById('cpf').disabled = true; document.getElementById('btnEnviar').innerText = "ATUALIZAR";
+        document.getElementById('edit-bar').style.display = 'block'; document.getElementById('btnCancelar').classList.remove('hidden');
+        urlFotoAntiga = item.foto; urlEvidenciaAntiga = item.evidencia; urlAudioAntiga = item.audio;
         mudarAba('cadastro');
     }
 
     function cancelarEdicao() {
-        modoEdicao = false;
-        document.getElementById('cpf').disabled = false;
-        document.getElementById('btnEnviar').innerText = "SALVAR FICHA";
-        document.getElementById('edit-bar').style.display = 'none';
+        modoEdicao = false; document.getElementById('cpf').disabled = false;
+        document.getElementById('btnEnviar').innerText = "SALVAR"; document.getElementById('edit-bar').style.display = 'none';
         document.getElementById('btnCancelar').classList.add('hidden');
         document.querySelectorAll('#cadastro input, #cadastro textarea').forEach(i => i.value = "");
-        document.getElementById('status').value = "ATIVO"; document.getElementById('nivel').value = "0";
-        document.getElementById('previewBox').style.backgroundImage = "none"; document.getElementById('previewBox').innerText = "FOTO";
+        document.getElementById('previewBox').style.backgroundImage = "none";
+        document.getElementById('audioPreview').style.display = 'none';
+        audioBase64 = null;
     }
 
     async function enviarDados() {
-        const nome = document.getElementById('nome').value;
-        const cpf = document.getElementById('cpf').value;
+        const nome = document.getElementById('nome').value; const cpf = document.getElementById('cpf').value;
         if(!nome || !cpf) return alert("Dados incompletos.");
-        document.getElementById('btnEnviar').disabled = true;
-        document.getElementById('loading').style.display = 'block';
+        document.getElementById('btnEnviar').disabled = true; document.getElementById('loading').style.display = 'block';
 
         const getB64 = async (id) => { const f = document.getElementById(id).files[0]; return f ? { b64: await toBase64(f), mime: f.type, nome: f.name } : { b64:"", mime:"", nome:"" }; }
         const foto = await getB64('fotoPerfil'); const ev = await getB64('arquivoEvidencia');
 
         const dados = { 
-            senhaacesso: sessionPass, acao: modoEdicao ? "editar" : "criar",
+            senhaacesso: sessionPass, acao: modoEdicao ? "editar" : "criar", agente: document.getElementById('displayUser').innerText,
             nome, cpf, status: document.getElementById('status').value, nivel: document.getElementById('nivel').value,
             tags: document.getElementById('tags').value, vulgo: document.getElementById('vulgo').value,
             profissao: document.getElementById('profissao').value, idade: document.getElementById('idade').value,
@@ -470,22 +482,37 @@
             afiliacao: document.getElementById('afiliacao').value, endereco: document.getElementById('endereco').value,
             email: document.getElementById('email').value, telefone: document.getElementById('telefone').value,
             redes: document.getElementById('redes').value, detalhes: document.getElementById('detalhes').value,
-            fotoBase64: foto.b64, fotoMime: foto.mime, fotoNome: foto.nome, arquivoBase64: ev.b64, arquivoMime: ev.mime, arquivoNome: ev.nome,
-            urlFotoExistente: urlFotoAntiga, urlEvidenciaExistente: urlEvidenciaAntiga
+            associados: document.getElementById('associados').value,
+            fotoBase64: foto.b64, fotoMime: foto.mime, fotoNome: foto.nome, 
+            arquivoBase64: ev.b64, arquivoMime: ev.mime, arquivoNome: ev.nome,
+            audioBase64: audioBase64, 
+            urlFotoExistente: urlFotoAntiga, urlEvidenciaExistente: urlEvidenciaAntiga, urlAudioExistente: urlAudioAntiga
         };
 
         fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(dados) })
         .then(res => res.json()).then(data => {
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('btnEnviar').disabled = false;
-            if(data.status === "sucesso") {
-                alert("Salvo!");
-                cancelarEdicao();
-                fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ acao: "busca", termo: "*", senhaacesso: sessionPass }) }).then(r=>r.json()).then(d=>{ dadosCache=d; atualizarDashboard(); });
-            } else { alert("Erro: " + data.msg); }
+            document.getElementById('loading').style.display = 'none'; document.getElementById('btnEnviar').disabled = false;
+            if(data.status === "sucesso") { alert("Salvo!"); cancelarEdicao(); fazerLogin(); } 
+            else { alert("Erro: " + data.msg); }
         }).catch(e => { alert("Falha conexão."); document.getElementById('btnEnviar').disabled = false; });
     }
 
+    function atualizarDashboard() {
+        document.getElementById('stat-total').innerText = dadosCache.length;
+        document.getElementById('stat-ativos').innerText = dadosCache.filter(i => i.status === "ATIVO").length;
+        document.getElementById('stat-presos').innerText = dadosCache.filter(i => i.status === "PRESO").length;
+        document.getElementById('stat-danger').innerText = dadosCache.filter(i => parseInt(i.nivel) >= 4).length;
+        renderizarCards(dadosCache.slice(-10).reverse(), 'dashboard-results');
+    }
+    
+    function buscarDados() {
+        const termo = document.getElementById('termoBusca').value.toLowerCase();
+        const filtrados = dadosCache.filter(item => (item.nome + item.cpf + item.vulgo + item.tags).toLowerCase().includes(termo));
+        renderizarCards(filtrados, 'resultados');
+    }
+    function mudarAba(aba) { document.getElementById('dashboard').classList.add('hidden'); document.getElementById('cadastro').classList.add('hidden'); document.getElementById('busca').classList.add('hidden'); document.getElementById(aba).classList.remove('hidden'); document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); event.target.classList.add('active'); }
+    function calcularIdade() { const nascInput = document.getElementById('nascimento').value; if(!nascInput) return; const nasc = new Date(nascInput); const hoje = new Date(); let idade = hoje.getFullYear() - nasc.getFullYear(); if (hoje.getMonth() < nasc.getMonth() || (hoje.getMonth() === nasc.getMonth() && hoje.getDate() < nasc.getDate())) idade--; document.getElementById('idade').value = idade; }
+    function previewImagem(input) { if (input.files && input.files[0]) { const reader = new FileReader(); reader.onload = function(e) { document.getElementById('previewBox').style.backgroundImage = `url(${e.target.result})`; document.getElementById('previewBox').innerText = ""; }; reader.readAsDataURL(input.files[0]); } }
     const toBase64 = file => new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = () => resolve(reader.result.split(',')[1]); reader.onerror = error => reject(error); });
 </script>
 

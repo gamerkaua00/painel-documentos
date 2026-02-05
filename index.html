@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AGÊNCIA DE INTELIGÊNCIA // V15</title>
+    <title>SISTEMA V16 (STABLE)</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -21,7 +21,6 @@
         header { border-bottom: 2px solid var(--primary); padding-bottom: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end; }
         h1 { margin: 0; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 1px; font-size: 1.5rem; }
         
-        /* CARDS DO DASHBOARD (ESTILO PROFISSIONAL RESTAURADO) */
         .card { 
             background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; 
             padding: 15px; margin-bottom: 15px; display: flex; gap: 20px;
@@ -29,30 +28,22 @@
         }
         .card:hover { background: #1a1d21; border-color: #444; }
         
-        .card-mugshot { 
-            width: 90px; height: 110px; background: #000; object-fit: cover; 
-            border: 1px solid #444; flex-shrink: 0; 
-        }
+        .card-mugshot { width: 90px; height: 110px; background: #000; object-fit: cover; border: 1px solid #444; flex-shrink: 0; }
         .card-info { flex: 1; }
-        
         .card-title { font-size: 1.2rem; font-weight: bold; color: #fff; margin: 0 0 5px 0; }
         .card-vulgo { color: var(--primary); font-size: 0.8rem; font-weight: bold; text-transform: uppercase; margin-bottom: 8px; }
         .card-meta { font-size: 0.8rem; color: #888; display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
-        
         .card-actions { display: flex; flex-direction: column; gap: 5px; justify-content: center; }
 
-        /* STATUS CORES */
         .status-ativo { border-left-color: var(--success); } 
         .status-preso { border-left-color: var(--danger); }
         .status-vigilancia { border-left-color: var(--warning); }
         
-        /* Stats Grid */
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
         .stat-card { background: var(--bg-card); padding: 15px; border-radius: 4px; border: 1px solid var(--border); text-align: center; }
         .stat-num { font-size: 2rem; font-weight: 700; color: #fff; display: block; }
         .stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
 
-        /* Inputs & UI */
         input, textarea, select { width: 100%; box-sizing: border-box; background: var(--bg-input); border: 1px solid var(--border); color: #fff; padding: 10px; margin-bottom: 12px; border-radius: 3px; font-family: 'Roboto', sans-serif; }
         input:focus, textarea:focus, select:focus { border-color: var(--primary); outline: none; background: #252a33; }
         label { display: block; font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; font-weight: 600; }
@@ -65,12 +56,10 @@
         .btn-record.recording { animation: pulse 1.5s infinite; background: #ff0000; }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
-        /* Tabs */
         .tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
         .tab { padding: 12px 25px; cursor: pointer; color: var(--text-muted); font-weight: 500; border-bottom: 3px solid transparent; transition: 0.3s; }
         .tab.active { color: var(--primary); border-bottom-color: var(--primary); color: #fff; }
 
-        /* Modal Dossiê */
         #modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; display: none; justify-content: center; align-items: center; overflow-y: auto; }
         .dossier-paper { background: #141619; width: 850px; max-height: 95vh; overflow-y: auto; padding: 40px; border: 1px solid #333; position: relative; box-shadow: 0 0 50px #000; }
         .close-modal { position: absolute; top: 15px; right: 20px; font-size: 24px; color: #fff; cursor: pointer; z-index: 10; }
@@ -216,10 +205,9 @@
 </div>
 
 <script>
-    // --- COLE SUA URL DO APPS SCRIPT AQUI ---
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyVgkv76_NApSCN3_3Uf6B0hGdehSml6ZW109I6WYqF0OWyar8lQbaRf2_IklccdCNR8w/exec";
-    
     const VALID_USER = "mazur";
+    
     let sessionPass = ""; let modoEdicao = false; let dadosCache = []; 
     let urlFotoAntiga = "", urlEvidenciaAntiga = "", urlAudioAntiga = "";
     let mediaRecorder; let audioChunks = []; let audioBlob = null; let audioBase64 = null;
@@ -252,7 +240,6 @@
             let nivelIcon = item.nivel > 0 ? "💀".repeat(parseInt(item.nivel)) : "🛡️";
             let statusClass = "status-" + (item.status || "ativo").toLowerCase();
             
-            // CARD RESTAURADO COM FOTO
             let html = `
                 <div class="card ${statusClass}">
                     <img id="card-img-${item.cpf}" src="" class="card-mugshot" style="display:none">
@@ -280,7 +267,6 @@
                 </div>`;
             container.innerHTML += html;
             
-            // Carrega foto async para não travar
             carregarFotoCard(item.cpf, item.foto);
         });
     }
@@ -302,7 +288,6 @@
         }
     }
 
-    // MAPA E GRAVACAO (Mesmos da V14)
     let map = null;
     function carregarMapa(endereco) {
         const container = document.getElementById('map-container');
@@ -359,9 +344,7 @@
         const assocDiv = document.getElementById('view-associados');
         assocDiv.innerHTML = item.associados ? item.associados.split(',').map(a => `<span class="associate-link" onclick="abrirFicha('${a.trim()}')">🔗 ${a.trim()}</span>`).join(' ') : "-";
 
-        carregarFotoCard(item.cpf, item.foto); // Reusa a função pra carregar no modal
-        // Ajuste manual pro modal (porque a funcao acima busca id card-img)
-        // Simplificado: Modal usa img com id view-foto.
+        // Carrega foto no modal via proxy
         const imgModal = document.getElementById('view-foto'); imgModal.style.display = 'none';
         const noImgModal = document.getElementById('view-no-foto'); noImgModal.style.display = 'flex';
         
@@ -389,8 +372,21 @@
     function mudarAba(aba) { document.getElementById('dashboard').classList.add('hidden'); document.getElementById('cadastro').classList.add('hidden'); document.getElementById(aba).classList.remove('hidden'); document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); event.target.classList.add('active'); }
     function calcularIdade() { const nasc = new Date(document.getElementById('nascimento').value); const hoje = new Date(); let idade = hoje.getFullYear() - nasc.getFullYear(); if (hoje.getMonth() < nasc.getMonth()) idade--; document.getElementById('idade').value = idade; }
     function previewImagem(i) { if(i.files[0]) { const r = new FileReader(); r.onload=e=>{document.getElementById('previewBox').style.backgroundImage=`url(${e.target.result})`; document.getElementById('previewBox').innerText=""}; r.readAsDataURL(i.files[0]); } }
-    function prepararEdicao(cpf) { const i = dadosCache.find(x=>x.cpf==cpf); modoEdicao=true; document.getElementById('nome').value=i.nome; document.getElementById('cpf').value=i.cpf; document.getElementById('vulgo').value=i.vulgo; document.getElementById('endereco').value=i.endereco; document.getElementById('detalhes').value=i.detalhes; document.getElementById('status').value=i.status; document.getElementById('nivel').value=i.nivel; document.getElementById('afiliacao').value=i.afiliacao; document.getElementById('associados').value=i.associados; document.getElementById('btnEnviar').innerText="ATUALIZAR"; document.getElementById('edit-bar').style.display='block'; document.getElementById('btnCancelar').classList.remove('hidden'); urlFotoAntiga=i.foto; urlEvidenciaAntiga=i.evidencia; urlAudioAntiga=i.audio; mudarAba('cadastro'); }
+    
+    function prepararEdicao(cpf) { 
+        const i = dadosCache.find(x=>x.cpf==cpf); modoEdicao=true; 
+        document.getElementById('nome').value=i.nome||""; document.getElementById('cpf').value=i.cpf||""; 
+        document.getElementById('vulgo').value=i.vulgo||""; document.getElementById('endereco').value=i.endereco||""; 
+        document.getElementById('detalhes').value=i.detalhes||""; document.getElementById('status').value=i.status||"ATIVO"; 
+        document.getElementById('nivel').value=i.nivel||"0"; document.getElementById('afiliacao').value=i.afiliacao||""; 
+        document.getElementById('associados').value=i.associados||""; 
+        
+        document.getElementById('btnEnviar').innerText="ATUALIZAR"; document.getElementById('edit-bar').style.display='block'; document.getElementById('btnCancelar').classList.remove('hidden'); 
+        urlFotoAntiga=i.foto; urlEvidenciaAntiga=i.evidencia; urlAudioAntiga=i.audio; mudarAba('cadastro'); 
+    }
+    
     function cancelarEdicao() { modoEdicao=false; document.getElementById('btnEnviar').innerText="SALVAR"; document.getElementById('edit-bar').style.display='none'; document.getElementById('btnCancelar').classList.add('hidden'); document.querySelectorAll('#cadastro input, #cadastro textarea').forEach(i=>i.value=""); }
+    
     async function enviarDados() { 
         document.getElementById('btnEnviar').disabled=true; document.getElementById('loading').style.display='block';
         const getB64 = async (id) => { const f = document.getElementById(id).files[0]; return f ? { b64: await toBase64(f), mime: f.type, nome: f.name } : { b64:"", mime:"", nome:"" }; };

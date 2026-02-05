@@ -1,127 +1,268 @@
 <!DOCTYPE html>
-<html lang="pt-PT">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAZUR DATABASE // V7</title>
+    <title>SISTEMA INTEGRADO DE REGISTROS // V8</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
     <style>
-        :root { --bg-color: #050505; --terminal-green: #00ff41; --terminal-dim: #008f11; }
-        body { background-color: var(--bg-color); color: var(--terminal-green); font-family: 'Courier New', Courier, monospace; margin: 0; padding: 20px; background-image: radial-gradient(circle, #0a0a0a 0%, #000000 100%); }
-        body::before { content: " "; display: block; position: fixed; top: 0; left: 0; bottom: 0; right: 0; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); z-index: 2; background-size: 100% 2px, 3px 100%; pointer-events: none; }
-        .container { max-width: 650px; margin: 0 auto; position: relative; z-index: 3; }
-        h1, h2 { text-align: center; border-bottom: 1px solid var(--terminal-dim); padding-bottom: 10px; letter-spacing: 2px; }
-        input, textarea, button { width: 100%; box-sizing: border-box; background: #000; border: 1px solid var(--terminal-dim); color: var(--terminal-green); padding: 12px; margin-bottom: 10px; font-family: 'Courier New', monospace; }
-        input:focus, textarea:focus { outline: none; border-color: var(--terminal-green); }
-        input:disabled { background: #1a1a1a; color: #555; border-color: #333; cursor: not-allowed; }
-        .row-inputs { display: flex; gap: 10px; } .row-inputs input { flex: 1; }
-        button { font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 10px; border: 1px solid var(--terminal-green); transition: 0.2s; }
-        button:hover { background: var(--terminal-green); color: #000; }
-        .photo-upload-container { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; border: 1px dashed var(--terminal-dim); padding: 10px; background: rgba(0,50,0,0.1); }
-        .photo-preview { width: 80px; height: 100px; background: #111; border: 1px solid var(--terminal-dim); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #555; text-align: center; }
-        .card { border: 1px solid var(--terminal-dim); padding: 15px; margin-bottom: 15px; background: rgba(0, 20, 0, 0.4); display: flex; gap: 15px; align-items: start; }
-        .mugshot { width: 100px; height: 130px; background: #000; border: 1px solid #fff; object-fit: cover; flex-shrink: 0; }
-        .card-info { flex-grow: 1; } .card h3 { margin: 0 0 5px 0; color: #fff; text-transform: uppercase; font-size: 1.2em; }
-        .label { font-size: 10px; color: #aaa; display: block; margin-top: 8px; margin-bottom: 2px; text-transform: uppercase; }
-        .data-text { font-size: 14px; margin-bottom: 5px; display: block; color: #ddd; }
-        .link-btn { display: inline-block; padding: 5px 10px; border: 1px solid var(--terminal-green); color: var(--terminal-green); text-decoration: none; font-size: 11px; margin-top: 10px; }
-        .action-btn { display: inline-block; padding: 5px 10px; background: #003300; border: 1px solid var(--terminal-green); color: #fff; cursor: pointer; font-size: 10px; margin-top: 5px; text-transform: uppercase; }
-        #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 999; display: flex; justify-content: center; align-items: center; }
-        .login-box { border: 1px solid var(--terminal-green); padding: 30px; width: 300px; background: #000; box-shadow: 0 0 20px rgba(0,255,65,0.2); }
-        #app-system { display: none; } .hidden { display: none !important; }
-        .tabs { display: flex; margin-bottom: 20px; border-bottom: 1px solid var(--terminal-dim); }
-        .tab { flex: 1; padding: 10px; text-align: center; border-right: 1px solid var(--terminal-dim); cursor: pointer; background: #0a0a0a; } .tab:last-child { border: none; }
-        .tab.active { background: var(--terminal-green); color: #000; font-weight: bold; }
-        #edit-warning { display:none; background: #330000; color: red; font-size: 10px; text-align: center; padding: 5px; margin-bottom: 10px; border: 1px solid red; }
+        :root {
+            --bg-body: #121212;
+            --bg-card: #1e1e1e;
+            --bg-input: #2c2c2c;
+            --primary: #3a7bd5; /* Azul Profissional */
+            --accent: #00d2ff;
+            --text-main: #e0e0e0;
+            --text-muted: #a0a0a0;
+            --border: #444;
+            --danger: #d9534f;
+            --warning: #f0ad4e;
+            --success: #5cb85c;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: 'Roboto', sans-serif;
+            margin: 0; padding: 20px;
+            font-size: 14px;
+        }
+
+        .container { max-width: 800px; margin: 0 auto; }
+
+        /* Header Corporativo */
+        header {
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            display: flex; justify-content: space-between; align-items: flex-end;
+        }
+        h1 { margin: 0; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 1px; font-size: 1.5rem; }
+        .meta-info { font-size: 0.8rem; color: var(--text-muted); text-align: right; }
+
+        /* Inputs Estilo Software */
+        label { display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; font-weight: 500; }
+        input, textarea, select {
+            width: 100%; box-sizing: border-box;
+            background: var(--bg-input); border: 1px solid var(--border);
+            color: #fff; padding: 10px; margin-bottom: 12px;
+            border-radius: 4px; font-family: 'Roboto', sans-serif;
+            transition: 0.3s;
+        }
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--primary); outline: none; background: #333;
+        }
+        input:disabled { background: #222; color: #666; border-color: #333; }
+
+        .row { display: flex; gap: 15px; }
+        .col { flex: 1; }
+
+        /* Botões */
+        button {
+            background: var(--primary); color: #fff; border: none;
+            padding: 12px 20px; border-radius: 4px; font-weight: 600;
+            cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px;
+            transition: 0.2s; width: 100%;
+        }
+        button:hover { background: #2c6cb5; }
+        .btn-cancel { background: transparent; border: 1px solid var(--text-muted); color: var(--text-muted); margin-top: 10px; }
+        .btn-cancel:hover { background: #333; }
+        
+        .btn-sm { padding: 5px 10px; font-size: 0.75rem; width: auto; display: inline-block; }
+
+        /* Tabs */
+        .tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+        .tab {
+            padding: 12px 25px; cursor: pointer; color: var(--text-muted); font-weight: 500;
+            border-bottom: 3px solid transparent; transition: 0.3s;
+        }
+        .tab:hover { color: #fff; }
+        .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+        /* Upload Foto */
+        .photo-area { display: flex; gap: 15px; background: var(--bg-card); padding: 15px; border-radius: 6px; border: 1px solid var(--border); margin-bottom: 15px; }
+        .preview-box {
+            width: 90px; height: 110px; background: #000; border-radius: 4px;
+            background-size: cover; background-position: center;
+            display: flex; align-items: center; justify-content: center;
+            color: #555; font-size: 0.7rem; border: 1px solid #444;
+        }
+
+        /* Cartão de Resultado (Ficha) */
+        .card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 6px; padding: 20px; margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            border-left: 4px solid var(--primary); /* Cor padrão */
+        }
+        
+        /* Cores de Status para a borda */
+        .status-ativo { border-left-color: var(--success); }
+        .status-preso { border-left-color: var(--danger); }
+        .status-investigacao { border-left-color: var(--warning); }
+        .status-arquivado { border-left-color: #666; }
+
+        .card-header { display: flex; justify-content: space-between; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px; }
+        .card-body { display: flex; gap: 20px; }
+        .card-details { flex: 1; }
+        
+        .field-group { margin-bottom: 8px; }
+        .field-label { color: var(--primary); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; margin-right: 5px; }
+        .field-value { color: #fff; font-size: 0.9rem; }
+        
+        .tag { background: #333; padding: 2px 8px; border-radius: 10px; font-size: 0.75rem; color: #ccc; margin-right: 5px; display: inline-block; }
+        
+        .danger-level { color: var(--danger); font-weight: bold; letter-spacing: 2px; }
+
+        .card-footer { 
+            margin-top: 15px; padding-top: 10px; border-top: 1px solid #333; 
+            font-size: 0.7rem; color: #666; display: flex; justify-content: space-between; align-items: center; 
+        }
+
+        /* Login */
+        #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f0f0f; z-index: 999; display: flex; justify-content: center; align-items: center; }
+        .login-box { background: var(--bg-card); padding: 40px; border-radius: 8px; width: 320px; text-align: center; border-top: 4px solid var(--primary); }
+        
+        .hidden { display: none !important; }
+        
+        /* Print Fix */
+        @media print { .no-print { display: none; } }
     </style>
 </head>
 <body>
 
 <div id="login-screen">
     <div class="login-box">
-        <h2 style="margin-top:0">ACESSO RESTRITO</h2>
-        <input type="text" id="loginUser" placeholder="USUÁRIO (mazur)">
-        <input type="password" id="loginPass" placeholder="SENHA">
-        <button onclick="fazerLogin()">ACESSAR SISTEMA</button>
-        <p id="loginError" style="color:red; display:none; text-align:center; font-size:12px; margin-top:10px;">ACESSO NEGADO</p>
+        <h2 style="color:#fff; margin-bottom:20px;">ACESSO RESTRITO</h2>
+        <input type="text" id="loginUser" placeholder="ID DO AGENTE">
+        <input type="password" id="loginPass" placeholder="SENHA DE ACESSO">
+        <button onclick="fazerLogin()">ENTRAR NO SISTEMA</button>
+        <p id="loginError" style="color:var(--danger); display:none; margin-top:15px; font-size:0.8rem;">CREDENCIAIS INVÁLIDAS</p>
     </div>
 </div>
 
-<div id="app-system" class="container">
-    <div style="display:flex; justify-content:space-between; font-size:10px; color:#555; margin-bottom:10px;">
-        <span>USER: <span id="displayUser">UNKNOWN</span></span>
-        <span>STATUS: <span id="modeStatus">CADASTRO</span></span>
-    </div>
-    <h1>DOSSIÊ CRIMINAL V7</h1>
+<div id="app-system" class="container hidden">
+    <header>
+        <div>
+            <h1>BASE DE DADOS CENTRAL</h1>
+            <span style="font-size:0.8rem; color:var(--primary);">SISTEMA DE GESTÃO DE REGISTROS V8</span>
+        </div>
+        <div class="meta-info">
+            LOGADO COMO: <strong id="displayUser" style="color:#fff">...</strong><br>
+            <span id="systemStatus">ONLINE - CONEXÃO SEGURA</span>
+        </div>
+    </header>
+
     <div class="tabs">
-        <div class="tab active" onclick="mudarAba('cadastro')">FICHA TÉCNICA</div>
-        <div class="tab" onclick="mudarAba('busca')">CONSULTAR BASE</div>
+        <div class="tab active" onclick="mudarAba('cadastro')">GERENCIAR FICHA</div>
+        <div class="tab" onclick="mudarAba('busca')">CONSULTAR REGISTROS</div>
     </div>
 
     <div id="cadastro">
-        <div id="edit-warning">⚠️ MODO DE EDIÇÃO - ALTERANDO REGISTRO EXISTENTE</div>
-        
-        <p class="label" style="color:#fff; border-bottom:1px dashed #333;">// BIOMETRIA</p>
-        <div class="photo-upload-container">
-            <div id="previewBox" class="photo-preview">SEM FOTO</div>
-            <div style="flex-grow:1"><input type="file" id="fotoPerfil" accept="image/*" onchange="previewImagem(this)" style="border:none; padding:0;"><span style="font-size:10px; color:#666;">FOTO 3x4 (DEIXE VAZIO AO EDITAR PARA MANTER)</span></div>
-        </div>
-        
-        <p class="label" style="color:#fff; border-bottom:1px dashed #333;">// IDENTIFICAÇÃO</p>
-        <input type="text" id="nome" placeholder="NOME COMPLETO *">
-        <div class="row-inputs">
-            <input type="text" id="vulgo" placeholder="VULGO / APELIDO" style="border-color:#005500">
-            <input type="text" id="profissao" placeholder="PROFISSÃO / OCUPAÇÃO">
-        </div>
-        <div class="row-inputs">
-            <input type="number" id="cpf" placeholder="CPF / RG (CHAVE ÚNICA)">
-            <input type="number" id="idade" placeholder="IDADE">
+        <div id="edit-bar" style="background: #2a3b4d; padding: 10px; border-radius: 4px; margin-bottom: 20px; display:none; border-left: 4px solid var(--warning);">
+            <strong style="color:var(--warning)">MODO DE EDIÇÃO ATIVO</strong>
+            <span style="font-size:0.8rem; margin-left:10px;">Alterando registro existente. CPF bloqueado.</span>
         </div>
 
-        <p class="label" style="color:#fff; border-bottom:1px dashed #333;">// LOCALIZAÇÃO & CONTATO</p>
-        <input type="text" id="endereco" placeholder="ENDEREÇO COMPLETO / LOCALIZAÇÃO">
-        <div class="row-inputs">
-            <input type="text" id="telefone" placeholder="TELEFONE">
-            <input type="email" id="email" placeholder="EMAIL">
+        <div class="row">
+            <div class="col">
+                <label>Status do Indivíduo</label>
+                <select id="status">
+                    <option value="ATIVO">ATIVO / EM LIBERDADE</option>
+                    <option value="VIGILANCIA">SOB VIGILÂNCIA</option>
+                    <option value="PRESO">DETIDO / PRESO</option>
+                    <option value="FORAGIDO">PROCURADO / FORAGIDO</option>
+                    <option value="ARQUIVADO">ARQUIVADO / INATIVO</option>
+                    <option value="OBITO">ÓBITO</option>
+                </select>
+            </div>
+            <div class="col">
+                <label>Nível de Periculosidade (1-5)</label>
+                <select id="nivel">
+                    <option value="1">NÍVEL 1 - BAIXO</option>
+                    <option value="2">NÍVEL 2 - MODERADO</option>
+                    <option value="3">NÍVEL 3 - ATENÇÃO</option>
+                    <option value="4">NÍVEL 4 - ALTO RISCO</option>
+                    <option value="5">NÍVEL 5 - EXTREMO</option>
+                </select>
+            </div>
         </div>
-        <input type="text" id="redes" placeholder="REDES SOCIAIS / LINKS">
+
+        <div class="photo-area">
+            <div id="previewBox" class="preview-box">FOTO</div>
+            <div style="flex:1">
+                <label>Foto de Identificação (3x4)</label>
+                <input type="file" id="fotoPerfil" accept="image/*" onchange="previewImagem(this)" style="background:transparent; border:none; padding:0;">
+                <p style="font-size:0.75rem; color:#666; margin:0;">Recomendado formato JPG/PNG. Face clara.</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col" style="flex:2"><label>Nome Completo</label><input type="text" id="nome"></div>
+            <div class="col"><label>Vulgo / Apelido</label><input type="text" id="vulgo"></div>
+        </div>
+
+        <div class="row">
+            <div class="col"><label>CPF / ID (Único)</label><input type="number" id="cpf"></div>
+            <div class="col"><label>Profissão / Ocupação</label><input type="text" id="profissao"></div>
+            <div class="col" style="flex:0.5"><label>Idade</label><input type="number" id="idade"></div>
+        </div>
+
+        <label>Endereço / Localização Atual</label>
+        <input type="text" id="endereco">
+
+        <div class="row">
+            <div class="col"><label>Telefone</label><input type="text" id="telefone"></div>
+            <div class="col"><label>Email</label><input type="email" id="email"></div>
+        </div>
         
-        <p class="label" style="color:#fff; border-bottom:1px dashed #333;">// HISTÓRICO</p>
-        <textarea id="detalhes" rows="6" placeholder="DIGITE O DOSSIÊ COMPLETO..."></textarea>
-        
-        <p class="label">ARQUIVO DE PROVA</p>
+        <label>Tags / Palavras-Chave (Separe por vírgula)</label>
+        <input type="text" id="tags" placeholder="Ex: Furto, Estelionato, Facção X...">
+
+        <label>Redes Sociais</label>
+        <input type="text" id="redes">
+
+        <label>Histórico Detalhado / Ocorrências</label>
+        <textarea id="detalhes" rows="6"></textarea>
+
+        <label>Anexar Evidência (PDF/Doc/Zip)</label>
         <input type="file" id="arquivoEvidencia">
-        
-        <button onclick="enviarDados()" id="btnEnviar">ARQUIVAR FICHA</button>
-        <button onclick="cancelarEdicao()" id="btnCancelar" class="hidden" style="border-color: #555; color: #555;">CANCELAR EDIÇÃO</button>
+
+        <button onclick="enviarDados()" id="btnEnviar">SALVAR NO BANCO DE DADOS</button>
+        <button onclick="cancelarEdicao()" id="btnCancelar" class="btn-cancel hidden">CANCELAR EDIÇÃO</button>
     </div>
 
     <div id="busca" class="hidden">
-        <input type="text" id="termoBusca" placeholder="NOME, VULGO OU CPF...">
-        <button onclick="buscarDados()" id="btnBuscar">INICIAR VARREDURA</button>
+        <div class="row">
+            <input type="text" id="termoBusca" placeholder="Pesquisar por Nome, CPF, Vulgo ou Tag..." style="margin-bottom:0">
+            <button onclick="buscarDados()" id="btnBuscar" style="width:auto; margin-left:10px;">PESQUISAR</button>
+        </div>
         <div id="resultados" style="margin-top:20px;"></div>
     </div>
-    <p id="loading" style="text-align: center; display: none; margin-top:20px; color:yellow;">PROCESSANDO...</p>
+
+    <p id="loading" style="text-align: center; display: none; color: var(--primary); font-weight:bold; margin-top:20px;">SINCRONIZANDO COM O SERVIDOR...</p>
 </div>
 
 <script>
-    // --- SUA URL DO APPS SCRIPT ---
+    // --- COLE SUA URL DO APPS SCRIPT AQUI ---
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyVgkv76_NApSCN3_3Uf6B0hGdehSml6ZW109I6WYqF0OWyar8lQbaRf2_IklccdCNR8w/exec"; 
     
     const VALID_USER = "mazur";
     let sessionPass = ""; 
     let modoEdicao = false; 
     let dadosCache = []; 
-    let urlFotoAntiga = "";
-    let urlEvidenciaAntiga = "";
+    let urlFotoAntiga = "", urlEvidenciaAntiga = "";
 
     function fazerLogin() {
         const user = document.getElementById('loginUser').value.trim();
         const pass = document.getElementById('loginPass').value.trim();
         const btn = document.querySelector('.login-box button');
 
-        if (user.toLowerCase() !== VALID_USER) return alert("USUÁRIO INVÁLIDO");
+        if (user.toLowerCase() !== VALID_USER) return alert("ID de Agente não reconhecido.");
 
-        btn.innerText = "VERIFICANDO..."; btn.disabled = true;
+        btn.innerText = "AUTENTICANDO..."; btn.disabled = true;
 
         fetch(SCRIPT_URL, {
             method: 'POST', body: JSON.stringify({ acao: "login", senhaacesso: pass })
@@ -129,10 +270,13 @@
             if(data.status === "sucesso") {
                 sessionPass = pass;
                 document.getElementById('login-screen').style.display = 'none';
-                document.getElementById('app-system').style.display = 'block';
+                document.getElementById('app-system').classList.remove('hidden');
                 document.getElementById('displayUser').innerText = user.toUpperCase();
-            } else { alert("SENHA INCORRETA"); btn.innerText = "ACESSAR"; btn.disabled = false; }
-        }).catch(e => { alert("ERRO CONEXÃO"); btn.innerText = "ACESSAR"; btn.disabled = false; });
+            } else { 
+                document.getElementById('loginError').style.display = 'block';
+                btn.innerText = "ENTRAR NO SISTEMA"; btn.disabled = false;
+            }
+        }).catch(e => { alert("Erro de Conexão com a Base de Dados."); btn.disabled = false; });
     }
 
     function mudarAba(aba) {
@@ -144,31 +288,36 @@
         if(aba==='cadastro' && !modoEdicao) document.getElementById('resultados').innerHTML = "";
     }
 
+    function previewImagem(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) { 
+                document.getElementById('previewBox').style.backgroundImage = `url(${e.target.result})`; 
+                document.getElementById('previewBox').innerText = "";
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
     function prepararEdicao(index) {
         const item = dadosCache[index];
         modoEdicao = true;
         
-        document.getElementById('nome').value = item.nome;
-        document.getElementById('vulgo').value = item.vulgo || "";
-        document.getElementById('profissao').value = item.profissao || "";
-        document.getElementById('cpf').value = item.cpf;
-        document.getElementById('idade').value = item.idade;
-        document.getElementById('endereco').value = item.endereco || "";
-        document.getElementById('email').value = item.email;
-        document.getElementById('telefone').value = item.telefone;
-        document.getElementById('redes').value = item.redes;
-        document.getElementById('detalhes').value = item.detalhes;
-        
-        document.getElementById('cpf').disabled = true;
-        document.getElementById('btnEnviar').innerText = "SALVAR ALTERAÇÕES";
-        document.getElementById('edit-warning').style.display = 'block';
-        document.getElementById('btnCancelar').classList.remove('hidden');
-        document.getElementById('modeStatus').innerText = "EDIÇÃO";
-        document.getElementById('modeStatus').style.color = "yellow";
-        
-        urlFotoAntiga = item.foto;
-        urlEvidenciaAntiga = item.evidencia;
+        // Poupulando campos
+        const setVal = (id, val) => document.getElementById(id).value = val || "";
+        setVal('nome', item.nome); setVal('cpf', item.cpf); setVal('vulgo', item.vulgo);
+        setVal('profissao', item.profissao); setVal('idade', item.idade);
+        setVal('endereco', item.endereco); setVal('telefone', item.telefone);
+        setVal('email', item.email); setVal('redes', item.redes);
+        setVal('detalhes', item.detalhes); setVal('status', item.status);
+        setVal('nivel', item.nivel); setVal('tags', item.tags);
 
+        document.getElementById('cpf').disabled = true;
+        document.getElementById('btnEnviar').innerText = "ATUALIZAR REGISTRO";
+        document.getElementById('edit-bar').style.display = 'block';
+        document.getElementById('btnCancelar').classList.remove('hidden');
+
+        urlFotoAntiga = item.foto; urlEvidenciaAntiga = item.evidencia;
         if(item.foto) {
             document.getElementById('previewBox').style.backgroundImage = `url(${item.foto})`;
             document.getElementById('previewBox').innerText = "";
@@ -179,20 +328,20 @@
     function cancelarEdicao() {
         modoEdicao = false;
         document.getElementById('cpf').disabled = false;
-        document.getElementById('btnEnviar').innerText = "ARQUIVAR FICHA";
-        document.getElementById('edit-warning').style.display = 'none';
+        document.getElementById('btnEnviar').innerText = "SALVAR NO BANCO DE DADOS";
+        document.getElementById('edit-bar').style.display = 'none';
         document.getElementById('btnCancelar').classList.add('hidden');
-        document.getElementById('modeStatus').innerText = "CADASTRO";
-        document.getElementById('modeStatus').style.color = "#555";
         document.querySelectorAll('input, textarea').forEach(i => i.value = "");
+        document.getElementById('status').value = "ATIVO";
+        document.getElementById('nivel').value = "1";
         document.getElementById('previewBox').style.backgroundImage = "none";
-        document.getElementById('previewBox').innerText = "SEM FOTO";
+        document.getElementById('previewBox').innerText = "FOTO";
     }
 
     async function enviarDados() {
         const nome = document.getElementById('nome').value;
         const cpf = document.getElementById('cpf').value;
-        if(!nome || !cpf) return alert("NOME E CPF SÃO OBRIGATÓRIOS");
+        if(!nome || !cpf) return alert("Campos NOME e CPF são obrigatórios.");
         
         document.getElementById('btnEnviar').disabled = true;
         document.getElementById('loading').style.display = 'block';
@@ -209,6 +358,9 @@
             senhaacesso: sessionPass, 
             acao: modoEdicao ? "editar" : "criar",
             nome, cpf, 
+            status: document.getElementById('status').value,
+            nivel: document.getElementById('nivel').value,
+            tags: document.getElementById('tags').value,
             vulgo: document.getElementById('vulgo').value,
             profissao: document.getElementById('profissao').value,
             idade: document.getElementById('idade').value,
@@ -228,15 +380,15 @@
             document.getElementById('loading').style.display = 'none';
             document.getElementById('btnEnviar').disabled = false;
             if(data.status === "sucesso") {
-                alert(modoEdicao ? "ATUALIZADO!" : "CRIADO!");
+                alert("Operação realizada com sucesso.");
                 cancelarEdicao();
-            } else { alert("ERRO: " + data.msg); }
-        }).catch(e => { alert("ERRO CONEXÃO"); document.getElementById('btnEnviar').disabled = false; });
+            } else { alert("Erro no servidor: " + data.msg); }
+        }).catch(e => { alert("Falha na comunicação."); document.getElementById('btnEnviar').disabled = false; });
     }
 
     function buscarDados() {
         const termo = document.getElementById('termoBusca').value;
-        if(!termo) return alert("DIGITE ALGO");
+        if(!termo) return alert("Digite um termo para busca.");
         document.getElementById('loading').style.display = 'block';
         document.getElementById('resultados').innerHTML = "";
         
@@ -244,37 +396,83 @@
         .then(res => res.json())
         .then(data => {
             document.getElementById('loading').style.display = 'none';
-            if(data[0] && data[0].erro) { alert("LOGIN EXPIRADO"); location.reload(); return; }
-            if(data.length === 0) { document.getElementById('resultados').innerHTML = "<p align='center'>NADA ENCONTRADO</p>"; return; }
+            if(data[0] && data[0].erro) { alert("Sessão expirada."); location.reload(); return; }
+            if(data.length === 0) { document.getElementById('resultados').innerHTML = "<p align='center' style='color:#666'>Nenhum registro encontrado.</p>"; return; }
             
             dadosCache = data;
 
             data.forEach((item, index) => {
                 let img = item.foto ? `<img src="${item.foto}" class="mugshot">` : `<div class="mugshot">SEM FOTO</div>`;
-                let vulgo = item.vulgo ? `"${item.vulgo}"` : "";
                 
+                // Formatação de Datas
+                const fmtData = (d) => d ? new Date(d).toLocaleDateString() : "-";
+                
+                // Formatação de Nível (Caveiras)
+                let nivelIcon = "💀".repeat(parseInt(item.nivel));
+                
+                // Formatação de Tags
+                let tagsHtml = item.tags ? item.tags.split(',').map(t => `<span class="tag">${t.trim()}</span>`).join('') : "";
+
+                // Classe de cor baseada no status
+                let statusClass = "status-" + (item.status || "ativo").toLowerCase();
+
                 let html = `
-                    <div class="card">
-                        ${img}
-                        <div class="card-info">
-                            <h3>${item.nome} <span style="font-size:0.6em; color:#ffff00">${vulgo}</span></h3>
-                            <span class="label">CPF: ${item.cpf} | IDADE: ${item.idade}</span>
-                            <span class="data-text">${item.profissao || "SEM OCUPAÇÃO"}</span>
-                            
-                            ${item.endereco ? `<span class="label">LOCALIZAÇÃO:</span><span class="data-text" style="color:#00ff41">${item.endereco}</span>` : ""}
-                            
-                            <span class="label">CONTATO:</span>
-                            <span class="data-text">${item.telefone} | ${item.email}</span>
-                            
-                            <div style="margin-top:10px; color:#ddd; font-size:13px; border-top:1px dashed #333; padding-top:5px">${item.detalhes}</div>
-                            <div style="margin-top:10px;">
-                                <button onclick="prepararEdicao(${index})" class="action-btn" style="background:#333">✏️ EDITAR</button>
-                `;
-                if(item.evidencia && item.evidencia !== "Sem anexo") html += `<a href="${item.evidencia}" target="_blank" class="link-btn" style="margin-left:10px;">📂 EVIDÊNCIA</a>`;
-                html += `</div></div></div>`;
+                    <div class="card ${statusClass}" id="card-${index}">
+                        <div class="card-header">
+                            <div>
+                                <strong>ID: ${item.cpf}</strong>
+                                <span style="margin-left:10px; font-size:0.75rem; color:#888;">CRIADO EM: ${fmtData(item.dataCriacao)}</span>
+                            </div>
+                            <div class="danger-level" title="Nível de Periculosidade">${nivelIcon}</div>
+                        </div>
+                        <div class="card-body">
+                            ${img}
+                            <div class="card-details">
+                                <h2 style="margin:0; font-size:1.2rem; color:#fff;">${item.nome}</h2>
+                                <div style="margin-bottom:10px; color:var(--primary); font-weight:bold; font-size:0.85rem;">VULGO: ${item.vulgo || "N/A"}</div>
+                                
+                                <div class="row">
+                                    <div class="col"><span class="field-label">Status:</span> <span class="field-value">${item.status}</span></div>
+                                    <div class="col"><span class="field-label">Ocupação:</span> <span class="field-value">${item.profissao}</span></div>
+                                </div>
+                                
+                                <div style="margin:5px 0;">${tagsHtml}</div>
+                                
+                                <div style="margin-top:10px; border-top:1px solid #333; padding-top:5px;">
+                                    <span class="field-label">Localização:</span> <span class="field-value">${item.endereco || "Desconhecido"}</span>
+                                </div>
+                                <div style="margin-top:5px;">
+                                    <span class="field-label">Contato:</span> <span class="field-value">${item.telefone} | ${item.email}</span>
+                                </div>
+                                
+                                <div style="margin-top:15px; background:#111; padding:10px; border-radius:4px; font-size:0.85rem; color:#ccc; white-space: pre-wrap;">${item.detalhes}</div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <span>ÚLTIMA ATUALIZAÇÃO: ${fmtData(item.dataUpdate)}</span>
+                            <div>
+                                ${item.evidencia && item.evidencia !== "Sem anexo" ? `<a href="${item.evidencia}" target="_blank" class="btn-sm" style="background:#444; text-decoration:none; color:#fff; margin-right:5px;">📂 PROVAS</a>` : ""}
+                                <button onclick="prepararEdicao(${index})" class="btn-sm" style="background:var(--warning); color:#000;">✏️ EDITAR</button>
+                                <button onclick="exportarPDF('card-${index}')" class="btn-sm" style="background:#fff; color:#000; margin-left:5px;">🖨️ PDF</button>
+                            </div>
+                        </div>
+                    </div>`;
                 document.getElementById('resultados').innerHTML += html;
             });
         });
+    }
+
+    function exportarPDF(elementId) {
+        const element = document.getElementById(elementId);
+        const opt = {
+            margin:       10,
+            filename:     'Ficha_Registro.pdf',
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2, backgroundColor: "#1e1e1e" }, // Mantém fundo escuro
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+        // Pequeno ajuste para o PDF sair legível
+        html2pdf().set(opt).from(element).save();
     }
 
     const toBase64 = file => new Promise((resolve, reject) => {
@@ -283,14 +481,6 @@
         reader.onload = () => resolve(reader.result.split(',')[1]);
         reader.onerror = error => reject(error);
     });
-    function previewImagem(input) {
-        const preview = document.getElementById('previewBox');
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) { preview.style.backgroundImage = `url(${e.target.result})`; preview.innerText = ""; }
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
 </script>
 
 </body>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SISTEMA DE INTELIGÊNCIA // V12 (FIX)</title>
+    <title>SISTEMA DE INTELIGÊNCIA // V13</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
@@ -57,7 +57,6 @@
         .close-modal { position: absolute; top: 15px; right: 20px; font-size: 24px; color: #fff; cursor: pointer; }
         
         .dossier-header { display: flex; border-bottom: 2px solid var(--text-muted); padding-bottom: 20px; margin-bottom: 20px; }
-        /* CORREÇÃO: CORS attribute adicionado */
         .dossier-photo { width: 120px; height: 160px; background: #000; margin-right: 25px; object-fit: cover; border: 1px solid #555; }
         .dossier-title { font-size: 2rem; font-weight: bold; color: #fff; margin: 0; }
         .dossier-subtitle { color: var(--primary); font-size: 1rem; text-transform: uppercase; letter-spacing: 2px; }
@@ -72,8 +71,6 @@
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f0f0f; z-index: 999; display: flex; justify-content: center; align-items: center; }
         .login-box { background: var(--bg-card); padding: 40px; border-radius: 8px; width: 320px; text-align: center; border-top: 4px solid var(--primary); }
         .hidden { display: none !important; }
-        
-        /* Ocultar elementos desnecessários no PDF */
         @media print { .no-print { display: none !important; } }
     </style>
 </head>
@@ -84,8 +81,13 @@
         <span class="close-modal no-print" onclick="fecharModal()">&times;</span>
         
         <div class="dossier-header">
-            <img id="view-foto" src="" class="dossier-photo" style="display:none" crossorigin="anonymous">
+            <img id="view-foto" src="" class="dossier-photo" style="display:none">
             <div id="view-no-foto" class="dossier-photo" style="display:flex; align-items:center; justify-content:center; color:#555; font-size:0.7rem;">SEM FOTO</div>
+            
+            <div id="view-loading-foto" class="dossier-photo" style="display:none; align-items:center; justify-content:center; color:var(--primary); font-size:0.7rem; border-color:var(--primary);">
+                BAIXANDO...
+            </div>
+
             <div style="flex:1">
                 <div style="display:flex; justify-content:space-between;">
                     <h1 class="dossier-title" id="view-nome">NOME</h1>
@@ -155,7 +157,7 @@
 
 <div id="app-system" class="container hidden">
     <header>
-        <div><h1>COMMAND CENTER</h1><span style="font-size:0.8rem; color:var(--primary);">BASE DE DADOS V12</span></div>
+        <div><h1>COMMAND CENTER</h1><span style="font-size:0.8rem; color:var(--primary);">BASE DE DADOS V13</span></div>
         <div class="meta-info">AGENTE: <strong id="displayUser" style="color:#fff">...</strong><br>STATUS: ONLINE</div>
     </header>
 
@@ -236,25 +238,7 @@
         }).catch(e => { alert("Erro de Conexão."); btn.disabled = false; });
     }
 
-    // --- CORREÇÃO DA IMAGEM ---
-    function formatarUrlImagem(url) {
-        if (!url || url === "Sem anexo") return "";
-        // Transforma link do Drive em link direto de imagem
-        // De: https://drive.google.com/file/d/ID_DO_ARQUIVO/view...
-        // Para: https://drive.google.com/uc?export=view&id=ID_DO_ARQUIVO
-        let id = "";
-        try {
-            if (url.includes("/file/d/")) {
-                id = url.split("/file/d/")[1].split("/")[0];
-            } else if (url.includes("id=")) {
-                id = url.split("id=")[1].split("&")[0];
-            }
-        } catch(e) { return url; }
-
-        if(id) return `https://drive.google.com/uc?export=view&id=${id}`;
-        return url;
-    }
-
+    // --- FUNÇÃO DE ABRIR FICHA COM PROXY DE IMAGEM ---
     function abrirFicha(index) {
         const item = dadosCache[index];
         const setTxt = (id, val) => document.getElementById(id).innerText = val || "-";
@@ -275,19 +259,56 @@
         
         document.getElementById('view-nivel').innerText = item.nivel > 0 ? "💀".repeat(parseInt(item.nivel)) : "🛡️";
         document.getElementById('view-tags').innerHTML = item.tags ? item.tags.split(',').map(t => `<span class="tag-badge">${t.trim()}</span>`).join('') : "-";
-        
-        // Aplica a correção da imagem
-        if(item.foto) {
-            let imgUrl = formatarUrlImagem(item.foto);
-            document.getElementById('view-foto').src = imgUrl;
-            document.getElementById('view-foto').style.display = 'block';
-            document.getElementById('view-no-foto').style.display = 'none';
-        } else {
-            document.getElementById('view-foto').style.display = 'none';
-            document.getElementById('view-no-foto').style.display = 'flex';
-        }
-        
         document.getElementById('view-update').innerText = item.dataUpdate ? new Date(item.dataUpdate).toLocaleString() : "-";
+        
+        // TRATAMENTO DA FOTO (VIA PROXY APPS SCRIPT)
+        const imgEl = document.getElementById('view-foto');
+        const noFoto = document.getElementById('view-no-foto');
+        const loadingFoto = document.getElementById('view-loading-foto');
+
+        imgEl.style.display = 'none';
+        noFoto.style.display = 'none';
+        loadingFoto.style.display = 'none';
+
+        if(item.foto && item.foto !== "Sem anexo") {
+            // Extrai ID do arquivo Google Drive
+            let fileId = "";
+            try {
+                if (item.foto.includes("/file/d/")) fileId = item.foto.split("/file/d/")[1].split("/")[0];
+                else if (item.foto.includes("id=")) fileId = item.foto.split("id=")[1].split("&")[0];
+            } catch(e){}
+
+            if(fileId) {
+                loadingFoto.style.display = 'flex'; // Mostra "Baixando..."
+                
+                // Chama o Apps Script para pegar a imagem Base64
+                fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ acao: "getFoto", id: fileId, senhaacesso: sessionPass })
+                })
+                .then(r => r.json())
+                .then(d => {
+                    loadingFoto.style.display = 'none';
+                    if(d.status === "sucesso") {
+                        imgEl.src = d.base64; // Coloca o Base64 direto (sem link externo)
+                        imgEl.style.display = 'block';
+                    } else {
+                        noFoto.innerText = "ERRO NA FOTO";
+                        noFoto.style.display = 'flex';
+                    }
+                })
+                .catch(() => {
+                    loadingFoto.style.display = 'none';
+                    noFoto.innerText = "FALHA CONEXÃO";
+                    noFoto.style.display = 'flex';
+                });
+            } else {
+                noFoto.style.display = 'flex';
+            }
+        } else {
+            noFoto.style.display = 'flex';
+        }
+
         const btnEv = document.getElementById('view-evidencia-btn');
         if(item.evidencia && item.evidencia !== "Sem anexo") {
             btnEv.href = item.evidencia; btnEv.style.display = 'inline-block';
@@ -300,25 +321,19 @@
 
     function imprimirFicha() {
         const element = document.getElementById('ficha-impressao');
-        document.querySelector('.close-modal').style.display = 'none'; // Esconde o X
-        document.querySelectorAll('.no-print').forEach(e => e.style.display = 'none'); // Esconde botões
+        document.querySelector('.close-modal').style.display = 'none';
+        document.querySelectorAll('.no-print').forEach(e => e.style.display = 'none');
 
         const opt = { 
-            margin: 5, 
-            filename: 'Dossie.pdf', 
+            margin: 5, filename: 'Dossie.pdf', 
             image: { type: 'jpeg', quality: 0.98 }, 
-            html2canvas: { 
-                scale: 2, 
-                backgroundColor: "#1a1a1a",
-                useCORS: true, // ESSENCIAL PARA FOTO APARECER
-                allowTaint: true
-            }, 
+            html2canvas: { scale: 2, backgroundColor: "#1a1a1a" }, 
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } 
         };
         
         html2pdf().set(opt).from(element).save().then(() => {
-            document.querySelector('.close-modal').style.display = 'block'; // Volta o X
-            document.querySelectorAll('.no-print').forEach(e => e.style.display = 'flex'); // Volta botões
+            document.querySelector('.close-modal').style.display = 'block';
+            document.querySelectorAll('.no-print').forEach(e => e.style.display = 'flex');
         });
     }
 
@@ -370,7 +385,6 @@
         });
     }
 
-    // --- FUNÇÕES DE NAVEGAÇÃO E CRUD ---
     function mudarAba(aba) {
         document.getElementById('dashboard').classList.add('hidden');
         document.getElementById('cadastro').classList.add('hidden');
@@ -400,10 +414,7 @@
     function previewImagem(input) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
-            reader.onload = function(e) { 
-                document.getElementById('previewBox').style.backgroundImage = `url(${e.target.result})`; 
-                document.getElementById('previewBox').innerText = "";
-            }
+            reader.onload = function(e) { document.getElementById('previewBox').style.backgroundImage = `url(${e.target.result})`; document.getElementById('previewBox').innerText = ""; }
             reader.readAsDataURL(input.files[0]);
         }
     }
@@ -425,7 +436,7 @@
         document.getElementById('edit-bar').style.display = 'block';
         document.getElementById('btnCancelar').classList.remove('hidden');
         urlFotoAntiga = item.foto; urlEvidenciaAntiga = item.evidencia;
-        if(item.foto) { document.getElementById('previewBox').style.backgroundImage = `url(${formatarUrlImagem(item.foto)})`; document.getElementById('previewBox').innerText = ""; }
+        if(item.foto) { document.getElementById('previewBox').style.backgroundImage = `url(${item.foto})`; document.getElementById('previewBox').innerText = ""; }
         mudarAba('cadastro');
     }
 

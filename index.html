@@ -3,43 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SISTEMA INTEGRADO DE REGISTROS // V9</title>
+    <title>SISTEMA DE INTELIGÊNCIA // V10</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
         :root {
-            --bg-body: #121212;
-            --bg-card: #1e1e1e;
-            --bg-input: #2c2c2c;
-            --primary: #3a7bd5; 
-            --accent: #00d2ff;
+            --bg-body: #0f1012;
+            --bg-card: #1b1e23;
+            --bg-input: #252a33;
+            --primary: #2d6cdf; 
             --text-main: #e0e0e0;
-            --text-muted: #a0a0a0;
-            --border: #444;
-            --danger: #d9534f;
-            --warning: #f0ad4e;
-            --success: #5cb85c;
-            --neutral: #888;
+            --text-muted: #8892b0;
+            --border: #333a45;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --success: #10b981;
         }
 
         body { background-color: var(--bg-body); color: var(--text-main); font-family: 'Roboto', sans-serif; margin: 0; padding: 20px; font-size: 14px; }
-        .container { max-width: 850px; margin: 0 auto; }
+        .container { max-width: 900px; margin: 0 auto; }
 
         header { border-bottom: 2px solid var(--primary); padding-bottom: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end; }
         h1 { margin: 0; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 1px; font-size: 1.5rem; }
         .meta-info { font-size: 0.8rem; color: var(--text-muted); text-align: right; }
 
+        /* Estilo Dashboard Stats */
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
+        .stat-card { background: var(--bg-card); padding: 15px; border-radius: 6px; border: 1px solid var(--border); text-align: center; }
+        .stat-num { font-size: 2rem; font-weight: 700; color: #fff; display: block; }
+        .stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Filtros Avançados */
+        .filter-box { background: #16191d; padding: 15px; border-radius: 6px; border: 1px solid var(--border); margin-bottom: 20px; }
+        .filter-title { font-size: 0.8rem; text-transform: uppercase; color: var(--primary); font-weight: bold; margin-bottom: 10px; display: block; }
+
         label { display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; font-weight: 500; }
         input, textarea, select { width: 100%; box-sizing: border-box; background: var(--bg-input); border: 1px solid var(--border); color: #fff; padding: 10px; margin-bottom: 12px; border-radius: 4px; font-family: 'Roboto', sans-serif; transition: 0.3s; }
-        input:focus, textarea:focus, select:focus { border-color: var(--primary); outline: none; background: #333; }
-        input:disabled { background: #222; color: #666; border-color: #333; }
+        input:focus, textarea:focus, select:focus { border-color: var(--primary); outline: none; background: #2f3642; }
+        input:disabled { background: #1a1a1a; color: #555; border-color: #333; }
 
         .row { display: flex; gap: 15px; }
         .col { flex: 1; }
 
         button { background: var(--primary); color: #fff; border: none; padding: 12px 20px; border-radius: 4px; font-weight: 600; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; transition: 0.2s; width: 100%; }
-        button:hover { background: #2c6cb5; }
+        button:hover { background: #1e54b3; }
         .btn-cancel { background: transparent; border: 1px solid var(--text-muted); color: var(--text-muted); margin-top: 10px; }
         .btn-sm { padding: 5px 10px; font-size: 0.75rem; width: auto; display: inline-block; }
 
@@ -55,7 +63,7 @@
         .status-ativo { border-left-color: var(--success); }
         .status-preso { border-left-color: var(--danger); }
         .status-vigilancia { border-left-color: var(--warning); }
-        .status-arquivado { border-left-color: var(--neutral); }
+        .status-arquivado { border-left-color: #555; }
         .status-obito { border-left-color: #000; }
 
         .card-header { display: flex; justify-content: space-between; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px; }
@@ -64,8 +72,11 @@
         
         .field-label { color: var(--primary); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; margin-right: 5px; }
         .field-value { color: #fff; font-size: 0.9rem; }
-        .tag { background: #333; padding: 2px 8px; border-radius: 10px; font-size: 0.75rem; color: #ccc; margin-right: 5px; display: inline-block; }
+        .tag { background: #2f3642; padding: 2px 8px; border-radius: 10px; font-size: 0.75rem; color: #ccc; margin-right: 5px; display: inline-block; }
         .danger-level { color: var(--danger); font-weight: bold; letter-spacing: 2px; }
+        
+        .map-link { color: #58a6ff; text-decoration: none; border-bottom: 1px dotted #58a6ff; }
+        .map-link:hover { color: #fff; border-bottom-style: solid; }
 
         .card-footer { margin-top: 15px; padding-top: 10px; border-top: 1px solid #333; font-size: 0.7rem; color: #666; display: flex; justify-content: space-between; align-items: center; }
 
@@ -79,8 +90,8 @@
 
 <div id="login-screen">
     <div class="login-box">
-        <h2 style="color:#fff; margin-bottom:20px;">ACESSO DE AGENTE</h2>
-        <input type="text" id="loginUser" placeholder="ID DO AGENTE">
+        <h2 style="color:#fff; margin-bottom:20px;">SISTEMA CENTRAL</h2>
+        <input type="text" id="loginUser" placeholder="ID AGENTE">
         <input type="password" id="loginPass" placeholder="SENHA">
         <button onclick="fazerLogin()">AUTENTICAR</button>
         <p id="loginError" style="color:var(--danger); display:none; margin-top:15px; font-size:0.8rem;">NEGADO</p>
@@ -90,119 +101,123 @@
 <div id="app-system" class="container hidden">
     <header>
         <div>
-            <h1>BASE DE DADOS V9</h1>
-            <span style="font-size:0.8rem; color:var(--primary);">SISTEMA DE INTELIGÊNCIA INTEGRADA</span>
+            <h1>COMMAND CENTER V10</h1>
+            <span style="font-size:0.8rem; color:var(--primary);">BASE DE DADOS INTEGRADA</span>
         </div>
         <div class="meta-info">
             AGENTE: <strong id="displayUser" style="color:#fff">...</strong><br>
-            <span id="systemStatus">STATUS: ONLINE</span>
+            <span id="systemStatus">CONECTADO</span>
         </div>
     </header>
 
     <div class="tabs">
-        <div class="tab active" onclick="mudarAba('cadastro')">FICHA CRIMINAL / CIVIL</div>
-        <div class="tab" onclick="mudarAba('busca')">CONSULTAR BASE</div>
+        <div class="tab active" onclick="mudarAba('dashboard')">VISÃO GERAL</div>
+        <div class="tab" onclick="mudarAba('cadastro')">NOVA FICHA</div>
+        <div class="tab" onclick="mudarAba('busca')">BUSCA TEXTUAL</div>
     </div>
 
-    <div id="cadastro">
+    <div id="dashboard">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-num" id="stat-total">0</span>
+                <span class="stat-label">TOTAL REGISTROS</span>
+            </div>
+            <div class="stat-card" style="border-color:var(--success)">
+                <span class="stat-num" id="stat-ativos" style="color:var(--success)">0</span>
+                <span class="stat-label">ATIVOS</span>
+            </div>
+            <div class="stat-card" style="border-color:var(--danger)">
+                <span class="stat-num" id="stat-danger" style="color:var(--danger)">0</span>
+                <span class="stat-label">RISCO ALTO (NV 4-5)</span>
+            </div>
+            <div class="stat-card" style="border-color:var(--warning)">
+                <span class="stat-num" id="stat-presos" style="color:var(--warning)">0</span>
+                <span class="stat-label">PRESOS/DETIDOS</span>
+            </div>
+        </div>
+
+        <div class="filter-box">
+            <span class="filter-title">FILTRAGEM AVANÇADA</span>
+            <div class="row">
+                <div class="col">
+                    <label>Status</label>
+                    <select id="filtroStatus">
+                        <option value="">TODOS</option>
+                        <option value="ATIVO">ATIVOS</option>
+                        <option value="PRESO">PRESOS</option>
+                        <option value="VIGILANCIA">VIGILÂNCIA</option>
+                        <option value="FORAGIDO">FORAGIDOS</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label>Nível Risco</label>
+                    <select id="filtroNivel">
+                        <option value="">QUALQUER</option>
+                        <option value="45">ALTO (4-5)</option>
+                        <option value="123">MÉDIO/BAIXO (1-3)</option>
+                        <option value="0">CIVIL (0)</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label>Região (Endereço)</label>
+                    <input type="text" id="filtroRegiao" placeholder="Ex: Centro, Z. Norte...">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col"><label>Idade Min</label><input type="number" id="filtroIdadeMin"></div>
+                <div class="col"><label>Idade Max</label><input type="number" id="filtroIdadeMax"></div>
+                <div class="col" style="display:flex; align-items:flex-end;">
+                    <button onclick="aplicarFiltros()" style="background:#444">APLICAR FILTROS</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="dashboard-results"></div>
+    </div>
+
+    <div id="cadastro" class="hidden">
         <div id="edit-bar" style="background: #2a3b4d; padding: 10px; border-radius: 4px; margin-bottom: 20px; display:none; border-left: 4px solid var(--warning);">
             <strong style="color:var(--warning)">MODO DE EDIÇÃO</strong>
-            <span style="font-size:0.8rem; margin-left:10px;">Atualizando registro existente.</span>
         </div>
 
         <div class="row">
-            <div class="col">
-                <label>Status</label>
-                <select id="status">
-                    <option value="ATIVO">ATIVO / EM LIBERDADE</option>
-                    <option value="VIGILANCIA">SOB VIGILÂNCIA</option>
-                    <option value="PRESO">DETIDO / PRESO</option>
-                    <option value="FORAGIDO">PROCURADO / FORAGIDO</option>
-                    <option value="ARQUIVADO">ARQUIVADO / INATIVO</option>
-                    <option value="OBITO">ÓBITO / FALECIDO</option>
-                </select>
-            </div>
-            <div class="col">
-                <label>Nível de Periculosidade</label>
-                <select id="nivel">
-                    <option value="0">NÍVEL 0 - NULO / CIVIL</option>
-                    <option value="1">NÍVEL 1 - BAIXO</option>
-                    <option value="2">NÍVEL 2 - MODERADO</option>
-                    <option value="3">NÍVEL 3 - ATENÇÃO</option>
-                    <option value="4">NÍVEL 4 - ALTO RISCO</option>
-                    <option value="5">NÍVEL 5 - EXTREMO</option>
-                </select>
-            </div>
+            <div class="col"><label>Status</label><select id="status"><option value="ATIVO">ATIVO</option><option value="VIGILANCIA">VIGILÂNCIA</option><option value="PRESO">PRESO</option><option value="FORAGIDO">FORAGIDO</option><option value="ARQUIVADO">ARQUIVADO</option><option value="OBITO">ÓBITO</option></select></div>
+            <div class="col"><label>Nível Risco</label><select id="nivel"><option value="0">0 - NULO</option><option value="1">1 - BAIXO</option><option value="2">2 - MODERADO</option><option value="3">3 - ATENÇÃO</option><option value="4">4 - ALTO</option><option value="5">5 - EXTREMO</option></select></div>
         </div>
 
         <div class="photo-area">
             <div id="previewBox" class="preview-box">FOTO</div>
-            <div style="flex:1">
-                <label>Foto de Identificação (3x4)</label>
-                <input type="file" id="fotoPerfil" accept="image/*" onchange="previewImagem(this)" style="background:transparent; border:none; padding:0;">
-            </div>
+            <div style="flex:1"><label>Foto (3x4)</label><input type="file" id="fotoPerfil" accept="image/*" onchange="previewImagem(this)" style="background:transparent; border:none; padding:0;"></div>
         </div>
 
-        <div class="row">
-            <div class="col" style="flex:2"><label>Nome Completo</label><input type="text" id="nome"></div>
-            <div class="col"><label>Vulgo / Apelido</label><input type="text" id="vulgo"></div>
-        </div>
-
-        <div class="row">
-            <div class="col"><label>CPF / ID</label><input type="number" id="cpf"></div>
-            <div class="col"><label>Data Nascimento</label><input type="date" id="nascimento" onchange="calcularIdade()"></div>
-            <div class="col" style="flex:0.5"><label>Idade (Auto)</label><input type="number" id="idade" readonly style="background:#222; color:#888;"></div>
-        </div>
-
-        <div class="row">
-            <div class="col"><label>Afiliação / Grupo / Facção</label><input type="text" id="afiliacao" placeholder="Ex: PCC, Empresa X, Neutro..."></div>
-            <div class="col"><label>Profissão / Ocupação</label><input type="text" id="profissao"></div>
-        </div>
-
-        <label>Marcas Físicas / Características (Tatuagens, Cicatrizes, Altura)</label>
-        <input type="text" id="fisico" placeholder="Ex: Tatuagem de aranha no pescoço, cicatriz supercílio esquerdo...">
-
-        <label>Endereço / Localização</label>
-        <input type="text" id="endereco">
-
-        <div class="row">
-            <div class="col"><label>Telefone</label><input type="text" id="telefone"></div>
-            <div class="col"><label>Email</label><input type="email" id="email"></div>
-        </div>
-        
-        <label>Tags (Separe por vírgula)</label>
-        <input type="text" id="tags">
-
-        <label>Redes Sociais</label>
-        <input type="text" id="redes">
-
-        <label>Histórico / Ocorrências</label>
-        <textarea id="detalhes" rows="6"></textarea>
-
-        <label>Evidência (Arquivo)</label>
-        <input type="file" id="arquivoEvidencia">
+        <div class="row"><div class="col" style="flex:2"><label>Nome</label><input type="text" id="nome"></div><div class="col"><label>Vulgo</label><input type="text" id="vulgo"></div></div>
+        <div class="row"><div class="col"><label>CPF</label><input type="number" id="cpf"></div><div class="col"><label>Data Nasc</label><input type="date" id="nascimento" onchange="calcularIdade()"></div><div class="col" style="flex:0.5"><label>Idade</label><input type="number" id="idade" readonly style="background:#222;"></div></div>
+        <div class="row"><div class="col"><label>Grupo/Facção</label><input type="text" id="afiliacao"></div><div class="col"><label>Profissão</label><input type="text" id="profissao"></div></div>
+        <label>Marcas Físicas</label><input type="text" id="fisico">
+        <label>Endereço</label><input type="text" id="endereco">
+        <div class="row"><div class="col"><label>Tel</label><input type="text" id="telefone"></div><div class="col"><label>Email</label><input type="email" id="email"></div></div>
+        <label>Tags</label><input type="text" id="tags"><label>Redes</label><input type="text" id="redes">
+        <label>Histórico</label><textarea id="detalhes" rows="6"></textarea>
+        <label>Evidência</label><input type="file" id="arquivoEvidencia">
 
         <button onclick="enviarDados()" id="btnEnviar">SALVAR FICHA</button>
-        <button onclick="cancelarEdicao()" id="btnCancelar" class="btn-cancel hidden">CANCELAR EDIÇÃO</button>
+        <button onclick="cancelarEdicao()" id="btnCancelar" class="btn-cancel hidden">CANCELAR</button>
     </div>
 
     <div id="busca" class="hidden">
-        <div class="row">
-            <input type="text" id="termoBusca" placeholder="Pesquisar..." style="margin-bottom:0">
-            <button onclick="buscarDados()" id="btnBuscar" style="width:auto; margin-left:10px;">BUSCAR</button>
-        </div>
+        <div class="row"><input type="text" id="termoBusca" placeholder="Buscar..." style="margin-bottom:0"><button onclick="buscarDados()" id="btnBuscar" style="width:auto; margin-left:10px;">BUSCAR</button></div>
         <div id="resultados" style="margin-top:20px;"></div>
     </div>
     <p id="loading" style="text-align: center; display: none; color: var(--primary); font-weight:bold; margin-top:20px;">SINCRONIZANDO...</p>
 </div>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyVgkv76_NApSCN3_3Uf6B0hGdehSml6ZW109I6WYqF0OWyar8lQbaRf2_IklccdCNR8w/exec"; 
+    const SCRIPT_URL = "SUA_URL_DO_APPS_SCRIPT_AQUI"; 
     
     const VALID_USER = "mazur";
     let sessionPass = ""; 
     let modoEdicao = false; 
-    let dadosCache = []; 
+    let dadosCache = []; // O Banco de dados inteiro fica aqui pra filtrar rapido
     let urlFotoAntiga = "", urlEvidenciaAntiga = "";
 
     function fazerLogin() {
@@ -211,46 +226,143 @@
         const btn = document.querySelector('.login-box button');
 
         if (user.toLowerCase() !== VALID_USER) return alert("ID inválido.");
-        btn.innerText = "AUTENTICANDO..."; btn.disabled = true;
+        btn.innerText = "CARREGANDO..."; btn.disabled = true;
 
-        fetch(SCRIPT_URL, {
-            method: 'POST', body: JSON.stringify({ acao: "login", senhaacesso: pass })
-        }).then(res => res.json()).then(data => {
-            if(data.status === "sucesso") {
+        // Ao logar, já baixa TODOS os dados para o Dashboard (*)
+        fetch(`${SCRIPT_URL}?q=*&auth=${encodeURIComponent(pass)}`)
+        .then(res => res.json()).then(data => {
+            if(data[0] && data[0].erro) {
+                document.getElementById('loginError').style.display = 'block';
+                btn.innerText = "AUTENTICAR"; btn.disabled = false;
+            } else {
                 sessionPass = pass;
+                dadosCache = data; // Salva na memória
+                atualizarDashboard(); // Popula os numeros
+                
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('app-system').classList.remove('hidden');
                 document.getElementById('displayUser').innerText = user.toUpperCase();
-            } else { 
-                document.getElementById('loginError').style.display = 'block';
-                btn.innerText = "AUTENTICAR"; btn.disabled = false;
             }
-        }).catch(e => { alert("Erro Conexão."); btn.disabled = false; });
+        }).catch(e => { alert("Erro de Conexão."); btn.disabled = false; });
     }
 
-    // Função Automática de Idade
-    function calcularIdade() {
-        const nascInput = document.getElementById('nascimento').value;
-        if(!nascInput) return;
+    function atualizarDashboard() {
+        // Atualiza contadores
+        document.getElementById('stat-total').innerText = dadosCache.length;
+        document.getElementById('stat-ativos').innerText = dadosCache.filter(i => i.status === "ATIVO").length;
+        document.getElementById('stat-presos').innerText = dadosCache.filter(i => i.status === "PRESO").length;
+        document.getElementById('stat-danger').innerText = dadosCache.filter(i => parseInt(i.nivel) >= 4).length;
         
-        const nasc = new Date(nascInput);
-        const hoje = new Date();
-        let idade = hoje.getFullYear() - nasc.getFullYear();
-        const m = hoje.getMonth() - nasc.getMonth();
-        
-        if (m < 0 || (m === 0 && hoje.getDate() < nasc.getDate())) {
-            idade--;
-        }
-        document.getElementById('idade').value = idade;
+        // Mostra todos inicialmente (limitado a 10 recentes)
+        renderizarCards(dadosCache.slice(-10).reverse(), 'dashboard-results');
     }
 
+    function aplicarFiltros() {
+        const st = document.getElementById('filtroStatus').value;
+        const nv = document.getElementById('filtroNivel').value;
+        const reg = document.getElementById('filtroRegiao').value.toLowerCase();
+        const min = document.getElementById('filtroIdadeMin').value;
+        const max = document.getElementById('filtroIdadeMax').value;
+
+        let filtrados = dadosCache.filter(item => {
+            let pass = true;
+            if (st && item.status !== st) pass = false;
+            if (reg && (!item.endereco || !item.endereco.toLowerCase().includes(reg))) pass = false;
+            
+            // Nivel (lógica agrupada)
+            if (nv === "45" && item.nivel < 4) pass = false;
+            if (nv === "123" && (item.nivel < 1 || item.nivel > 3)) pass = false;
+            if (nv === "0" && item.nivel != 0) pass = false;
+
+            // Idade
+            let idade = parseInt(item.idade) || 0;
+            if (min && idade < min) pass = false;
+            if (max && idade > max) pass = false;
+
+            return pass;
+        });
+
+        if(filtrados.length === 0) document.getElementById('dashboard-results').innerHTML = "<p align='center'>Nenhum resultado para este filtro.</p>";
+        else renderizarCards(filtrados, 'dashboard-results');
+    }
+
+    function renderizarCards(lista, divId) {
+        const container = document.getElementById(divId);
+        container.innerHTML = "";
+        
+        lista.forEach((item) => {
+            // Acha o index real no cache principal para editar
+            let realIndex = dadosCache.findIndex(x => x.cpf === item.cpf);
+
+            let img = item.foto ? `<img src="${item.foto}" class="mugshot">` : `<div class="mugshot">SEM FOTO</div>`;
+            const fmtData = (d) => d ? new Date(d).toLocaleDateString() : "-";
+            let nivelIcon = item.nivel > 0 ? "💀".repeat(parseInt(item.nivel)) : "🛡️ CIVIL";
+            let statusClass = "status-" + (item.status || "ativo").toLowerCase();
+            
+            // Link do Maps
+            let enderecoHtml = item.endereco ? `<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.endereco)}" target="_blank" class="map-link">📍 ${item.endereco}</a>` : "Localização desconhecida";
+
+            let html = `
+                <div class="card ${statusClass}" id="card-${realIndex}">
+                    <div class="card-header">
+                        <div><strong>${item.cpf}</strong></div>
+                        <div class="danger-level">${nivelIcon}</div>
+                    </div>
+                    <div class="card-body">
+                        ${img}
+                        <div class="card-details">
+                            <h2 style="margin:0; font-size:1.2rem; color:#fff;">${item.nome}</h2>
+                            <div style="margin-bottom:10px; color:var(--primary); font-weight:bold; font-size:0.85rem;">VULGO: ${item.vulgo || ""}</div>
+                            <div class="row">
+                                <div class="col"><span class="field-label">Grupo:</span> <span class="field-value">${item.afiliacao || "-"}</span></div>
+                                <div class="col"><span class="field-label">Status:</span> <span class="field-value">${item.status}</span></div>
+                            </div>
+                            <div style="margin-top:10px;">${enderecoHtml}</div>
+                            <div style="margin-top:5px; font-size:0.8rem; color:#888">${item.telefone || ""}</div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <span>ATT: ${fmtData(item.dataUpdate)}</span>
+                        <div>
+                            ${item.evidencia && item.evidencia !== "Sem anexo" ? `<a href="${item.evidencia}" target="_blank" class="btn-sm" style="background:#444; text-decoration:none; color:#fff; margin-right:5px;">📂</a>` : ""}
+                            <button onclick="prepararEdicao(${realIndex})" class="btn-sm" style="background:var(--warning); color:#000;">✏️</button>
+                            <button onclick="exportarPDF('card-${realIndex}')" class="btn-sm" style="background:#fff; color:#000; margin-left:5px;">🖨️</button>
+                        </div>
+                    </div>
+                </div>`;
+            container.innerHTML += html;
+        });
+    }
+
+    // --- FUNÇÕES DE NAVEGAÇÃO E CRUD (IGUAIS V9, ADAPTADAS) ---
     function mudarAba(aba) {
+        document.getElementById('dashboard').classList.add('hidden');
         document.getElementById('cadastro').classList.add('hidden');
         document.getElementById('busca').classList.add('hidden');
         document.getElementById(aba).classList.remove('hidden');
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         event.target.classList.add('active');
-        if(aba==='cadastro' && !modoEdicao) document.getElementById('resultados').innerHTML = "";
+    }
+
+    function buscarDados() {
+        const termo = document.getElementById('termoBusca').value.toLowerCase();
+        const filtrados = dadosCache.filter(item => 
+            (item.nome && item.nome.toLowerCase().includes(termo)) ||
+            (item.cpf && item.cpf.toString().includes(termo)) ||
+            (item.vulgo && item.vulgo.toLowerCase().includes(termo)) ||
+            (item.tags && item.tags.toLowerCase().includes(termo))
+        );
+        renderizarCards(filtrados, 'resultados');
+    }
+
+    function calcularIdade() {
+        const nascInput = document.getElementById('nascimento').value;
+        if(!nascInput) return;
+        const nasc = new Date(nascInput);
+        const hoje = new Date();
+        let idade = hoje.getFullYear() - nasc.getFullYear();
+        if (hoje.getMonth() < nasc.getMonth() || (hoje.getMonth() === nasc.getMonth() && hoje.getDate() < nasc.getDate())) idade--;
+        document.getElementById('idade').value = idade;
     }
 
     function previewImagem(input) {
@@ -267,7 +379,6 @@
     function prepararEdicao(index) {
         const item = dadosCache[index];
         modoEdicao = true;
-        
         const setVal = (id, val) => document.getElementById(id).value = val || "";
         setVal('nome', item.nome); setVal('cpf', item.cpf); setVal('vulgo', item.vulgo);
         setVal('profissao', item.profissao); setVal('idade', item.idade);
@@ -277,13 +388,7 @@
         setVal('nivel', item.nivel); setVal('tags', item.tags);
         setVal('fisico', item.fisico); setVal('afiliacao', item.afiliacao);
         
-        // Trata data nascimento (O Google Sheets retorna data ISO estranha às vezes)
-        if(item.nascimento) {
-            let d = new Date(item.nascimento);
-            // Ajuste fuso horário simples
-            let dataFormatada = d.toISOString().split('T')[0];
-            document.getElementById('nascimento').value = dataFormatada;
-        }
+        if(item.nascimento) document.getElementById('nascimento').value = new Date(item.nascimento).toISOString().split('T')[0];
 
         document.getElementById('cpf').disabled = true;
         document.getElementById('btnEnviar').innerText = "ATUALIZAR";
@@ -304,7 +409,7 @@
         document.getElementById('btnEnviar').innerText = "SALVAR";
         document.getElementById('edit-bar').style.display = 'none';
         document.getElementById('btnCancelar').classList.add('hidden');
-        document.querySelectorAll('input, textarea').forEach(i => i.value = "");
+        document.querySelectorAll('#cadastro input, #cadastro textarea').forEach(i => i.value = "");
         document.getElementById('status').value = "ATIVO";
         document.getElementById('nivel').value = "0";
         document.getElementById('previewBox').style.backgroundImage = "none";
@@ -312,124 +417,41 @@
     }
 
     async function enviarDados() {
+        // (Código de envio igual V9, mas recarrega os dados ao final)
         const nome = document.getElementById('nome').value;
         const cpf = document.getElementById('cpf').value;
-        if(!nome || !cpf) return alert("Nome e CPF são obrigatórios.");
-        
+        if(!nome || !cpf) return alert("Nome e CPF obrigatórios.");
         document.getElementById('btnEnviar').disabled = true;
         document.getElementById('loading').style.display = 'block';
 
-        const getB64 = async (id) => {
-            const f = document.getElementById(id).files[0];
-            return f ? { b64: await toBase64(f), mime: f.type, nome: f.name } : { b64:"", mime:"", nome:"" };
-        }
-
+        const getB64 = async (id) => { const f = document.getElementById(id).files[0]; return f ? { b64: await toBase64(f), mime: f.type, nome: f.name } : { b64:"", mime:"", nome:"" }; }
         const foto = await getB64('fotoPerfil');
         const ev = await getB64('arquivoEvidencia');
 
         const dados = { 
-            senhaacesso: sessionPass, 
-            acao: modoEdicao ? "editar" : "criar",
-            nome, cpf, 
-            status: document.getElementById('status').value,
-            nivel: document.getElementById('nivel').value,
-            tags: document.getElementById('tags').value,
-            vulgo: document.getElementById('vulgo').value,
-            profissao: document.getElementById('profissao').value,
-            idade: document.getElementById('idade').value,
-            nascimento: document.getElementById('nascimento').value, // NOVO
-            fisico: document.getElementById('fisico').value, // NOVO
-            afiliacao: document.getElementById('afiliacao').value, // NOVO
-            endereco: document.getElementById('endereco').value,
-            email: document.getElementById('email').value,
-            telefone: document.getElementById('telefone').value,
-            redes: document.getElementById('redes').value,
-            detalhes: document.getElementById('detalhes').value,
-            fotoBase64: foto.b64, fotoMime: foto.mime, fotoNome: foto.nome,
-            arquivoBase64: ev.b64, arquivoMime: ev.mime, arquivoNome: ev.nome,
+            senhaacesso: sessionPass, acao: modoEdicao ? "editar" : "criar",
+            nome, cpf, status: document.getElementById('status').value, nivel: document.getElementById('nivel').value,
+            tags: document.getElementById('tags').value, vulgo: document.getElementById('vulgo').value,
+            profissao: document.getElementById('profissao').value, idade: document.getElementById('idade').value,
+            nascimento: document.getElementById('nascimento').value, fisico: document.getElementById('fisico').value,
+            afiliacao: document.getElementById('afiliacao').value, endereco: document.getElementById('endereco').value,
+            email: document.getElementById('email').value, telefone: document.getElementById('telefone').value,
+            redes: document.getElementById('redes').value, detalhes: document.getElementById('detalhes').value,
+            fotoBase64: foto.b64, fotoMime: foto.mime, fotoNome: foto.nome, arquivoBase64: ev.b64, arquivoMime: ev.mime, arquivoNome: ev.nome,
             urlFotoExistente: urlFotoAntiga, urlEvidenciaExistente: urlEvidenciaAntiga
         };
 
         fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(dados) })
-        .then(res => res.json())
-        .then(data => {
+        .then(res => res.json()).then(data => {
             document.getElementById('loading').style.display = 'none';
             document.getElementById('btnEnviar').disabled = false;
             if(data.status === "sucesso") {
-                alert("Registro salvo.");
+                alert("Salvo!");
                 cancelarEdicao();
+                // Recarrega dados silenciosamente para atualizar dashboard
+                fetch(`${SCRIPT_URL}?q=*&auth=${encodeURIComponent(sessionPass)}`).then(r=>r.json()).then(d=>{ dadosCache=d; atualizarDashboard(); });
             } else { alert("Erro: " + data.msg); }
-        }).catch(e => { alert("Falha na comunicação."); document.getElementById('btnEnviar').disabled = false; });
-    }
-
-    function buscarDados() {
-        const termo = document.getElementById('termoBusca').value;
-        if(!termo) return alert("Digite um termo.");
-        document.getElementById('loading').style.display = 'block';
-        document.getElementById('resultados').innerHTML = "";
-        
-        fetch(`${SCRIPT_URL}?q=${termo}&auth=${encodeURIComponent(sessionPass)}`)
-        .then(res => res.json())
-        .then(data => {
-            document.getElementById('loading').style.display = 'none';
-            if(data[0] && data[0].erro) { alert("Sessão expirada."); location.reload(); return; }
-            if(data.length === 0) { document.getElementById('resultados').innerHTML = "<p align='center' style='color:#666'>Nada encontrado.</p>"; return; }
-            
-            dadosCache = data;
-
-            data.forEach((item, index) => {
-                let img = item.foto ? `<img src="${item.foto}" class="mugshot">` : `<div class="mugshot">SEM FOTO</div>`;
-                const fmtData = (d) => d ? new Date(d).toLocaleDateString() : "-";
-                
-                // Caveiras se for nivel > 0
-                let nivelIcon = item.nivel > 0 ? "💀".repeat(parseInt(item.nivel)) : "🛡️ CIVIL";
-                let tagsHtml = item.tags ? item.tags.split(',').map(t => `<span class="tag">${t.trim()}</span>`).join('') : "";
-                let statusClass = "status-" + (item.status || "ativo").toLowerCase();
-
-                let html = `
-                    <div class="card ${statusClass}" id="card-${index}">
-                        <div class="card-header">
-                            <div>
-                                <strong>${item.cpf}</strong>
-                            </div>
-                            <div class="danger-level">${nivelIcon}</div>
-                        </div>
-                        <div class="card-body">
-                            ${img}
-                            <div class="card-details">
-                                <h2 style="margin:0; font-size:1.2rem; color:#fff;">${item.nome}</h2>
-                                <div style="margin-bottom:10px; color:var(--primary); font-weight:bold; font-size:0.85rem;">VULGO: ${item.vulgo || "N/A"}</div>
-                                
-                                <div class="row">
-                                    <div class="col"><span class="field-label">Grupo:</span> <span class="field-value">${item.afiliacao || "NENHUM"}</span></div>
-                                    <div class="col"><span class="field-label">Status:</span> <span class="field-value">${item.status}</span></div>
-                                </div>
-
-                                <div style="margin:5px 0; border-bottom:1px solid #333; padding-bottom:5px;">
-                                    <span class="field-label">Físico:</span> <span class="field-value" style="font-size:0.8rem; color:#ccc">${item.fisico || "Sem registros"}</span>
-                                </div>
-                                
-                                <div style="margin:5px 0;">${tagsHtml}</div>
-                                
-                                <div style="margin-top:10px;">
-                                    <span class="field-label">Local:</span> <span class="field-value">${item.endereco || "Desconhecido"}</span>
-                                </div>
-                                
-                                <div style="margin-top:15px; background:#111; padding:10px; border-radius:4px; font-size:0.85rem; color:#ccc; white-space: pre-wrap;">${item.detalhes}</div>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <span>ATUALIZADO: ${fmtData(item.dataUpdate)}</span>
-                            <div>
-                                ${item.evidencia && item.evidencia !== "Sem anexo" ? `<a href="${item.evidencia}" target="_blank" class="btn-sm" style="background:#444; text-decoration:none; color:#fff; margin-right:5px;">📂 PROVAS</a>` : ""}
-                                <button onclick="prepararEdicao(${index})" class="btn-sm" style="background:var(--warning); color:#000;">✏️ EDITAR</button>
-                                <button onclick="exportarPDF('card-${index}')" class="btn-sm" style="background:#fff; color:#000; margin-left:5px;">🖨️ PDF</button>
-                            </div>
-                        </div>
-                    </div>`;
-                document.getElementById('resultados').innerHTML += html;
-            });
-        });
+        }).catch(e => { alert("Falha Conexão."); document.getElementById('btnEnviar').disabled = false; });
     }
 
     function exportarPDF(elementId) {
@@ -437,13 +459,7 @@
         const opt = { margin: 10, filename: 'Dossie.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, backgroundColor: "#1e1e1e" }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
         html2pdf().set(opt).from(element).save();
     }
-
-    const toBase64 = file => new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result.split(',')[1]);
-        reader.onerror = error => reject(error);
-    });
+    const toBase64 = file => new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = () => resolve(reader.result.split(',')[1]); reader.onerror = error => reject(error); });
 </script>
 
 </body>

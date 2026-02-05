@@ -3,196 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAZUR DATABASE // RESTRICTED</title>
+    <title>MAZUR DATABASE // PROFILE V4</title>
     <style>
-        /* --- ESTILO VISUAL "HACKER / TERMINAL" --- */
         :root {
             --bg-color: #050505;
             --terminal-green: #00ff41;
             --terminal-dim: #008f11;
             --alert-color: #ff3333;
-            --glass: rgba(0, 255, 65, 0.05);
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--terminal-green);
             font-family: 'Courier New', Courier, monospace;
-            margin: 0;
-            padding: 20px;
-            overflow-x: hidden;
+            margin: 0; padding: 20px;
             background-image: radial-gradient(circle, #0a0a0a 0%, #000000 100%);
         }
 
-        /* Efeito de Scanline (TV antiga) */
+        /* Efeito de linhas na tela (Scanlines) */
         body::before {
-            content: " ";
-            display: block;
-            position: fixed;
+            content: " "; display: block; position: fixed;
             top: 0; left: 0; bottom: 0; right: 0;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 2;
-            background-size: 100% 2px, 3px 100%;
-            pointer-events: none;
+            z-index: 2; background-size: 100% 2px, 3px 100%; pointer-events: none;
         }
 
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 3;
+        .container { max-width: 650px; margin: 0 auto; position: relative; z-index: 3; }
+
+        h1, h2 { text-align: center; border-bottom: 1px solid var(--terminal-dim); padding-bottom: 10px; letter-spacing: 2px; }
+
+        input, textarea, button {
+            width: 100%; box-sizing: border-box; background: #000;
+            border: 1px solid var(--terminal-dim); color: var(--terminal-green);
+            padding: 12px; margin-bottom: 10px; font-family: 'Courier New', monospace;
+        }
+        input:focus, textarea:focus { outline: none; border-color: var(--terminal-green); }
+
+        button { font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 10px; border: 1px solid var(--terminal-green); transition: 0.2s; }
+        button:hover { background: var(--terminal-green); color: #000; }
+
+        /* UPLOAD DE FOTO 3x4 ESTILIZADO */
+        .photo-upload-container {
+            display: flex; align-items: center; gap: 15px; margin-bottom: 15px; border: 1px dashed var(--terminal-dim); padding: 10px; background: rgba(0,50,0,0.1);
+        }
+        .photo-preview {
+            width: 80px; height: 100px; /* Proporção 3x4 */
+            background: #111; border: 1px solid var(--terminal-dim);
+            background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #555; text-align: center;
         }
 
-        h1, h2 {
-            text-align: center;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            text-shadow: 0 0 10px var(--terminal-dim);
-            border-bottom: 1px solid var(--terminal-dim);
-            padding-bottom: 10px;
-        }
-
-        /* INPUTS E BOTÕES */
-        input, textarea, select {
-            width: 100%;
-            box-sizing: border-box;
-            background: #000;
-            border: 1px solid var(--terminal-dim);
-            color: var(--terminal-green);
-            padding: 15px;
-            margin-bottom: 15px;
-            font-family: 'Courier New', monospace;
-            font-size: 16px;
-            transition: 0.3s;
-            box-shadow: inset 0 0 5px #000;
-        }
-
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: var(--terminal-green);
-            box-shadow: 0 0 10px var(--terminal-dim);
-        }
-
-        button {
-            width: 100%;
-            padding: 15px;
-            background: transparent;
-            border: 1px solid var(--terminal-green);
-            color: var(--terminal-green);
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        button:hover {
-            background: var(--terminal-green);
-            color: #000;
-            box-shadow: 0 0 15px var(--terminal-green);
-        }
-
-        /* TELA DE LOGIN */
-        #login-screen {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #000;
-            z-index: 999;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .login-box {
-            border: 1px solid var(--terminal-green);
-            padding: 30px;
-            width: 100%;
-            max-width: 400px;
-            box-shadow: 0 0 20px var(--terminal-dim);
-            background: rgba(0,0,0,0.9);
-        }
-
-        /* SISTEMA PRINCIPAL (Inicialmente oculto) */
-        #app-system {
-            display: none;
-            animation: fadeIn 1s forwards;
-        }
-
-        /* ABAS */
-        .tabs {
-            display: flex;
-            margin-bottom: 25px;
-            border: 1px solid var(--terminal-dim);
-        }
-        .tab {
-            flex: 1;
-            padding: 15px;
-            text-align: center;
-            cursor: pointer;
-            background: rgba(0, 50, 0, 0.3);
-            border-right: 1px solid var(--terminal-dim);
-            transition: 0.3s;
-        }
-        .tab:last-child { border-right: none; }
-        .tab.active {
-            background: var(--terminal-green);
-            color: #000;
-            font-weight: bold;
-            box-shadow: 0 0 10px var(--terminal-dim);
-        }
-
-        /* RESULTADOS */
+        /* CARD DE RESULTADO (LAYOUT NOVO) */
         .card {
-            border: 1px dashed var(--terminal-dim);
-            padding: 15px;
-            margin-bottom: 15px;
-            background: rgba(0, 20, 0, 0.4);
-            position: relative;
+            border: 1px solid var(--terminal-dim); padding: 15px; margin-bottom: 15px;
+            background: rgba(0, 20, 0, 0.4); display: flex; gap: 15px;
+            align-items: start;
         }
-        .card::before {
-            content: "[REGISTRO]";
-            position: absolute;
-            top: -10px;
-            right: 10px;
-            background: #000;
-            padding: 0 5px;
-            font-size: 12px;
-            color: var(--terminal-dim);
+        .mugshot {
+            width: 100px; height: 130px; /* Foto no resultado um pouco maior */
+            background: #000; border: 1px solid #fff;
+            object-fit: cover; flex-shrink: 0; 
         }
+        .card-info { flex-grow: 1; }
+        .card h3 { margin: 0 0 5px 0; color: #fff; text-transform: uppercase; font-size: 1.2em; }
+        .label { font-size: 10px; color: #aaa; display: block; margin-bottom: 2px; margin-top: 8px; }
+        .data-text { font-size: 14px; margin-bottom: 5px; display: block; color: #ddd; }
+        
         .link-btn {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 8px 15px;
-            border: 1px solid var(--terminal-green);
-            color: var(--terminal-green);
-            text-decoration: none;
-            font-size: 14px;
+            display: inline-block; padding: 5px 10px; border: 1px solid var(--terminal-green);
+            color: var(--terminal-green); text-decoration: none; font-size: 11px; margin-top: 10px;
         }
-        .link-btn:hover {
-            background: var(--terminal-green);
-            color: #000;
-        }
-
+        .link-btn:hover { background: var(--terminal-green); color: #000; }
+        
+        /* LOGIN E ABAS */
+        #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 999; display: flex; justify-content: center; align-items: center; }
+        .login-box { border: 1px solid var(--terminal-green); padding: 30px; width: 300px; background: #000; box-shadow: 0 0 20px rgba(0,255,65,0.2); }
+        #app-system { display: none; }
         .hidden { display: none !important; }
-        .error-msg { color: var(--alert-color); text-align: center; margin-top: 10px; display: none; }
-        
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
-        /* LOGO / STATUS */
-        .status-bar {
-            font-size: 12px;
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            color: var(--terminal-dim);
-            border-bottom: 1px solid #333;
-        }
+        .tabs { display: flex; margin-bottom: 20px; border-bottom: 1px solid var(--terminal-dim); }
+        .tab { flex: 1; padding: 10px; text-align: center; border-right: 1px solid var(--terminal-dim); cursor: pointer; background: #0a0a0a; }
+        .tab:last-child { border: none; }
+        .tab.active { background: var(--terminal-green); color: #000; font-weight: bold; }
 
     </style>
 </head>
@@ -201,237 +91,239 @@
 <div id="login-screen">
     <div class="login-box">
         <h2 style="margin-top:0">ACESSO RESTRITO</h2>
-        <p style="text-align:center; font-size:12px; color: var(--terminal-dim);">INSIRA CREDENCIAIS DE ADMINISTRADOR</p>
-        
-        <input type="text" id="loginUser" placeholder="USUÁRIO">
-        <input type="password" id="loginPass" placeholder="SENHA">
-        
-        <button onclick="fazerLogin()">DESBLOQUEAR SISTEMA</button>
-        <p id="loginError" class="error-msg">ACESSO NEGADO. IP REGISTRADO.</p>
+        <input type="text" id="loginUser" placeholder="USUÁRIO (mazur)">
+        <input type="password" id="loginPass" placeholder="SENHA (********)">
+        <button onclick="fazerLogin()">ACESSAR SISTEMA</button>
+        <p id="loginError" style="color:red; display:none; text-align:center; font-size:12px; margin-top:10px;">ACESSO NEGADO</p>
     </div>
 </div>
 
 <div id="app-system" class="container">
-    <div class="status-bar">
+    <div style="display:flex; justify-content:space-between; font-size:10px; color:#555; margin-bottom:10px;">
         <span>USER: <span id="displayUser">UNKNOWN</span></span>
-        <span>STATUS: ONLINE</span>
-        <span>SERVER: SECURE</span>
+        <span>DB STATUS: ONLINE</span>
     </div>
-
-    <h1>DATABASE KMZ v2.0</h1>
+    
+    <h1>DOSSIÊ CRIMINAL V4</h1>
 
     <div class="tabs">
-        <div class="tab active" onclick="mudarAba('cadastro')">NOVO ARQUIVO</div>
-        <div class="tab" onclick="mudarAba('busca')">INVESTIGAR</div>
+        <div class="tab active" onclick="mudarAba('cadastro')">NOVO REGISTRO</div>
+        <div class="tab" onclick="mudarAba('busca')">CONSULTAR</div>
     </div>
 
     <div id="cadastro">
-        <p style="font-size:12px; margin-bottom:5px;">// DADOS DO ALVO</p>
-        <input type="text" id="nome" placeholder="NOME COMPLETO">
-        <input type="number" id="cpf" placeholder="CPF (SOMENTE NÚMEROS)">
-        
-        <p style="font-size:12px; margin-bottom:5px;">// DOSSIÊ / HISTÓRICO</p>
-        <textarea id="detalhes" rows="5" placeholder="DIGITE OS DETALHES, OCORRÊNCIAS E DADOS DO PASSADO..."></textarea>
-        
-        <p style="font-size:12px; margin-bottom:5px;">// EVIDÊNCIAS (UPLOAD)</p>
-        <div style="border: 1px solid #333; padding: 10px; margin-bottom: 15px;">
-            <input type="file" id="arquivo" style="border:none; padding:0;">
+        <p class="label" style="color:#fff; border-bottom:1px dashed #333; padding-bottom:5px;">// DADOS BIOMÉTRICOS (FOTO 3x4)</p>
+        <div class="photo-upload-container">
+            <div id="previewBox" class="photo-preview">SEM FOTO</div>
+            <div style="flex-grow:1">
+                <input type="file" id="fotoPerfil" accept="image/*" onchange="previewImagem(this)" style="border:none; padding:0;">
+                <span style="font-size:10px; color:#666;">CLIQUE ACIMA PARA SELECIONAR A FOTO DO ROSTO</span>
+            </div>
         </div>
 
-        <button onclick="enviarDados()" id="btnEnviar">CRIPTOGRAFAR E SALVAR</button>
+        <p class="label" style="color:#fff; border-bottom:1px dashed #333; padding-bottom:5px;">// DADOS DE IDENTIFICAÇÃO</p>
+        <input type="text" id="nome" placeholder="NOME COMPLETO">
+        <input type="number" id="cpf" placeholder="CPF / ID (SOMENTE NÚMEROS)">
+        
+        <p class="label" style="color:#fff; border-bottom:1px dashed #333; padding-bottom:5px;">// ANTECEDENTES & HISTÓRICO</p>
+        <textarea id="detalhes" rows="6" placeholder="DIGITE O DOSSIÊ COMPLETO..."></textarea>
+        
+        <p class="label" style="color:#fff; border-bottom:1px dashed #333; padding-bottom:5px;">// EVIDÊNCIAS / PROVAS (ARQUIVO)</p>
+        <input type="file" id="arquivoEvidencia">
+
+        <button onclick="enviarDados()" id="btnEnviar">ARQUIVAR FICHA COMPLETA</button>
     </div>
 
     <div id="busca" class="hidden">
-        <p style="font-size:12px; margin-bottom:5px;">// PARÂMETROS DE BUSCA</p>
         <input type="text" id="termoBusca" placeholder="DIGITE NOME OU CPF DO ALVO...">
-        <button onclick="buscarDados()" id="btnBuscar">EXECUTAR VARREDURA</button>
-        
-        <div id="resultados" style="margin-top: 20px;"></div>
+        <button onclick="buscarDados()" id="btnBuscar">INICIAR VARREDURA</button>
+        <div id="resultados" style="margin-top:20px;"></div>
     </div>
 
-    <p id="loading" style="text-align: center; color: var(--terminal-green); display: none; margin-top:20px;">
-        <span class="blink">PROCESSANDO DADOS... AGUARDE...</span>
-    </p>
+    <p id="loading" style="text-align: center; display: none; margin-top:20px; color:yellow;">PROCESSANDO DADOS NO SERVIDOR...</p>
 </div>
 
 <script>
-    // --- CONFIGURAÇÃO ---
-    // SUA URL DO GOOGLE APPS SCRIPT
+    // --- CONFIGURAÇÃO (SUA NOVA URL AQUI) ---
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw-N38fOeT3BG_GAVWug3FNa52zmVTRWpCPSOgdSzRTsDGsTLGNf5i6wRU-Ntrhgto4yg/exec";
     
-    // CREDENCIAIS
-    const VALID_USER = "mazur";
-    const VALID_PASS = "02893011";
+    const VALID_USER = "mazur"; // Usuário do Login
+    let sessionPass = ""; // Senha temporária
 
-    // --- LÓGICA DE LOGIN ---
+    // 1. SISTEMA DE LOGIN
     function fazerLogin() {
         const user = document.getElementById('loginUser').value.trim();
         const pass = document.getElementById('loginPass').value.trim();
-        const errorMsg = document.getElementById('loginError');
+        const btn = document.querySelector('.login-box button');
 
-        if (user.toLowerCase() === VALID_USER && pass === VALID_PASS) {
-            // Sucesso
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('app-system').style.display = 'block';
-            document.getElementById('displayUser').innerText = user.toUpperCase();
-        } else {
-            // Erro
-            errorMsg.style.display = 'block';
-            errorMsg.innerText = "ACESSO NEGADO // CREDENCIAIS INVÁLIDAS";
-            
-            // Efeito visual de erro
-            document.querySelector('.login-box').style.borderColor = "red";
-            setTimeout(() => {
-                document.querySelector('.login-box').style.borderColor = "#00ff41";
-            }, 1000);
+        // Validação simples de usuário (Case insensitive)
+        if (user.toLowerCase() !== VALID_USER) return erroLogin();
+
+        btn.innerText = "VERIFICANDO...";
+        btn.disabled = true;
+
+        // Testa a senha fazendo uma chamada leve ao Google
+        fetch(`${SCRIPT_URL}?q=login_check&auth=${encodeURIComponent(pass)}`)
+        .then(res => res.json())
+        .then(data => {
+            // Se o Google recusar a senha
+            if(data[0] && data[0].erro === "ACESSO NEGADO") {
+                erroLogin();
+            } else {
+                // Sucesso
+                sessionPass = pass;
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('app-system').style.display = 'block';
+                document.getElementById('displayUser').innerText = user.toUpperCase();
+            }
+        }).catch(e => {
+            alert("Erro de conexão. Verifique sua internet.");
+            erroLogin();
+        });
+
+        function erroLogin() {
+            document.getElementById('loginError').style.display = 'block';
+            btn.innerText = "ACESSAR SISTEMA";
+            btn.disabled = false;
         }
     }
 
-    // Permitir Enter no Login
-    document.getElementById('loginPass').addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') fazerLogin();
-    });
+    // 2. FUNÇÃO VISUAL: PREVIEW DA FOTO 3X4
+    function previewImagem(input) {
+        const preview = document.getElementById('previewBox');
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.style.backgroundImage = `url(${e.target.result})`;
+                preview.innerText = ""; // Remove o texto "SEM FOTO"
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
 
-    // --- LÓGICA DO APP ---
-
+    // 3. NAVEGAÇÃO ENTRE ABAS
     function mudarAba(aba) {
         document.getElementById('cadastro').classList.add('hidden');
         document.getElementById('busca').classList.add('hidden');
         document.getElementById(aba).classList.remove('hidden');
-        
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         event.target.classList.add('active');
-        
-        // Limpar resultados ao trocar de aba
-        if(aba === 'cadastro') document.getElementById('resultados').innerHTML = "";
+        if(aba==='cadastro') document.getElementById('resultados').innerHTML = "";
     }
 
+    // 4. ENVIAR DADOS (UPLOAD DUPLO: FOTO + EVIDENCIA)
     async function enviarDados() {
         const nome = document.getElementById('nome').value;
         const cpf = document.getElementById('cpf').value;
         const detalhes = document.getElementById('detalhes').value;
-        const fileInput = document.getElementById('arquivo');
+        const fotoInput = document.getElementById('fotoPerfil');
+        const evidenciaInput = document.getElementById('arquivoEvidencia');
         const btn = document.getElementById('btnEnviar');
         
-        if(!nome) return alert("ERRO: NOME DO ALVO É OBRIGATÓRIO");
+        if(!nome) return alert("ERRO: NOME É OBRIGATÓRIO PARA ABRIR A FICHA.");
 
-        // UI Loading
-        btn.disabled = true;
-        btn.innerText = "ENVIANDO PACOTE DE DADOS...";
+        btn.disabled = true; btn.innerText = "UPLOADING E CRIPTOGRAFIA...";
         document.getElementById('loading').style.display = 'block';
 
-        let base64 = "";
-        let mime = "";
-        let filename = "";
-
-        if (fileInput.files.length > 0) {
-            const file = fileInput.files[0];
-            // Pequena trava de segurança para arquivos gigantes no browser
-            if(file.size > 50 * 1024 * 1024) { 
-                alert("ALERTA: ARQUIVO MUITO GRANDE (>50MB). PODE FALHAR.");
-            }
-            base64 = await toBase64(file);
-            mime = file.type;
-            filename = file.name;
+        // Prepara Foto de Perfil
+        let fotoB64 = "", fotoMime = "", fotoNome = "";
+        if (fotoInput.files.length > 0) {
+            fotoB64 = await toBase64(fotoInput.files[0]);
+            fotoMime = fotoInput.files[0].type;
+            fotoNome = fotoInput.files[0].name;
         }
 
-        const dados = { nome, cpf, detalhes, arquivoBase64: base64, arquivoMime: mime, arquivoNome: filename };
+        // Prepara Evidência (Print/PDF/Vídeo)
+        let evB64 = "", evMime = "", evNome = "";
+        if (evidenciaInput.files.length > 0) {
+            evB64 = await toBase64(evidenciaInput.files[0]);
+            evMime = evidenciaInput.files[0].type;
+            evNome = evidenciaInput.files[0].name;
+        }
 
-        fetch(SCRIPT_URL, {
-            method: 'POST',
-            body: JSON.stringify(dados)
-        })
+        const dados = { 
+            senhaacesso: sessionPass, 
+            nome, cpf, detalhes, 
+            fotoBase64: fotoB64, fotoMime: fotoMime, fotoNome: fotoNome,
+            arquivoBase64: evB64, arquivoMime: evMime, arquivoNome: evNome
+        };
+
+        fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(dados) })
         .then(res => res.json())
         .then(data => {
             document.getElementById('loading').style.display = 'none';
-            btn.disabled = false;
-            btn.innerText = "CRIPTOGRAFAR E SALVAR";
+            btn.disabled = false; btn.innerText = "ARQUIVAR FICHA COMPLETA";
             
             if(data.status === "sucesso") {
-                alert("SUCESSO: FICHA ARQUIVADA NA NUVEM.");
+                alert("SUCESSO: INDIVÍDUO FICHADO.");
                 // Limpar campos
                 document.getElementById('nome').value = "";
                 document.getElementById('cpf').value = "";
                 document.getElementById('detalhes').value = "";
-                fileInput.value = "";
-            } else {
-                alert("ERRO NO SERVIDOR: " + data.msg);
+                fotoInput.value = ""; evidenciaInput.value = "";
+                document.getElementById('previewBox').style.backgroundImage = "none";
+                document.getElementById('previewBox').innerText = "SEM FOTO";
+            } else { 
+                alert("ERRO NO SERVIDOR: " + data.msg); 
             }
-        })
-        .catch(e => {
-            alert("ERRO CRÍTICO DE CONEXÃO.");
-            console.error(e);
-            document.getElementById('loading').style.display = 'none';
+        }).catch(e => {
+            alert("FALHA CRÍTICA DE CONEXÃO.");
             btn.disabled = false;
-            btn.innerText = "TENTAR NOVAMENTE";
         });
     }
 
+    // 5. BUSCAR DADOS
     function buscarDados() {
         const termo = document.getElementById('termoBusca').value;
         const btn = document.getElementById('btnBuscar');
         
-        if(!termo) return alert("DIGITE UM TERMO PARA A BUSCA.");
+        if(!termo) return alert("DIGITE NOME OU CPF.");
 
         document.getElementById('loading').style.display = 'block';
         document.getElementById('resultados').innerHTML = "";
-        btn.disabled = true;
-        btn.innerText = "VARREDURA EM ANDAMENTO...";
+        btn.disabled = true; btn.innerText = "VARREDURA EM CURSO...";
 
-        fetch(`${SCRIPT_URL}?q=${termo}`)
+        fetch(`${SCRIPT_URL}?q=${termo}&auth=${encodeURIComponent(sessionPass)}`)
         .then(res => res.json())
         .then(data => {
             document.getElementById('loading').style.display = 'none';
-            btn.disabled = false;
-            btn.innerText = "EXECUTAR VARREDURA";
-
-            if(data.length === 0) {
-                document.getElementById('resultados').innerHTML = "<p style='text-align:center; color:#888'>// NENHUM REGISTRO ENCONTRADO NA BASE DE DADOS.</p>";
-                return;
-            }
+            btn.disabled = false; btn.innerText = "INICIAR VARREDURA";
+            
+            if(data[0] && data[0].erro) { alert("SESSÃO EXPIRADA. FAÇA LOGIN NOVAMENTE."); location.reload(); return; }
+            if(data.length === 0) { document.getElementById('resultados').innerHTML = "<p align='center' style='color:#888'>// NENHUM REGISTRO ENCONTRADO.</p>"; return; }
 
             data.forEach(item => {
+                // Lógica: Se tem foto, mostra ela. Se não, mostra caixa preta.
+                let imgHtml = item.foto ? `<img src="${item.foto}" class="mugshot">` : `<div class="mugshot" style="display:flex;align-items:center;justify-content:center;color:#555;font-size:10px;">SEM FOTO</div>`;
+
                 let html = `
                     <div class="card">
-                        <h3 style="margin:0; color:#fff">${item.nome.toUpperCase()}</h3>
-                        <p style="font-size:12px; color:#aaa; margin:5px 0">CPF/ID: ${item.cpf || 'NÃO INFORMADO'}</p>
-                        <div style="background:rgba(0,0,0,0.5); padding:10px; font-size:14px; margin:10px 0; white-space: pre-wrap;">${item.detalhes}</div>
+                        ${imgHtml}
+                        <div class="card-info">
+                            <h3>${item.nome}</h3>
+                            <span class="label">IDENTIDADE (CPF):</span>
+                            <span class="data-text">${item.cpf || 'N/A'}</span>
+                            <span class="label">HISTÓRICO:</span>
+                            <div style="font-size:13px; color:#ddd; white-space: pre-wrap; margin-bottom:10px;">${item.detalhes}</div>
                 `;
                 
-                // Formatar Data
-                if(item.data) {
-                    let d = new Date(item.data);
-                    let dataF = d.toLocaleDateString('pt-BR');
-                    html += `<p style="font-size:10px; color:#555; margin:0">DATA REGISTRO: ${dataF}</p>`;
-                }
-
                 if(item.evidencia && item.evidencia !== "Sem anexo") {
-                    html += `<br><a href="${item.evidencia}" target="_blank" class="link-btn">A C E S S A R &nbsp;  E V I D Ê N C I A</a>`;
+                    html += `<a href="${item.evidencia}" target="_blank" class="link-btn">📂 ABRIR EVIDÊNCIA</a>`;
                 }
-                html += `</div>`;
+                html += `</div></div>`;
                 document.getElementById('resultados').innerHTML += html;
             });
         })
-        .catch(e => {
-           alert("ERRO AO BUSCAR.");
-           btn.disabled = false;
-           document.getElementById('loading').style.display = 'none';
-        });
+        .catch(e => { alert("ERRO NA BUSCA."); btn.disabled = false; });
     }
 
+    // Utilitário para converter arquivo em Base64
     const toBase64 = file => new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = () => resolve(reader.result.split(',')[1]);
         reader.onerror = error => reject(error);
     });
-
-    // Efeito visual de Blink
-    setInterval(() => {
-        const el = document.querySelector('.blink');
-        if(el) el.style.opacity = (el.style.opacity == 0 ? 1 : 0);
-    }, 500);
-
 </script>
 
 </body>

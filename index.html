@@ -3,87 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SISTEMA DE INTELIGÊNCIA // V10</title>
+    <title>SISTEMA DE INTELIGÊNCIA // V10 FINAL</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
         :root {
-            --bg-body: #0f1012;
-            --bg-card: #1b1e23;
-            --bg-input: #252a33;
-            --primary: #2d6cdf; 
-            --text-main: #e0e0e0;
-            --text-muted: #8892b0;
-            --border: #333a45;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --success: #10b981;
+            --bg-body: #0f1012; --bg-card: #1b1e23; --bg-input: #252a33;
+            --primary: #2d6cdf; --text-main: #e0e0e0; --text-muted: #8892b0;
+            --border: #333a45; --danger: #ef4444; --warning: #f59e0b; --success: #10b981;
         }
-
         body { background-color: var(--bg-body); color: var(--text-main); font-family: 'Roboto', sans-serif; margin: 0; padding: 20px; font-size: 14px; }
         .container { max-width: 900px; margin: 0 auto; }
-
         header { border-bottom: 2px solid var(--primary); padding-bottom: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end; }
         h1 { margin: 0; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 1px; font-size: 1.5rem; }
-        .meta-info { font-size: 0.8rem; color: var(--text-muted); text-align: right; }
-
-        /* Estilo Dashboard Stats */
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
         .stat-card { background: var(--bg-card); padding: 15px; border-radius: 6px; border: 1px solid var(--border); text-align: center; }
         .stat-num { font-size: 2rem; font-weight: 700; color: #fff; display: block; }
         .stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-
-        /* Filtros Avançados */
         .filter-box { background: #16191d; padding: 15px; border-radius: 6px; border: 1px solid var(--border); margin-bottom: 20px; }
-        .filter-title { font-size: 0.8rem; text-transform: uppercase; color: var(--primary); font-weight: bold; margin-bottom: 10px; display: block; }
-
         label { display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; font-weight: 500; }
-        input, textarea, select { width: 100%; box-sizing: border-box; background: var(--bg-input); border: 1px solid var(--border); color: #fff; padding: 10px; margin-bottom: 12px; border-radius: 4px; font-family: 'Roboto', sans-serif; transition: 0.3s; }
+        input, textarea, select { width: 100%; box-sizing: border-box; background: var(--bg-input); border: 1px solid var(--border); color: #fff; padding: 10px; margin-bottom: 12px; border-radius: 4px; transition: 0.3s; }
         input:focus, textarea:focus, select:focus { border-color: var(--primary); outline: none; background: #2f3642; }
-        input:disabled { background: #1a1a1a; color: #555; border-color: #333; }
-
-        .row { display: flex; gap: 15px; }
-        .col { flex: 1; }
-
-        button { background: var(--primary); color: #fff; border: none; padding: 12px 20px; border-radius: 4px; font-weight: 600; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; transition: 0.2s; width: 100%; }
+        input:disabled { background: #1a1a1a; color: #555; }
+        .row { display: flex; gap: 15px; } .col { flex: 1; }
+        button { background: var(--primary); color: #fff; border: none; padding: 12px 20px; border-radius: 4px; font-weight: 600; cursor: pointer; text-transform: uppercase; transition: 0.2s; width: 100%; }
         button:hover { background: #1e54b3; }
         .btn-cancel { background: transparent; border: 1px solid var(--text-muted); color: var(--text-muted); margin-top: 10px; }
         .btn-sm { padding: 5px 10px; font-size: 0.75rem; width: auto; display: inline-block; }
-
         .tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
         .tab { padding: 12px 25px; cursor: pointer; color: var(--text-muted); font-weight: 500; border-bottom: 3px solid transparent; transition: 0.3s; }
-        .tab:hover { color: #fff; }
         .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
-
         .photo-area { display: flex; gap: 15px; background: var(--bg-card); padding: 15px; border-radius: 6px; border: 1px solid var(--border); margin-bottom: 15px; }
-        .preview-box { width: 90px; height: 110px; background: #000; border-radius: 4px; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; color: #555; font-size: 0.7rem; border: 1px solid #444; }
-
+        .preview-box { width: 90px; height: 110px; background: #000; border-radius: 4px; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; color: #555; border: 1px solid #444; }
         .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); border-left: 4px solid var(--primary); }
-        .status-ativo { border-left-color: var(--success); }
-        .status-preso { border-left-color: var(--danger); }
-        .status-vigilancia { border-left-color: var(--warning); }
-        .status-arquivado { border-left-color: #555; }
-        .status-obito { border-left-color: #000; }
-
+        .status-ativo { border-left-color: var(--success); } .status-preso { border-left-color: var(--danger); }
+        .status-vigilancia { border-left-color: var(--warning); } .status-arquivado { border-left-color: #555; }
         .card-header { display: flex; justify-content: space-between; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px; }
-        .card-body { display: flex; gap: 20px; }
-        .card-details { flex: 1; }
-        
+        .card-body { display: flex; gap: 20px; } .card-details { flex: 1; }
         .field-label { color: var(--primary); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; margin-right: 5px; }
         .field-value { color: #fff; font-size: 0.9rem; }
         .tag { background: #2f3642; padding: 2px 8px; border-radius: 10px; font-size: 0.75rem; color: #ccc; margin-right: 5px; display: inline-block; }
         .danger-level { color: var(--danger); font-weight: bold; letter-spacing: 2px; }
-        
         .map-link { color: #58a6ff; text-decoration: none; border-bottom: 1px dotted #58a6ff; }
-        .map-link:hover { color: #fff; border-bottom-style: solid; }
-
         .card-footer { margin-top: 15px; padding-top: 10px; border-top: 1px solid #333; font-size: 0.7rem; color: #666; display: flex; justify-content: space-between; align-items: center; }
-
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f0f0f; z-index: 999; display: flex; justify-content: center; align-items: center; }
         .login-box { background: var(--bg-card); padding: 40px; border-radius: 8px; width: 320px; text-align: center; border-top: 4px solid var(--primary); }
         .hidden { display: none !important; }
-        @media print { .no-print { display: none; } }
     </style>
 </head>
 <body>
@@ -100,14 +66,8 @@
 
 <div id="app-system" class="container hidden">
     <header>
-        <div>
-            <h1>COMMAND CENTER V10</h1>
-            <span style="font-size:0.8rem; color:var(--primary);">BASE DE DADOS INTEGRADA</span>
-        </div>
-        <div class="meta-info">
-            AGENTE: <strong id="displayUser" style="color:#fff">...</strong><br>
-            <span id="systemStatus">CONECTADO</span>
-        </div>
+        <div><h1>COMMAND CENTER</h1><span style="font-size:0.8rem; color:var(--primary);">BASE DE DADOS INTEGRADA</span></div>
+        <div class="meta-info">AGENTE: <strong id="displayUser" style="color:#fff">...</strong><br>STATUS: ONLINE</div>
     </header>
 
     <div class="tabs">
@@ -118,88 +78,38 @@
 
     <div id="dashboard">
         <div class="stats-grid">
-            <div class="stat-card">
-                <span class="stat-num" id="stat-total">0</span>
-                <span class="stat-label">TOTAL REGISTROS</span>
-            </div>
-            <div class="stat-card" style="border-color:var(--success)">
-                <span class="stat-num" id="stat-ativos" style="color:var(--success)">0</span>
-                <span class="stat-label">ATIVOS</span>
-            </div>
-            <div class="stat-card" style="border-color:var(--danger)">
-                <span class="stat-num" id="stat-danger" style="color:var(--danger)">0</span>
-                <span class="stat-label">RISCO ALTO (NV 4-5)</span>
-            </div>
-            <div class="stat-card" style="border-color:var(--warning)">
-                <span class="stat-num" id="stat-presos" style="color:var(--warning)">0</span>
-                <span class="stat-label">PRESOS/DETIDOS</span>
-            </div>
+            <div class="stat-card"><span class="stat-num" id="stat-total">0</span><span class="stat-label">TOTAL REGISTROS</span></div>
+            <div class="stat-card" style="border-color:var(--success)"><span class="stat-num" id="stat-ativos" style="color:var(--success)">0</span><span class="stat-label">ATIVOS</span></div>
+            <div class="stat-card" style="border-color:var(--danger)"><span class="stat-num" id="stat-danger" style="color:var(--danger)">0</span><span class="stat-label">RISCO ALTO</span></div>
+            <div class="stat-card" style="border-color:var(--warning)"><span class="stat-num" id="stat-presos" style="color:var(--warning)">0</span><span class="stat-label">PRESOS</span></div>
         </div>
 
         <div class="filter-box">
-            <span class="filter-title">FILTRAGEM AVANÇADA</span>
+            <span class="filter-title" style="color:var(--primary); font-weight:bold; display:block; margin-bottom:10px;">FILTRAGEM</span>
             <div class="row">
-                <div class="col">
-                    <label>Status</label>
-                    <select id="filtroStatus">
-                        <option value="">TODOS</option>
-                        <option value="ATIVO">ATIVOS</option>
-                        <option value="PRESO">PRESOS</option>
-                        <option value="VIGILANCIA">VIGILÂNCIA</option>
-                        <option value="FORAGIDO">FORAGIDOS</option>
-                    </select>
-                </div>
-                <div class="col">
-                    <label>Nível Risco</label>
-                    <select id="filtroNivel">
-                        <option value="">QUALQUER</option>
-                        <option value="45">ALTO (4-5)</option>
-                        <option value="123">MÉDIO/BAIXO (1-3)</option>
-                        <option value="0">CIVIL (0)</option>
-                    </select>
-                </div>
-                <div class="col">
-                    <label>Região (Endereço)</label>
-                    <input type="text" id="filtroRegiao" placeholder="Ex: Centro, Z. Norte...">
-                </div>
+                <div class="col"><label>Status</label><select id="filtroStatus"><option value="">TODOS</option><option value="ATIVO">ATIVOS</option><option value="PRESO">PRESOS</option><option value="VIGILANCIA">VIGILÂNCIA</option><option value="FORAGIDO">FORAGIDOS</option></select></div>
+                <div class="col"><label>Risco</label><select id="filtroNivel"><option value="">QUALQUER</option><option value="45">ALTO (4-5)</option><option value="123">MÉDIO/BAIXO (1-3)</option><option value="0">CIVIL (0)</option></select></div>
+                <div class="col"><label>Região</label><input type="text" id="filtroRegiao" placeholder="Ex: Centro..."></div>
             </div>
             <div class="row">
                 <div class="col"><label>Idade Min</label><input type="number" id="filtroIdadeMin"></div>
                 <div class="col"><label>Idade Max</label><input type="number" id="filtroIdadeMax"></div>
-                <div class="col" style="display:flex; align-items:flex-end;">
-                    <button onclick="aplicarFiltros()" style="background:#444">APLICAR FILTROS</button>
-                </div>
+                <div class="col" style="display:flex; align-items:flex-end;"><button onclick="aplicarFiltros()" style="background:#444">APLICAR</button></div>
             </div>
         </div>
-
         <div id="dashboard-results"></div>
     </div>
 
     <div id="cadastro" class="hidden">
-        <div id="edit-bar" style="background: #2a3b4d; padding: 10px; border-radius: 4px; margin-bottom: 20px; display:none; border-left: 4px solid var(--warning);">
-            <strong style="color:var(--warning)">MODO DE EDIÇÃO</strong>
-        </div>
-
-        <div class="row">
-            <div class="col"><label>Status</label><select id="status"><option value="ATIVO">ATIVO</option><option value="VIGILANCIA">VIGILÂNCIA</option><option value="PRESO">PRESO</option><option value="FORAGIDO">FORAGIDO</option><option value="ARQUIVADO">ARQUIVADO</option><option value="OBITO">ÓBITO</option></select></div>
-            <div class="col"><label>Nível Risco</label><select id="nivel"><option value="0">0 - NULO</option><option value="1">1 - BAIXO</option><option value="2">2 - MODERADO</option><option value="3">3 - ATENÇÃO</option><option value="4">4 - ALTO</option><option value="5">5 - EXTREMO</option></select></div>
-        </div>
-
-        <div class="photo-area">
-            <div id="previewBox" class="preview-box">FOTO</div>
-            <div style="flex:1"><label>Foto (3x4)</label><input type="file" id="fotoPerfil" accept="image/*" onchange="previewImagem(this)" style="background:transparent; border:none; padding:0;"></div>
-        </div>
-
+        <div id="edit-bar" style="background: #2a3b4d; padding: 10px; margin-bottom: 20px; display:none; border-left: 4px solid var(--warning);"><strong style="color:var(--warning)">MODO DE EDIÇÃO</strong></div>
+        <div class="row"><div class="col"><label>Status</label><select id="status"><option value="ATIVO">ATIVO</option><option value="VIGILANCIA">VIGILÂNCIA</option><option value="PRESO">PRESO</option><option value="FORAGIDO">FORAGIDO</option><option value="ARQUIVADO">ARQUIVADO</option><option value="OBITO">ÓBITO</option></select></div><div class="col"><label>Nível Risco</label><select id="nivel"><option value="0">0 - NULO</option><option value="1">1 - BAIXO</option><option value="2">2 - MODERADO</option><option value="3">3 - ATENÇÃO</option><option value="4">4 - ALTO</option><option value="5">5 - EXTREMO</option></select></div></div>
+        <div class="photo-area"><div id="previewBox" class="preview-box">FOTO</div><div style="flex:1"><label>Foto (3x4)</label><input type="file" id="fotoPerfil" accept="image/*" onchange="previewImagem(this)" style="border:none; padding:0;"></div></div>
         <div class="row"><div class="col" style="flex:2"><label>Nome</label><input type="text" id="nome"></div><div class="col"><label>Vulgo</label><input type="text" id="vulgo"></div></div>
         <div class="row"><div class="col"><label>CPF</label><input type="number" id="cpf"></div><div class="col"><label>Data Nasc</label><input type="date" id="nascimento" onchange="calcularIdade()"></div><div class="col" style="flex:0.5"><label>Idade</label><input type="number" id="idade" readonly style="background:#222;"></div></div>
         <div class="row"><div class="col"><label>Grupo/Facção</label><input type="text" id="afiliacao"></div><div class="col"><label>Profissão</label><input type="text" id="profissao"></div></div>
-        <label>Marcas Físicas</label><input type="text" id="fisico">
-        <label>Endereço</label><input type="text" id="endereco">
+        <label>Marcas Físicas</label><input type="text" id="fisico"><label>Endereço</label><input type="text" id="endereco">
         <div class="row"><div class="col"><label>Tel</label><input type="text" id="telefone"></div><div class="col"><label>Email</label><input type="email" id="email"></div></div>
-        <label>Tags</label><input type="text" id="tags"><label>Redes</label><input type="text" id="redes">
-        <label>Histórico</label><textarea id="detalhes" rows="6"></textarea>
-        <label>Evidência</label><input type="file" id="arquivoEvidencia">
-
+        <label>Tags</label><input type="text" id="tags"><label>Redes</label><input type="text" id="redes"><label>Histórico</label><textarea id="detalhes" rows="6"></textarea><label>Evidência</label><input type="file" id="arquivoEvidencia">
         <button onclick="enviarDados()" id="btnEnviar">SALVAR FICHA</button>
         <button onclick="cancelarEdicao()" id="btnCancelar" class="btn-cancel hidden">CANCELAR</button>
     </div>
@@ -212,12 +122,13 @@
 </div>
 
 <script>
+    // --- COLE SUA URL DO APPS SCRIPT AQUI ---
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyVgkv76_NApSCN3_3Uf6B0hGdehSml6ZW109I6WYqF0OWyar8lQbaRf2_IklccdCNR8w/exec"; 
     
     const VALID_USER = "mazur";
     let sessionPass = ""; 
     let modoEdicao = false; 
-    let dadosCache = []; // O Banco de dados inteiro fica aqui pra filtrar rapido
+    let dadosCache = []; 
     let urlFotoAntiga = "", urlEvidenciaAntiga = "";
 
     function fazerLogin() {
@@ -228,17 +139,19 @@
         if (user.toLowerCase() !== VALID_USER) return alert("ID inválido.");
         btn.innerText = "CARREGANDO..."; btn.disabled = true;
 
-        // Ao logar, já baixa TODOS os dados para o Dashboard (*)
-        fetch(`${SCRIPT_URL}?q=*&auth=${encodeURIComponent(pass)}`)
+        // USA POST PARA BUSCAR DADOS DO DASHBOARD
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify({ acao: "busca", termo: "*", senhaacesso: pass })
+        })
         .then(res => res.json()).then(data => {
             if(data[0] && data[0].erro) {
                 document.getElementById('loginError').style.display = 'block';
                 btn.innerText = "AUTENTICAR"; btn.disabled = false;
             } else {
                 sessionPass = pass;
-                dadosCache = data; // Salva na memória
-                atualizarDashboard(); // Popula os numeros
-                
+                dadosCache = data;
+                atualizarDashboard();
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('app-system').classList.remove('hidden');
                 document.getElementById('displayUser').innerText = user.toUpperCase();
@@ -247,13 +160,10 @@
     }
 
     function atualizarDashboard() {
-        // Atualiza contadores
         document.getElementById('stat-total').innerText = dadosCache.length;
         document.getElementById('stat-ativos').innerText = dadosCache.filter(i => i.status === "ATIVO").length;
         document.getElementById('stat-presos').innerText = dadosCache.filter(i => i.status === "PRESO").length;
         document.getElementById('stat-danger').innerText = dadosCache.filter(i => parseInt(i.nivel) >= 4).length;
-        
-        // Mostra todos inicialmente (limitado a 10 recentes)
         renderizarCards(dadosCache.slice(-10).reverse(), 'dashboard-results');
     }
 
@@ -268,73 +178,39 @@
             let pass = true;
             if (st && item.status !== st) pass = false;
             if (reg && (!item.endereco || !item.endereco.toLowerCase().includes(reg))) pass = false;
-            
-            // Nivel (lógica agrupada)
             if (nv === "45" && item.nivel < 4) pass = false;
             if (nv === "123" && (item.nivel < 1 || item.nivel > 3)) pass = false;
             if (nv === "0" && item.nivel != 0) pass = false;
-
-            // Idade
             let idade = parseInt(item.idade) || 0;
             if (min && idade < min) pass = false;
             if (max && idade > max) pass = false;
-
             return pass;
         });
-
-        if(filtrados.length === 0) document.getElementById('dashboard-results').innerHTML = "<p align='center'>Nenhum resultado para este filtro.</p>";
-        else renderizarCards(filtrados, 'dashboard-results');
+        renderizarCards(filtrados, 'dashboard-results');
     }
 
     function renderizarCards(lista, divId) {
         const container = document.getElementById(divId);
         container.innerHTML = "";
+        if(lista.length === 0) { container.innerHTML = "<p align='center'>Nenhum registro.</p>"; return; }
         
         lista.forEach((item) => {
-            // Acha o index real no cache principal para editar
             let realIndex = dadosCache.findIndex(x => x.cpf === item.cpf);
-
             let img = item.foto ? `<img src="${item.foto}" class="mugshot">` : `<div class="mugshot">SEM FOTO</div>`;
-            const fmtData = (d) => d ? new Date(d).toLocaleDateString() : "-";
             let nivelIcon = item.nivel > 0 ? "💀".repeat(parseInt(item.nivel)) : "🛡️ CIVIL";
             let statusClass = "status-" + (item.status || "ativo").toLowerCase();
-            
-            // Link do Maps
             let enderecoHtml = item.endereco ? `<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.endereco)}" target="_blank" class="map-link">📍 ${item.endereco}</a>` : "Localização desconhecida";
 
             let html = `
                 <div class="card ${statusClass}" id="card-${realIndex}">
-                    <div class="card-header">
-                        <div><strong>${item.cpf}</strong></div>
-                        <div class="danger-level">${nivelIcon}</div>
-                    </div>
-                    <div class="card-body">
-                        ${img}
-                        <div class="card-details">
-                            <h2 style="margin:0; font-size:1.2rem; color:#fff;">${item.nome}</h2>
-                            <div style="margin-bottom:10px; color:var(--primary); font-weight:bold; font-size:0.85rem;">VULGO: ${item.vulgo || ""}</div>
-                            <div class="row">
-                                <div class="col"><span class="field-label">Grupo:</span> <span class="field-value">${item.afiliacao || "-"}</span></div>
-                                <div class="col"><span class="field-label">Status:</span> <span class="field-value">${item.status}</span></div>
-                            </div>
-                            <div style="margin-top:10px;">${enderecoHtml}</div>
-                            <div style="margin-top:5px; font-size:0.8rem; color:#888">${item.telefone || ""}</div>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <span>ATT: ${fmtData(item.dataUpdate)}</span>
-                        <div>
-                            ${item.evidencia && item.evidencia !== "Sem anexo" ? `<a href="${item.evidencia}" target="_blank" class="btn-sm" style="background:#444; text-decoration:none; color:#fff; margin-right:5px;">📂</a>` : ""}
-                            <button onclick="prepararEdicao(${realIndex})" class="btn-sm" style="background:var(--warning); color:#000;">✏️</button>
-                            <button onclick="exportarPDF('card-${realIndex}')" class="btn-sm" style="background:#fff; color:#000; margin-left:5px;">🖨️</button>
-                        </div>
-                    </div>
+                    <div class="card-header"><div><strong>${item.cpf}</strong></div><div class="danger-level">${nivelIcon}</div></div>
+                    <div class="card-body">${img}<div class="card-details"><h2 style="margin:0; font-size:1.2rem; color:#fff;">${item.nome}</h2><div style="margin-bottom:10px; color:var(--primary); font-weight:bold; font-size:0.85rem;">VULGO: ${item.vulgo || ""}</div><div class="row"><div class="col"><span class="field-label">Grupo:</span> <span class="field-value">${item.afiliacao || "-"}</span></div><div class="col"><span class="field-label">Status:</span> <span class="field-value">${item.status}</span></div></div><div style="margin-top:10px;">${enderecoHtml}</div><div style="margin-top:5px; font-size:0.8rem; color:#888">${item.telefone || ""}</div></div></div>
+                    <div class="card-footer"><span>ID: ${realIndex}</span><div><button onclick="prepararEdicao(${realIndex})" class="btn-sm" style="background:var(--warning); color:#000;">✏️</button><button onclick="exportarPDF('card-${realIndex}')" class="btn-sm" style="background:#fff; color:#000; margin-left:5px;">🖨️</button></div></div>
                 </div>`;
             container.innerHTML += html;
         });
     }
 
-    // --- FUNÇÕES DE NAVEGAÇÃO E CRUD (IGUAIS V9, ADAPTADAS) ---
     function mudarAba(aba) {
         document.getElementById('dashboard').classList.add('hidden');
         document.getElementById('cadastro').classList.add('hidden');
@@ -346,12 +222,8 @@
 
     function buscarDados() {
         const termo = document.getElementById('termoBusca').value.toLowerCase();
-        const filtrados = dadosCache.filter(item => 
-            (item.nome && item.nome.toLowerCase().includes(termo)) ||
-            (item.cpf && item.cpf.toString().includes(termo)) ||
-            (item.vulgo && item.vulgo.toLowerCase().includes(termo)) ||
-            (item.tags && item.tags.toLowerCase().includes(termo))
-        );
+        // Agora busca direto no cache (mais rápido)
+        const filtrados = dadosCache.filter(item => (item.nome + item.cpf + item.vulgo + item.tags).toLowerCase().includes(termo));
         renderizarCards(filtrados, 'resultados');
     }
 
@@ -368,10 +240,7 @@
     function previewImagem(input) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
-            reader.onload = function(e) { 
-                document.getElementById('previewBox').style.backgroundImage = `url(${e.target.result})`; 
-                document.getElementById('previewBox').innerText = "";
-            }
+            reader.onload = function(e) { document.getElementById('previewBox').style.backgroundImage = `url(${e.target.result})`; document.getElementById('previewBox').innerText = ""; }
             reader.readAsDataURL(input.files[0]);
         }
     }
@@ -387,19 +256,13 @@
         setVal('detalhes', item.detalhes); setVal('status', item.status);
         setVal('nivel', item.nivel); setVal('tags', item.tags);
         setVal('fisico', item.fisico); setVal('afiliacao', item.afiliacao);
-        
         if(item.nascimento) document.getElementById('nascimento').value = new Date(item.nascimento).toISOString().split('T')[0];
-
         document.getElementById('cpf').disabled = true;
         document.getElementById('btnEnviar').innerText = "ATUALIZAR";
         document.getElementById('edit-bar').style.display = 'block';
         document.getElementById('btnCancelar').classList.remove('hidden');
-
         urlFotoAntiga = item.foto; urlEvidenciaAntiga = item.evidencia;
-        if(item.foto) {
-            document.getElementById('previewBox').style.backgroundImage = `url(${item.foto})`;
-            document.getElementById('previewBox').innerText = "";
-        }
+        if(item.foto) { document.getElementById('previewBox').style.backgroundImage = `url(${item.foto})`; document.getElementById('previewBox').innerText = ""; }
         mudarAba('cadastro');
     }
 
@@ -410,23 +273,19 @@
         document.getElementById('edit-bar').style.display = 'none';
         document.getElementById('btnCancelar').classList.add('hidden');
         document.querySelectorAll('#cadastro input, #cadastro textarea').forEach(i => i.value = "");
-        document.getElementById('status').value = "ATIVO";
-        document.getElementById('nivel').value = "0";
-        document.getElementById('previewBox').style.backgroundImage = "none";
-        document.getElementById('previewBox').innerText = "FOTO";
+        document.getElementById('status').value = "ATIVO"; document.getElementById('nivel').value = "0";
+        document.getElementById('previewBox').style.backgroundImage = "none"; document.getElementById('previewBox').innerText = "FOTO";
     }
 
     async function enviarDados() {
-        // (Código de envio igual V9, mas recarrega os dados ao final)
         const nome = document.getElementById('nome').value;
         const cpf = document.getElementById('cpf').value;
-        if(!nome || !cpf) return alert("Nome e CPF obrigatórios.");
+        if(!nome || !cpf) return alert("Dados incompletos.");
         document.getElementById('btnEnviar').disabled = true;
         document.getElementById('loading').style.display = 'block';
 
         const getB64 = async (id) => { const f = document.getElementById(id).files[0]; return f ? { b64: await toBase64(f), mime: f.type, nome: f.name } : { b64:"", mime:"", nome:"" }; }
-        const foto = await getB64('fotoPerfil');
-        const ev = await getB64('arquivoEvidencia');
+        const foto = await getB64('fotoPerfil'); const ev = await getB64('arquivoEvidencia');
 
         const dados = { 
             senhaacesso: sessionPass, acao: modoEdicao ? "editar" : "criar",
@@ -446,12 +305,13 @@
             document.getElementById('loading').style.display = 'none';
             document.getElementById('btnEnviar').disabled = false;
             if(data.status === "sucesso") {
-                alert("Salvo!");
+                alert("Salvo com sucesso!");
                 cancelarEdicao();
-                // Recarrega dados silenciosamente para atualizar dashboard
-                fetch(`${SCRIPT_URL}?q=*&auth=${encodeURIComponent(sessionPass)}`).then(r=>r.json()).then(d=>{ dadosCache=d; atualizarDashboard(); });
+                // RECARREGA TUDO (Via POST)
+                fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ acao: "busca", termo: "*", senhaacesso: sessionPass }) })
+                .then(r=>r.json()).then(d=>{ dadosCache=d; atualizarDashboard(); });
             } else { alert("Erro: " + data.msg); }
-        }).catch(e => { alert("Falha Conexão."); document.getElementById('btnEnviar').disabled = false; });
+        }).catch(e => { alert("Falha conexão."); document.getElementById('btnEnviar').disabled = false; });
     }
 
     function exportarPDF(elementId) {

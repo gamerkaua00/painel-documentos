@@ -154,8 +154,8 @@
 </div>
 
 <script>
-    // --- SUA URL ATUALIZADA AQUI ---
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw-N38fOeT3BG_GAVWug3FNa52zmVTRWpCPSOgdSzRTsDGsTLGNf5i6wRU-Ntrhgto4yg/exec";
+    // --- SUA NOVA URL AQUI ---
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyVgkv76_NApSCN3_3Uf6B0hGdehSml6ZW109I6WYqF0OWyar8lQbaRf2_IklccdCNR8w/exec";
     
     const VALID_USER = "mazur";
     let sessionPass = ""; 
@@ -181,8 +181,8 @@
                 document.getElementById('displayUser').innerText = user.toUpperCase();
             }
         }).catch(e => { 
-            // Se der erro de CORS ou Net, geralmente é script não publicado como "Nova Versão" ou "Qualquer Pessoa"
-            alert("Erro de conexão. Verifique se o Script foi implantado corretamente."); 
+            // Se der erro aqui, é permissão do Apps Script
+            alert("Erro de conexão. Verifique se a implantação está marcada como 'QUALQUER PESSOA'."); 
             erroLogin(); 
         });
 

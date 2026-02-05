@@ -39,7 +39,6 @@
         }
         input:focus, textarea:focus { outline: none; border-color: var(--terminal-green); }
         
-        /* Grid para inputs pequenos (Idade/Tel) */
         .row-inputs { display: flex; gap: 10px; }
         .row-inputs input { flex: 1; }
 
@@ -154,7 +153,7 @@
 </div>
 
 <script>
-    // --- SUA NOVA URL AQUI ---
+    // --- SUA URL DEPLOYADA AQUI ---
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyVgkv76_NApSCN3_3Uf6B0hGdehSml6ZW109I6WYqF0OWyar8lQbaRf2_IklccdCNR8w/exec";
     
     const VALID_USER = "mazur";
@@ -169,6 +168,7 @@
 
         btn.innerText = "VERIFICANDO..."; btn.disabled = true;
 
+        // Verifica a senha no servidor
         fetch(`${SCRIPT_URL}?q=login_check&auth=${encodeURIComponent(pass)}`)
         .then(res => res.json())
         .then(data => {
@@ -181,8 +181,8 @@
                 document.getElementById('displayUser').innerText = user.toUpperCase();
             }
         }).catch(e => { 
-            // Se der erro aqui, é permissão do Apps Script
-            alert("Erro de conexão. Verifique se a implantação está marcada como 'QUALQUER PESSOA'."); 
+            console.error(e);
+            alert("Erro de conexão. O servidor respondeu, mas algo falhou no navegador."); 
             erroLogin(); 
         });
 

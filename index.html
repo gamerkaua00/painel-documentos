@@ -3,87 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAZUR DATABASE // PROFILE V5</title>
+    <title>MAZUR DATABASE // PROFILE V6</title>
     <style>
-        :root {
-            --bg-color: #050505;
-            --terminal-green: #00ff41;
-            --terminal-dim: #008f11;
-            --alert-color: #ff3333;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--terminal-green);
-            font-family: 'Courier New', Courier, monospace;
-            margin: 0; padding: 20px;
-            background-image: radial-gradient(circle, #0a0a0a 0%, #000000 100%);
-        }
-
-        /* Efeito de Scanline */
-        body::before {
-            content: " "; display: block; position: fixed;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 2; background-size: 100% 2px, 3px 100%; pointer-events: none;
-        }
-
+        :root { --bg-color: #050505; --terminal-green: #00ff41; --terminal-dim: #008f11; }
+        body { background-color: var(--bg-color); color: var(--terminal-green); font-family: 'Courier New', Courier, monospace; margin: 0; padding: 20px; background-image: radial-gradient(circle, #0a0a0a 0%, #000000 100%); }
+        body::before { content: " "; display: block; position: fixed; top: 0; left: 0; bottom: 0; right: 0; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); z-index: 2; background-size: 100% 2px, 3px 100%; pointer-events: none; }
         .container { max-width: 650px; margin: 0 auto; position: relative; z-index: 3; }
         h1, h2 { text-align: center; border-bottom: 1px solid var(--terminal-dim); padding-bottom: 10px; letter-spacing: 2px; }
-
-        /* Estilo dos Inputs */
-        input, textarea, button {
-            width: 100%; box-sizing: border-box; background: #000;
-            border: 1px solid var(--terminal-dim); color: var(--terminal-green);
-            padding: 12px; margin-bottom: 10px; font-family: 'Courier New', monospace;
-        }
+        input, textarea, button { width: 100%; box-sizing: border-box; background: #000; border: 1px solid var(--terminal-dim); color: var(--terminal-green); padding: 12px; margin-bottom: 10px; font-family: 'Courier New', monospace; }
         input:focus, textarea:focus { outline: none; border-color: var(--terminal-green); }
-        
-        .row-inputs { display: flex; gap: 10px; }
-        .row-inputs input { flex: 1; }
-
+        .row-inputs { display: flex; gap: 10px; } .row-inputs input { flex: 1; }
         button { font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 10px; border: 1px solid var(--terminal-green); transition: 0.2s; }
         button:hover { background: var(--terminal-green); color: #000; }
-
-        /* Upload de Foto */
-        .photo-upload-container {
-            display: flex; align-items: center; gap: 15px; margin-bottom: 15px; border: 1px dashed var(--terminal-dim); padding: 10px; background: rgba(0,50,0,0.1);
-        }
-        .photo-preview {
-            width: 80px; height: 100px; background: #111; border: 1px solid var(--terminal-dim);
-            background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #555; text-align: center;
-        }
-
-        /* CARD DE RESULTADO */
-        .card {
-            border: 1px solid var(--terminal-dim); padding: 15px; margin-bottom: 15px;
-            background: rgba(0, 20, 0, 0.4); display: flex; gap: 15px; align-items: start;
-        }
-        .mugshot {
-            width: 100px; height: 130px; background: #000; border: 1px solid #fff;
-            object-fit: cover; flex-shrink: 0; 
-        }
-        .card-info { flex-grow: 1; }
-        .card h3 { margin: 0 0 5px 0; color: #fff; text-transform: uppercase; font-size: 1.2em; }
-        
+        .photo-upload-container { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; border: 1px dashed var(--terminal-dim); padding: 10px; background: rgba(0,50,0,0.1); }
+        .photo-preview { width: 80px; height: 100px; background: #111; border: 1px solid var(--terminal-dim); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #555; text-align: center; }
+        .card { border: 1px solid var(--terminal-dim); padding: 15px; margin-bottom: 15px; background: rgba(0, 20, 0, 0.4); display: flex; gap: 15px; align-items: start; }
+        .mugshot { width: 100px; height: 130px; background: #000; border: 1px solid #fff; object-fit: cover; flex-shrink: 0; }
+        .card-info { flex-grow: 1; } .card h3 { margin: 0 0 5px 0; color: #fff; text-transform: uppercase; font-size: 1.2em; }
         .label { font-size: 10px; color: #aaa; display: block; margin-top: 8px; margin-bottom: 2px; text-transform: uppercase; }
         .data-text { font-size: 14px; margin-bottom: 5px; display: block; color: #ddd; }
         .optional-info { font-size: 12px; color: var(--terminal-green); margin-bottom: 4px; display: block; }
-
-        .link-btn {
-            display: inline-block; padding: 5px 10px; border: 1px solid var(--terminal-green);
-            color: var(--terminal-green); text-decoration: none; font-size: 11px; margin-top: 10px;
-        }
+        .link-btn { display: inline-block; padding: 5px 10px; border: 1px solid var(--terminal-green); color: var(--terminal-green); text-decoration: none; font-size: 11px; margin-top: 10px; }
         .link-btn:hover { background: var(--terminal-green); color: #000; }
-        
-        /* Login e Abas */
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 999; display: flex; justify-content: center; align-items: center; }
         .login-box { border: 1px solid var(--terminal-green); padding: 30px; width: 300px; background: #000; box-shadow: 0 0 20px rgba(0,255,65,0.2); }
-        #app-system { display: none; }
-        .hidden { display: none !important; }
+        #app-system { display: none; } .hidden { display: none !important; }
         .tabs { display: flex; margin-bottom: 20px; border-bottom: 1px solid var(--terminal-dim); }
-        .tab { flex: 1; padding: 10px; text-align: center; border-right: 1px solid var(--terminal-dim); cursor: pointer; background: #0a0a0a; }
-        .tab:last-child { border: none; }
+        .tab { flex: 1; padding: 10px; text-align: center; border-right: 1px solid var(--terminal-dim); cursor: pointer; background: #0a0a0a; } .tab:last-child { border: none; }
         .tab.active { background: var(--terminal-green); color: #000; font-weight: bold; }
     </style>
 </head>
@@ -93,7 +39,7 @@
     <div class="login-box">
         <h2 style="margin-top:0">ACESSO RESTRITO</h2>
         <input type="text" id="loginUser" placeholder="USUÁRIO (mazur)">
-        <input type="password" id="loginPass" placeholder="SENHA (********)">
+        <input type="password" id="loginPass" placeholder="SENHA">
         <button onclick="fazerLogin()">ACESSAR SISTEMA</button>
         <p id="loginError" style="color:red; display:none; text-align:center; font-size:12px; margin-top:10px;">ACESSO NEGADO</p>
     </div>
@@ -104,9 +50,7 @@
         <span>USER: <span id="displayUser">UNKNOWN</span></span>
         <span>DB STATUS: ONLINE</span>
     </div>
-    
-    <h1>DOSSIÊ CRIMINAL V5</h1>
-
+    <h1>DOSSIÊ CRIMINAL V6</h1>
     <div class="tabs">
         <div class="tab active" onclick="mudarAba('cadastro')">NOVO REGISTRO</div>
         <div class="tab" onclick="mudarAba('busca')">CONSULTAR</div>
@@ -116,45 +60,30 @@
         <p class="label" style="color:#fff; border-bottom:1px dashed #333;">// DADOS BIOMÉTRICOS</p>
         <div class="photo-upload-container">
             <div id="previewBox" class="photo-preview">SEM FOTO</div>
-            <div style="flex-grow:1">
-                <input type="file" id="fotoPerfil" accept="image/*" onchange="previewImagem(this)" style="border:none; padding:0;">
-                <span style="font-size:10px; color:#666;">CLIQUE PARA SELECIONAR FOTO 3x4</span>
-            </div>
+            <div style="flex-grow:1"><input type="file" id="fotoPerfil" accept="image/*" onchange="previewImagem(this)" style="border:none; padding:0;"><span style="font-size:10px; color:#666;">FOTO 3x4</span></div>
         </div>
-
-        <p class="label" style="color:#fff; border-bottom:1px dashed #333;">// IDENTIFICAÇÃO BÁSICA</p>
+        <p class="label" style="color:#fff; border-bottom:1px dashed #333;">// IDENTIFICAÇÃO</p>
         <input type="text" id="nome" placeholder="NOME COMPLETO *">
-        
-        <div class="row-inputs">
-            <input type="number" id="cpf" placeholder="CPF / RG">
-            <input type="number" id="idade" placeholder="IDADE (Opcional)">
-        </div>
-
-        <p class="label" style="color:#fff; border-bottom:1px dashed #333;">// DADOS DE CONTATO (OPCIONAL)</p>
-        <input type="text" id="telefone" placeholder="TELEFONE / WHATSAPP">
-        <input type="email" id="email" placeholder="EMAIL">
-        <input type="text" id="redes" placeholder="REDES SOCIAIS / LINKS">
-        
-        <p class="label" style="color:#fff; border-bottom:1px dashed #333;">// DOSSIÊ & PROVAS</p>
-        <textarea id="detalhes" rows="6" placeholder="DIGITE O HISTÓRICO COMPLETO..."></textarea>
-        <p class="label">ARQUIVO DE EVIDÊNCIA</p>
-        <input type="file" id="arquivoEvidencia">
-
-        <button onclick="enviarDados()" id="btnEnviar">ARQUIVAR FICHA COMPLETA</button>
+        <div class="row-inputs"><input type="number" id="cpf" placeholder="CPF / RG"><input type="number" id="idade" placeholder="IDADE"></div>
+        <p class="label" style="color:#fff; border-bottom:1px dashed #333;">// CONTATO</p>
+        <input type="text" id="telefone" placeholder="TELEFONE"><input type="email" id="email" placeholder="EMAIL"><input type="text" id="redes" placeholder="REDES SOCIAIS">
+        <p class="label" style="color:#fff; border-bottom:1px dashed #333;">// DOSSIÊ</p>
+        <textarea id="detalhes" rows="6" placeholder="HISTÓRICO..."></textarea>
+        <p class="label">EVIDÊNCIA</p><input type="file" id="arquivoEvidencia">
+        <button onclick="enviarDados()" id="btnEnviar">ARQUIVAR FICHA</button>
     </div>
 
     <div id="busca" class="hidden">
-        <input type="text" id="termoBusca" placeholder="DIGITE NOME OU CPF...">
+        <input type="text" id="termoBusca" placeholder="NOME OU CPF...">
         <button onclick="buscarDados()" id="btnBuscar">INICIAR VARREDURA</button>
         <div id="resultados" style="margin-top:20px;"></div>
     </div>
-
-    <p id="loading" style="text-align: center; display: none; margin-top:20px; color:yellow;">PROCESSANDO DADOS NO SERVIDOR...</p>
+    <p id="loading" style="text-align: center; display: none; margin-top:20px; color:yellow;">PROCESSANDO...</p>
 </div>
 
 <script>
-    // --- SUA URL DEPLOYADA AQUI ---
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyVgkv76_NApSCN3_3Uf6B0hGdehSml6ZW109I6WYqF0OWyar8lQbaRf2_IklccdCNR8w/exec";
+    // --- COLE SUA URL NOVA AQUI ---
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyVgkv76_NApSCN3_3Uf6B0hGdehSml6ZW109I6WYqF0OWyar8lQbaRf2_IklccdCNR8w/exec"; 
     
     const VALID_USER = "mazur";
     let sessionPass = ""; 
@@ -163,43 +92,48 @@
         const user = document.getElementById('loginUser').value.trim();
         const pass = document.getElementById('loginPass').value.trim();
         const btn = document.querySelector('.login-box button');
+        const errorMsg = document.getElementById('loginError');
 
-        if (user.toLowerCase() !== VALID_USER) return erroLogin();
+        if (user.toLowerCase() !== VALID_USER) {
+            errorMsg.innerText = "USUÁRIO INVÁLIDO";
+            errorMsg.style.display = 'block';
+            return;
+        }
 
         btn.innerText = "VERIFICANDO..."; btn.disabled = true;
 
-        // Verifica a senha no servidor
-        fetch(`${SCRIPT_URL}?q=login_check&auth=${encodeURIComponent(pass)}`)
+        // AGORA O LOGIN É VIA POST (BLINDAGEM CONTRA CORS)
+        const loginData = { acao: "login", senhaacesso: pass };
+
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify(loginData)
+        })
         .then(res => res.json())
         .then(data => {
-            if(data[0] && data[0].erro === "ACESSO NEGADO") {
-                erroLogin();
-            } else {
+            if(data.status === "sucesso") {
                 sessionPass = pass;
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('app-system').style.display = 'block';
                 document.getElementById('displayUser').innerText = user.toUpperCase();
+            } else {
+                errorMsg.innerText = "SENHA INCORRETA";
+                errorMsg.style.display = 'block';
+                btn.innerText = "ACESSAR SISTEMA"; btn.disabled = false;
             }
-        }).catch(e => { 
-            console.error(e);
-            alert("Erro de conexão. O servidor respondeu, mas algo falhou no navegador."); 
-            erroLogin(); 
-        });
-
-        function erroLogin() {
-            document.getElementById('loginError').style.display = 'block';
+        }).catch(e => {
+            alert("ERRO DE CONEXÃO: " + e.message);
+            errorMsg.innerText = "ERRO NO SERVIDOR";
+            errorMsg.style.display = 'block';
             btn.innerText = "ACESSAR SISTEMA"; btn.disabled = false;
-        }
+        });
     }
 
     function previewImagem(input) {
         const preview = document.getElementById('previewBox');
         if (input.files && input.files[0]) {
             const reader = new FileReader();
-            reader.onload = function(e) {
-                preview.style.backgroundImage = `url(${e.target.result})`;
-                preview.innerText = "";
-            }
+            reader.onload = function(e) { preview.style.backgroundImage = `url(${e.target.result})`; preview.innerText = ""; }
             reader.readAsDataURL(input.files[0]);
         }
     }
@@ -215,108 +149,64 @@
 
     async function enviarDados() {
         const nome = document.getElementById('nome').value;
-        const cpf = document.getElementById('cpf').value;
-        const idade = document.getElementById('idade').value;
-        const email = document.getElementById('email').value;
-        const telefone = document.getElementById('telefone').value;
-        const redes = document.getElementById('redes').value;
-        const detalhes = document.getElementById('detalhes').value;
-        const fotoInput = document.getElementById('fotoPerfil');
-        const evidenciaInput = document.getElementById('arquivoEvidencia');
-        const btn = document.getElementById('btnEnviar');
+        if(!nome) return alert("NOME OBRIGATÓRIO");
         
-        if(!nome) return alert("ERRO: NOME É OBRIGATÓRIO.");
-
-        btn.disabled = true; btn.innerText = "UPLOADING...";
+        document.getElementById('btnEnviar').disabled = true;
         document.getElementById('loading').style.display = 'block';
 
-        let fotoB64 = "", fotoMime = "", fotoNome = "";
-        if (fotoInput.files.length > 0) {
-            fotoB64 = await toBase64(fotoInput.files[0]);
-            fotoMime = fotoInput.files[0].type;
-            fotoNome = fotoInput.files[0].name;
+        const getB64 = async (id) => {
+            const f = document.getElementById(id).files[0];
+            return f ? { b64: await toBase64(f), mime: f.type, nome: f.name } : { b64:"", mime:"", nome:"" };
         }
 
-        let evB64 = "", evMime = "", evNome = "";
-        if (evidenciaInput.files.length > 0) {
-            evB64 = await toBase64(evidenciaInput.files[0]);
-            evMime = evidenciaInput.files[0].type;
-            evNome = evidenciaInput.files[0].name;
-        }
+        const foto = await getB64('fotoPerfil');
+        const ev = await getB64('arquivoEvidencia');
 
         const dados = { 
-            senhaacesso: sessionPass, nome, cpf, idade, email, telefone, redes, detalhes, 
-            fotoBase64: fotoB64, fotoMime: fotoMime, fotoNome: fotoNome,
-            arquivoBase64: evB64, arquivoMime: evMime, arquivoNome: evNome
+            senhaacesso: sessionPass, nome, 
+            cpf: document.getElementById('cpf').value,
+            idade: document.getElementById('idade').value,
+            email: document.getElementById('email').value,
+            telefone: document.getElementById('telefone').value,
+            redes: document.getElementById('redes').value,
+            detalhes: document.getElementById('detalhes').value,
+            fotoBase64: foto.b64, fotoMime: foto.mime, fotoNome: foto.nome,
+            arquivoBase64: ev.b64, arquivoMime: ev.mime, arquivoNome: ev.nome
         };
 
         fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(dados) })
         .then(res => res.json())
         .then(data => {
             document.getElementById('loading').style.display = 'none';
-            btn.disabled = false; btn.innerText = "ARQUIVAR FICHA COMPLETA";
-            
+            document.getElementById('btnEnviar').disabled = false;
             if(data.status === "sucesso") {
-                alert("SUCESSO: FICHA ATUALIZADA.");
-                document.querySelectorAll('input, textarea').forEach(i => i.value = "");
-                document.getElementById('previewBox').style.backgroundImage = "none";
-                document.getElementById('previewBox').innerText = "SEM FOTO";
-            } else { alert("ERRO NO SERVIDOR: " + data.msg); }
-        }).catch(e => { alert("FALHA DE CONEXÃO."); btn.disabled = false; });
+                alert("SUCESSO!");
+                location.reload();
+            } else { alert("ERRO: " + data.msg); }
+        }).catch(e => { alert("ERRO CONEXÃO"); document.getElementById('btnEnviar').disabled = false; });
     }
 
     function buscarDados() {
         const termo = document.getElementById('termoBusca').value;
-        const btn = document.getElementById('btnBuscar');
-        
-        if(!termo) return alert("DIGITE NOME OU CPF.");
-
+        if(!termo) return alert("DIGITE ALGO");
         document.getElementById('loading').style.display = 'block';
         document.getElementById('resultados').innerHTML = "";
-        btn.disabled = true; btn.innerText = "VARREDURA EM CURSO...";
-
+        
         fetch(`${SCRIPT_URL}?q=${termo}&auth=${encodeURIComponent(sessionPass)}`)
         .then(res => res.json())
         .then(data => {
             document.getElementById('loading').style.display = 'none';
-            btn.disabled = false; btn.innerText = "INICIAR VARREDURA";
+            if(data[0] && data[0].erro) { alert("LOGIN EXPIRADO"); location.reload(); return; }
+            if(data.length === 0) { document.getElementById('resultados').innerHTML = "<p align='center'>NADA ENCONTRADO</p>"; return; }
             
-            if(data[0] && data[0].erro) { alert("SESSÃO EXPIRADA."); location.reload(); return; }
-            if(data.length === 0) { document.getElementById('resultados').innerHTML = "<p align='center' style='color:#888'>NADA ENCONTRADO.</p>"; return; }
-
             data.forEach(item => {
-                let imgHtml = item.foto ? `<img src="${item.foto}" class="mugshot">` : `<div class="mugshot" style="display:flex;align-items:center;justify-content:center;color:#555;font-size:10px;">SEM FOTO</div>`;
-
-                let extrasHtml = "";
-                if(item.idade) extrasHtml += `<span class="optional-info">IDADE: ${item.idade} ANOS</span>`;
-                if(item.telefone) extrasHtml += `<span class="optional-info">TEL: ${item.telefone}</span>`;
-                if(item.email) extrasHtml += `<span class="optional-info">EMAIL: ${item.email}</span>`;
-                if(item.redes) extrasHtml += `<span class="optional-info">SOCIAL: ${item.redes}</span>`;
-
-                let html = `
-                    <div class="card">
-                        ${imgHtml}
-                        <div class="card-info">
-                            <h3>${item.nome}</h3>
-                            <span class="label">IDENTIDADE:</span>
-                            <span class="data-text">${item.cpf || 'N/A'}</span>
-                            
-                            <div style="margin: 10px 0; border-top: 1px dashed #333; padding-top:5px;">
-                                ${extrasHtml}
-                            </div>
-
-                            <span class="label">HISTÓRICO:</span>
-                            <div style="font-size:13px; color:#ddd; white-space: pre-wrap; margin-bottom:10px;">${item.detalhes}</div>
-                `;
-                
-                if(item.evidencia && item.evidencia !== "Sem anexo") {
-                    html += `<a href="${item.evidencia}" target="_blank" class="link-btn">📂 ABRIR EVIDÊNCIA</a>`;
-                }
+                let img = item.foto ? `<img src="${item.foto}" class="mugshot">` : `<div class="mugshot">SEM FOTO</div>`;
+                let html = `<div class="card">${img}<div class="card-info"><h3>${item.nome}</h3><span class="label">CPF: ${item.cpf} | IDADE: ${item.idade}</span><span class="data-text">${item.email} | ${item.telefone}</span><div style="margin-top:10px; color:#ddd; font-size:13px">${item.detalhes}</div>`;
+                if(item.evidencia && item.evidencia !== "Sem anexo") html += `<a href="${item.evidencia}" target="_blank" class="link-btn">EVIDÊNCIA</a>`;
                 html += `</div></div>`;
                 document.getElementById('resultados').innerHTML += html;
             });
-        })
-        .catch(e => { alert("ERRO NA BUSCA."); btn.disabled = false; });
+        });
     }
 
     const toBase64 = file => new Promise((resolve, reject) => {

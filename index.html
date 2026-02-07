@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SISTEMA DE INTELIGÊNCIA // V22</title>
+    <title>SISTEMA DE INTELIGÊNCIA // V23</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
         :root {
             --bg-body: #050505; --bg-panel: #111; --bg-input: #1a1a1a;
-            --primary: #007bff; --accent: #00d2ff; --text-main: #e0e0e0; --text-muted: #666;
+            --primary: #007bff; --accent: #00d2ff; --text-main: #e0e0e0;
             --border: #333; --danger: #ff3333; --warning: #ffcc00; --success: #00cc66;
         }
         body { background-color: var(--bg-body); color: var(--text-main); font-family: 'Roboto', sans-serif; margin: 0; padding: 20px; font-size: 14px; user-select: none; }
@@ -33,19 +33,12 @@
         .card-meta { font-size: 0.85rem; color: #888; margin-top: 5px; font-family: 'Courier Prime', monospace; }
         .status-ativo { border-left-color: var(--success); } .status-preso { border-left-color: var(--danger); } .status-vigilancia { border-left-color: var(--warning); }
 
-        /* MODAL DOSSIÊ */
+        /* MODAL DOSSIÊ (INTERFACE WEB) */
         #modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; display: none; justify-content: center; align-items: center; overflow-y: auto; padding: 10px; box-sizing: border-box; }
         
         .dossier-paper { 
             background: #0a0a0a; width: 100%; max-width: 900px; max-height: 95vh; overflow-y: auto; 
             padding: 0; border: 1px solid #444; position: relative; box-shadow: 0 0 50px #000; 
-        }
-        
-        /* MARCA D'ÁGUA */
-        .watermark {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg);
-            font-size: 8rem; color: rgba(255, 255, 255, 0.03); font-weight: bold; pointer-events: none;
-            white-space: nowrap; font-family: 'Impact', sans-serif; z-index: 0; display: none;
         }
 
         .dossier-top-strip {
@@ -55,9 +48,7 @@
         }
 
         .dossier-content { padding: 40px; position: relative; z-index: 1; }
-
         .dossier-grid { display: grid; grid-template-columns: 200px 1fr; gap: 30px; margin-bottom: 30px; border-bottom: 1px solid #333; padding-bottom: 30px; }
-        
         .dossier-photo-container { text-align: center; }
         .dossier-photo { width: 100%; height: 260px; background: #000; object-fit: cover; object-position: center top; border: 2px solid #fff; margin-bottom: 10px; }
         .risk-badge { background: #333; color: #fff; padding: 5px; font-weight: bold; text-align: center; border: 1px solid #555; font-family: 'Courier Prime'; }
@@ -106,32 +97,7 @@
 
         .hidden { display: none !important; }
 
-        /* --- PDF MODE CORRIGIDO (ESTILO ARQUIVO OFICIAL) --- */
-        .pdf-mode {
-            width: 794px !important; /* A4 Largura */
-            min-height: 1123px !important;
-            margin: 0 auto !important;
-            background-color: #ffffff !important; /* FUNDO BRANCO */
-            color: #000000 !important; /* TINTA PRETA */
-            padding: 0 !important;
-            border: none !important;
-            box-shadow: none !important;
-            position: absolute !important;
-            top: 0 !important; left: 0 !important;
-            z-index: 9999 !important;
-        }
-        /* Força tudo para preto/branco no PDF */
-        .pdf-mode * { color: #000000 !important; border-color: #000000 !important; text-shadow: none !important; }
-        .pdf-mode .watermark { display: block !important; color: rgba(0,0,0,0.1) !important; font-size: 6rem !important; }
-        .pdf-mode .dossier-content { padding: 40px 50px !important; }
-        .pdf-mode .dossier-grid { display: flex !important; flex-direction: row !important; align-items: flex-start !important; gap: 40px !important; border-bottom: 2px solid #000 !important; }
-        .pdf-mode .dossier-photo { border: 2px solid #000 !important; filter: grayscale(100%) contrast(120%); } 
-        .pdf-mode .dossier-top-strip { background: #ddd !important; border-bottom: 2px solid #000 !important; color: #000 !important; }
-        .pdf-mode .risk-badge { background: #fff !important; border: 2px solid #000 !important; color: #000 !important; }
-        .pdf-mode .history-box { background: #fff !important; border: 1px solid #000 !important; color: #000 !important; }
-        .pdf-mode .section-title { background: #eee !important; color: #000 !important; border-left: 5px solid #000 !important; }
-        .pdf-mode ::-webkit-scrollbar { display: none; }
-
+        /* --- MOBILE RESPONSIVE --- */
         @media (max-width: 768px) {
             .dossier-content { padding: 20px; }
             .dossier-grid { grid-template-columns: 1fr; text-align: center; gap: 15px; }
@@ -145,17 +111,16 @@
 <body oncontextmenu="return false;"> 
 
 <div id="modal-overlay">
-    <div class="dossier-paper" id="ficha-impressao">
-        <div class="watermark">TOP SECRET // CLASSIFIED</div>
+    <div class="dossier-paper" id="ficha-visualizacao">
         <div class="dossier-top-strip">CONFIDENTIAL RECORD // CLASSIFIED</div>
-        <span class="close-modal no-print" onclick="fecharModal()">×</span>
+        <span class="close-modal" onclick="fecharModal()">×</span>
         
         <div class="dossier-content">
             <div class="dossier-grid">
                 <div class="dossier-photo-container">
                     <img id="view-foto" src="" class="dossier-photo" style="display:none" crossorigin="anonymous">
                     <div id="view-no-foto" class="dossier-photo" style="display:flex;align-items:center;justify-content:center;color:#555;border:2px dashed #444;">NO PHOTO</div>
-                    <div id="view-loading" style="color:var(--primary); font-size:0.7rem; margin-top:5px; display:none;">DECODIFICANDO IMAGEM...</div>
+                    <div id="view-loading" style="color:var(--primary); font-size:0.7rem; margin-top:5px; display:none;">DECODIFICANDO...</div>
                     <div class="risk-badge" id="view-nivel">NÍVEL DE RISCO: 0</div>
                 </div>
                 
@@ -188,11 +153,11 @@
                 <div class="data-value" id="view-audio-container">Nenhum registro.</div>
             </div>
 
-            <div style="margin-top:30px; border-top:2px solid #333; padding-top:15px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;" class="no-print">
+            <div style="margin-top:30px; border-top:2px solid #333; padding-top:15px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
                 <div style="font-size:0.7rem; color:#555;">ÚLTIMA ATUALIZAÇÃO: <span id="view-update"></span></div>
                 <div style="display:flex; gap:10px; flex-wrap:wrap;">
                     <a id="view-evidencia-btn" href="#" target="_blank" class="btn-sm" style="display:none; padding:10px; background:#222; color:#fff; text-decoration:none;">ABRIR EVIDÊNCIA (DRIVE)</a>
-                    <button onclick="imprimirFicha()" style="width:auto; background:#fff; color:#000;">🖨️ GERAR PDF OFICIAL</button>
+                    <button onclick="gerarPDFReal()" style="width:auto; background:#fff; color:#000;">🖨️ GERAR PDF OFICIAL</button>
                 </div>
             </div>
         </div>
@@ -201,7 +166,7 @@
 
 <div id="login-screen">
     <div class="login-box">
-        <h2 style="color:#fff; letter-spacing:3px;">SYSTEM V22</h2>
+        <h2 style="color:#fff; letter-spacing:3px;">SYSTEM V23</h2>
         <input type="text" id="loginUser" placeholder="USUÁRIO (ID)" style="text-align:center;">
         <input type="password" id="loginPass" placeholder="SENHA DE ACESSO" style="text-align:center;">
         <button onclick="fazerLogin()" id="btnLogin">INICIAR SESSÃO</button>
@@ -292,6 +257,8 @@
     </div>
 </div>
 
+<div id="print-container" style="display:none;"></div>
+
 <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyVgkv76_NApSCN3_3Uf6B0hGdehSml6ZW109I6WYqF0OWyar8lQbaRf2_IklccdCNR8w/exec";
     const VALID_USER = "mazur";
@@ -299,7 +266,7 @@
     let sessionPass = ""; let modoEdicao = false; let dadosCache = []; 
     let urlFotoAntiga = "", urlEvidenciaAntiga = "", urlAudioAntiga = "";
     
-    // SOM BEEP
+    // SOM & UTILITARIOS
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     function playBeep(freq = 800, type = 'square', dur = 0.05) {
         if(audioCtx.state === 'suspended') audioCtx.resume();
@@ -312,6 +279,14 @@
         osc.stop(audioCtx.currentTime + dur);
     }
     
+    // EXTRAÇÃO DE ID DO DRIVE (CORREÇÃO DE LINK UNIVERSAL)
+    function extrairIdDrive(url) {
+        if(!url) return null;
+        // Tenta pegar ID de 33 caracteres (padrão Google)
+        let match = url.match(/[-\w]{25,}/);
+        return match ? match[0] : null;
+    }
+
     // AUTO LOGOUT
     let logoutTimer;
     function startLogoutTimer() { clearTimeout(logoutTimer); logoutTimer = setTimeout(() => { alert("SESSÃO EXPIRADA."); location.reload(); }, 600000); }
@@ -345,6 +320,7 @@
         });
     }
 
+    // --- RENDERIZADOR DO DASHBOARD ---
     function renderizarCards(lista) {
         const div = document.getElementById('dashboard-results'); div.innerHTML = "";
         if(lista.length === 0) div.innerHTML = "<p align='center' style='color:#666'>NENHUM REGISTRO ENCONTRADO.</p>";
@@ -352,11 +328,14 @@
         lista.forEach(i => {
             let nivel = i.nivel > 0 ? "💀".repeat(parseInt(i.nivel)) : "🛡";
             let status = "status-" + (i.status||"ativo").toLowerCase();
+            
+            // Lógica de Imagem no Card (Links Diretos)
+            let imgHtml = `<div id="card-no-img-${i.cpf}" class="card-mugshot" style="display:flex;align-items:center;justify-content:center;color:#555;font-size:0.6rem;">SEM FOTO</div>
+                           <img id="card-img-${i.cpf}" src="" class="card-mugshot" style="display:none" onerror="this.style.display='none'; document.getElementById('card-no-img-${i.cpf}').style.display='flex'">`;
+            
             let html = `
                 <div class="card ${status}" onmouseenter="playBeep(2000, 'sine', 0.02)">
-                    <img id="card-img-${i.cpf}" src="" class="card-mugshot" style="display:none">
-                    <div id="card-no-img-${i.cpf}" class="card-mugshot" style="display:flex;align-items:center;justify-content:center;color:#555;font-size:0.6rem;">SEM FOTO</div>
-                    
+                    ${imgHtml}
                     <div class="card-info">
                         <div class="card-title">${i.nome} <span style="font-size:0.8rem; color:#666; margin-left:10px;">${nivel}</span></div>
                         <div style="font-size:0.8rem; color:var(--primary); font-weight:bold; margin-bottom:5px; font-family:'Courier Prime'">${i.vulgo||""}</div>
@@ -368,29 +347,19 @@
                     </div>
                 </div>`;
             div.innerHTML += html;
-            carregarFotoCard(i.cpf, i.foto); 
-        });
-    }
-
-    // --- CORREÇÃO DAS IMAGENS DO DASHBOARD ---
-    function carregarFotoCard(cpf, url) {
-        if(!url || url === "Sem anexo" || url.length < 10) return;
-        
-        // Tenta extrair ID do Google Drive
-        let id = "";
-        if(url.includes("id=")) id = url.split("id=")[1].split("&")[0];
-        else if(url.includes("/file/d/")) id = url.split("/file/d/")[1].split("/")[0];
-        
-        if(id) {
-            // Usa o link lh3 que geralmente funciona sem API e sem CORS para visualização
-            let directLink = `https://lh3.googleusercontent.com/d/${id}`;
-            let img = document.getElementById(`card-img-${cpf}`);
-            let placeholder = document.getElementById(`card-no-img-${cpf}`);
             
-            img.onload = () => { img.style.display = 'block'; placeholder.style.display = 'none'; };
-            img.onerror = () => { console.log("Erro imagem:", cpf); }; // Mantém o placeholder se falhar
-            img.src = directLink;
-        }
+            // Tenta carregar a imagem do Dashboard
+            if(i.foto && i.foto.length > 10 && i.foto !== "Sem anexo") {
+                let id = extrairIdDrive(i.foto);
+                if(id) {
+                    let imgEl = document.getElementById(`card-img-${i.cpf}`);
+                    let noImgEl = document.getElementById(`card-no-img-${i.cpf}`);
+                    // Link público de thumbnail do Google (Geralmente não bloqueia CORS)
+                    imgEl.src = `https://lh3.googleusercontent.com/d/${id}=s220`;
+                    imgEl.onload = () => { imgEl.style.display = 'block'; noImgEl.style.display = 'none'; };
+                }
+            }
+        });
     }
 
     function typeWriter(elementId, text) {
@@ -421,17 +390,14 @@
         const btnEv = document.getElementById('view-evidencia-btn');
         if(item.evidencia && item.evidencia !== "Sem anexo") { btnEv.href = item.evidencia; btnEv.style.display = 'inline-block'; } else btnEv.style.display = 'none';
 
-        // Carregamento de foto em alta qualidade (Base64)
+        // FOTO MODAL (CARREGAMENTO LENTO VIA API SCRIPT PARA GARANTIR)
         const img = document.getElementById('view-foto');
         const noImg = document.getElementById('view-no-foto');
         const load = document.getElementById('view-loading');
         img.style.display = 'none'; noImg.style.display = 'none'; load.style.display = 'none';
 
         if(item.foto && item.foto !== "Sem anexo") {
-            let id = ""; 
-            if(item.foto.includes("id=")) id = item.foto.split("id=")[1].split("&")[0];
-            else if(item.foto.includes("/file/d/")) id = item.foto.split("/file/d/")[1].split("/")[0];
-            
+            let id = extrairIdDrive(item.foto);
             if(id) {
                 load.style.display = 'flex';
                 fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ acao: "getFoto", id: id, senhaacesso: sessionPass }) })
@@ -445,34 +411,63 @@
         document.getElementById('modal-overlay').style.display = 'flex';
     }
 
-    function imprimirFicha() {
-        const element = document.getElementById('ficha-impressao');
-        const btnFechar = document.querySelector('.close-modal');
-        const botoesFundo = document.querySelector('.dossier-content > div:last-child');
+    function fecharModal() { document.getElementById('modal-overlay').style.display = 'none'; }
 
-        element.classList.add('pdf-mode');
-        if(btnFechar) btnFechar.style.display = 'none';
-        if(botoesFundo) botoesFundo.style.display = 'none';
+    // --- PDF GENERATOR V3 (CLONAGEM SEGURA) ---
+    function gerarPDFReal() {
+        const cpf = document.getElementById('view-cpf').innerText;
+        // Clonamos os dados visíveis para um HTML limpo de impressão
+        const htmlContent = `
+        <div style="width: 750px; padding: 40px; background: #fff; color: #000; font-family: 'Courier Prime', monospace; position: relative;">
+            <div style="position: absolute; top: 40%; left: 10%; transform: rotate(-45deg); font-size: 80px; color: rgba(0,0,0,0.05); font-weight: bold;">TOP SECRET</div>
+            <div style="border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px; text-align: center; font-weight: bold; letter-spacing: 3px;">CONFIDENTIAL RECORD // CLASSIFIED</div>
+            
+            <div style="display: flex; gap: 30px; margin-bottom: 30px;">
+                <div style="width: 200px; flex-shrink: 0; text-align: center;">
+                    <img src="${document.getElementById('view-foto').src}" style="width: 100%; height: 260px; object-fit: cover; border: 2px solid #000; display: ${document.getElementById('view-foto').style.display}; filter: grayscale(100%);">
+                    <div style="border: 2px dashed #000; padding: 20px; color: #000; display: ${document.getElementById('view-no-foto').style.display};">NO PHOTO</div>
+                    <div style="margin-top: 10px; border: 1px solid #000; padding: 5px; font-weight: bold;">${document.getElementById('view-nivel').innerText}</div>
+                </div>
+                <div style="flex: 1;">
+                    <h1 style="margin: 0; font-size: 24px; text-transform: uppercase;">${document.getElementById('view-nome').innerText}</h1>
+                    <h2 style="margin: 5px 0 20px 0; font-size: 16px; color: #333;">VULGO: ${document.getElementById('view-vulgo').innerText}</h2>
+                    
+                    <div style="border-bottom: 1px solid #ccc; padding: 5px 0;"><strong>CPF:</strong> ${document.getElementById('view-cpf').innerText}</div>
+                    <div style="border-bottom: 1px solid #ccc; padding: 5px 0;"><strong>STATUS:</strong> ${document.getElementById('view-status').innerText}</div>
+                    <div style="border-bottom: 1px solid #ccc; padding: 5px 0;"><strong>IDADE:</strong> ${document.getElementById('view-idade').innerText}</div>
+                    <div style="border-bottom: 1px solid #ccc; padding: 5px 0;"><strong>FACÇÃO:</strong> ${document.getElementById('view-afiliacao').innerText}</div>
+                </div>
+            </div>
 
-        setTimeout(() => {
-            const opt = { 
-                margin: 0, 
-                filename: `DOSSIE_${document.getElementById('view-cpf').innerText}.pdf`, 
-                image: { type: 'jpeg', quality: 1.0 }, 
-                html2canvas: { scale: 2, useCORS: true, backgroundColor: "#ffffff", scrollY: 0, windowWidth: 794 }, 
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } 
-            };
+            <h3 style="background: #eee; padding: 5px; border-left: 5px solid #000;">DADOS DE CONTATO</h3>
+            <p><strong>ENDEREÇO:</strong> ${document.getElementById('view-endereco').innerText}</p>
+            <p><strong>TELEFONE:</strong> ${document.getElementById('view-telefone').innerText} | <strong>EMAIL:</strong> ${document.getElementById('view-email').innerText}</p>
 
-            html2pdf().set(opt).from(element).save().then(()=>{
-                element.classList.remove('pdf-mode');
-                if(btnFechar) btnFechar.style.display = 'block';
-                if(botoesFundo) botoesFundo.style.display = 'flex';
-            });
-        }, 300);
+            <h3 style="background: #eee; padding: 5px; border-left: 5px solid #000;">HISTÓRICO OPERACIONAL</h3>
+            <div style="border: 1px solid #000; padding: 10px; min-height: 100px; white-space: pre-wrap;">${document.getElementById('view-detalhes').innerText}</div>
+            
+            <div style="margin-top: 30px; font-size: 10px; text-align: center;">GERADO PELO SISTEMA DE INTELIGÊNCIA EM ${new Date().toLocaleString()}</div>
+        </div>`;
+
+        // Cria elemento temporário
+        const container = document.getElementById('print-container');
+        container.innerHTML = htmlContent;
+        
+        const opt = {
+            margin: 10,
+            filename: `DOSSIE_${cpf}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        // Gera e limpa
+        html2pdf().set(opt).from(container.firstChild).save().then(() => {
+            container.innerHTML = "";
+        });
     }
 
-    function fecharModal() { document.getElementById('modal-overlay').style.display = 'none'; }
-    
+    // --- CRUD ---
     function prepararEdicao(cpf) {
         const i = dadosCache.find(x=>x.cpf==cpf); modoEdicao=true;
         const s = (id, v) => document.getElementById(id).value = v || "";

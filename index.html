@@ -17,7 +17,7 @@
         .container { max-width: 1200px; margin: 0 auto; }
 
         /* HEADER */
-        header { border-bottom: 2px solid var(--primary); padding-bottom: 15px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: flex-end; }
+        header { border-bottom: 2px solid var(--primary); padding-bottom: 15px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 10px; }
         h1 { margin: 0; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 2px; font-size: 1.8rem; }
         
         /* CARD DA BUSCA (Resumo) */
@@ -27,17 +27,17 @@
             border-left: 5px solid #555; transition: 0.2s; align-items: center;
         }
         .card:hover { background: #161616; border-color: #555; transform: translateX(5px); }
-        .card-mugshot { width: 70px; height: 90px; background: #000; object-fit: cover; border: 1px solid #444; flex-shrink: 0; }
+        .card-mugshot { width: 70px; height: 90px; background: #000; object-fit: cover; object-position: center top; border: 1px solid #444; flex-shrink: 0; }
         .card-info { flex: 1; }
         .card-title { font-size: 1.3rem; font-weight: bold; color: #fff; margin: 0; font-family: 'Courier Prime', monospace; }
         .card-meta { font-size: 0.85rem; color: #888; margin-top: 5px; font-family: 'Courier Prime', monospace; }
         .status-ativo { border-left-color: var(--success); } .status-preso { border-left-color: var(--danger); } .status-vigilancia { border-left-color: var(--warning); }
 
         /* MODAL DOSSIÊ (DESIGN PROFISSIONAL) */
-        #modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; display: none; justify-content: center; align-items: center; overflow-y: auto; }
+        #modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; display: none; justify-content: center; align-items: center; overflow-y: auto; padding: 10px; box-sizing: border-box; }
         
         .dossier-paper { 
-            background: #0a0a0a; width: 900px; max-height: 95vh; overflow-y: auto; 
+            background: #0a0a0a; width: 100%; max-width: 900px; max-height: 95vh; overflow-y: auto; 
             padding: 0; border: 1px solid #444; position: relative; box-shadow: 0 0 50px #000; 
         }
         
@@ -54,16 +54,16 @@
         .dossier-grid { display: grid; grid-template-columns: 200px 1fr; gap: 30px; margin-bottom: 30px; border-bottom: 1px solid #333; padding-bottom: 30px; }
         
         .dossier-photo-container { text-align: center; }
-        .dossier-photo { width: 100%; height: 240px; background: #000; object-fit: cover; border: 2px solid #fff; margin-bottom: 10px; }
+        .dossier-photo { width: 100%; height: 240px; background: #000; object-fit: cover; object-position: center top; border: 2px solid #fff; margin-bottom: 10px; }
         .risk-badge { background: #333; color: #fff; padding: 5px; font-weight: bold; text-align: center; border: 1px solid #555; font-family: 'Courier Prime'; }
 
-        .dossier-header-info h2 { margin: 0; font-size: 2.5rem; color: #fff; text-transform: uppercase; line-height: 1; }
+        .dossier-header-info h2 { margin: 0; font-size: 2.5rem; color: #fff; text-transform: uppercase; line-height: 1; word-break: break-word; }
         .dossier-vulgo { color: var(--primary); font-size: 1.2rem; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; display: block; }
 
         /* Dados Técnicos */
-        .data-row { display: flex; border-bottom: 1px dashed #333; padding: 8px 0; }
-        .data-label { width: 140px; color: #666; font-size: 0.75rem; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; }
-        .data-value { flex: 1; color: #ddd; font-family: 'Courier Prime', monospace; font-size: 0.95rem; }
+        .data-row { display: flex; border-bottom: 1px dashed #333; padding: 8px 0; align-items: baseline; }
+        .data-label { width: 140px; color: #666; font-size: 0.75rem; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; flex-shrink: 0; }
+        .data-value { flex: 1; color: #ddd; font-family: 'Courier Prime', monospace; font-size: 0.95rem; word-break: break-word; }
         .highlight { color: #fff; font-weight: bold; }
 
         .section-title { 
@@ -90,11 +90,31 @@
         .btn-sm { padding: 5px 10px; font-size: 0.7rem; width: auto; background: #333; }
 
         /* Login */
-        #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 3000; display: flex; justify-content: center; align-items: center; }
-        .login-box { background: #111; padding: 50px; border: 1px solid #333; width: 350px; text-align: center; border-top: 4px solid var(--primary); }
+        #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 3000; display: flex; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+        .login-box { background: #111; padding: 50px; border: 1px solid #333; width: 100%; max-width: 350px; text-align: center; border-top: 4px solid var(--primary); }
 
         .hidden { display: none !important; }
-        @media print { .no-print { display: none !important; } .dossier-paper { border: none; box-shadow: none; width: 100%; } }
+
+        /* --- MOBILE RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .dossier-content { padding: 20px; }
+            .dossier-grid { grid-template-columns: 1fr; text-align: center; gap: 15px; }
+            .dossier-photo-container { margin: 0 auto; width: 100%; max-width: 250px; }
+            .data-row { flex-direction: column; align-items: flex-start; gap: 5px; }
+            .data-label { width: 100%; color: var(--primary); border-bottom: 1px solid #222; margin-bottom: 2px; }
+            .dossier-header-info h2 { font-size: 1.8rem; }
+            
+            /* Ajuste de formulário no mobile */
+            div[style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
+            
+            #dashboard-results { display: flex; flex-direction: column; gap: 10px; }
+            .card { flex-direction: column; text-align: center; border-left: 1px solid #555; border-top: 5px solid #555; }
+            .card.status-ativo { border-top-color: var(--success); }
+            .card.status-preso { border-top-color: var(--danger); }
+            .card.status-vigilancia { border-top-color: var(--warning); }
+        }
+
+        @media print { .no-print { display: none !important; } .dossier-paper { border: none; box-shadow: none; width: 100%; max-width: 100%; } }
     </style>
 </head>
 <body>
@@ -102,7 +122,7 @@
 <div id="modal-overlay">
     <div class="dossier-paper" id="ficha-impressao">
         <div class="dossier-top-strip">CONFIDENTIAL RECORD // CLASSIFIED</div>
-        <span class="close-modal no-print" onclick="fecharModal()">&times;</span>
+        <span class="close-modal no-print" onclick="fecharModal()">×</span>
         
         <div class="dossier-content">
             <div class="dossier-grid">
@@ -132,7 +152,7 @@
             <div class="section-title">LOCALIZAÇÃO & CONTATO</div>
             <div class="data-row"><div class="data-label">ENDEREÇO</div><div class="data-value" id="view-endereco">-</div></div>
             <div class="data-row"><div class="data-label">TELEFONE</div><div class="data-value" id="view-telefone">-</div></div>
-            <div class="data-row"><div class="data-label">EMAIL/REDES</div><div class="data-value" id="view-email">-</div></div>
+            <div class="data-row"><div class="data-label">EMAIL</div><div class="data-value" id="view-email">-</div></div>
 
             <div class="section-title">HISTÓRICO OPERACIONAL</div>
             <div class="history-box" id="view-detalhes">...</div>
@@ -142,9 +162,9 @@
                 <div class="data-value" id="view-audio-container">Nenhum registro.</div>
             </div>
 
-            <div style="margin-top:30px; border-top:2px solid #333; padding-top:15px; display:flex; justify-content:space-between; align-items:center;" class="no-print">
+            <div style="margin-top:30px; border-top:2px solid #333; padding-top:15px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;" class="no-print">
                 <div style="font-size:0.7rem; color:#555;">ÚLTIMA ATUALIZAÇÃO: <span id="view-update"></span></div>
-                <div style="display:flex; gap:10px;">
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
                     <a id="view-evidencia-btn" href="#" target="_blank" class="btn-sm" style="display:none; padding:10px; background:#222; color:#fff; text-decoration:none;">ABRIR EVIDÊNCIA (DRIVE)</a>
                     <button onclick="imprimirFicha()" style="width:auto; background:#fff; color:#000;">🖨️ GERAR PDF OFICIAL</button>
                 </div>
@@ -156,7 +176,8 @@
 <div id="login-screen">
     <div class="login-box">
         <h2 style="color:#fff; letter-spacing:3px;">SYSTEM V19</h2>
-        <input type="password" id="loginPass" placeholder="SENHA DE ACESSO">
+        <input type="text" id="loginUser" placeholder="USUÁRIO (ID)" style="text-align:center;">
+        <input type="password" id="loginPass" placeholder="SENHA DE ACESSO" style="text-align:center;">
         <button onclick="fazerLogin()">INICIAR SESSÃO</button>
     </div>
 </div>
@@ -194,7 +215,7 @@
         <div style="display:grid; grid-template-columns: 150px 1fr; gap:20px;">
             <div>
                 <label>FOTO (3x4)</label>
-                <div id="previewBox" style="width:100%; height:180px; background:#000; border:1px solid #444; display:flex; align-items:center; justify-content:center; color:#555; margin-bottom:5px;">FOTO</div>
+                <div id="previewBox" style="width:100%; height:180px; background:#000; border:1px solid #444; display:flex; align-items:center; justify-content:center; color:#555; margin-bottom:5px; background-size: cover; background-position: center;">FOTO</div>
                 <input type="file" id="fotoPerfil" accept="image/*" onchange="previewImagem(this)" style="font-size:0.7rem;">
             </div>
             <div>
@@ -244,7 +265,6 @@
 </div>
 
 <script>
-    // --- SUA URL DO SCRIPT V18 AQUI ---
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyVgkv76_NApSCN3_3Uf6B0hGdehSml6ZW109I6WYqF0OWyar8lQbaRf2_IklccdCNR8w/exec";
     const VALID_USER = "mazur";
     
@@ -252,13 +272,28 @@
     let urlFotoAntiga = "", urlEvidenciaAntiga = "", urlAudioAntiga = "";
 
     function fazerLogin() {
+        const user = document.getElementById('loginUser').value.trim().toLowerCase();
         const pass = document.getElementById('loginPass').value.trim();
+        
+        // Verifica se usuário é MAZUR
+        if(user !== VALID_USER) {
+            alert("USUÁRIO NÃO AUTORIZADO");
+            return;
+        }
+
         if(!pass) return;
         document.querySelector('.login-box button').innerText = "VERIFICANDO...";
         fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ acao: "busca", termo: "*", senhaacesso: pass }) })
         .then(r=>r.json()).then(d=>{
-            if(d[0] && d[0].erro) { alert("ACESSO NEGADO"); location.reload(); }
-            else { sessionPass=pass; dadosCache=d; renderizarCards(d.slice(-20).reverse()); document.getElementById('login-screen').style.display='none'; document.getElementById('app-system').classList.remove('hidden'); }
+            if(d[0] && d[0].erro) { alert("SENHA INCORRETA"); location.reload(); }
+            else { 
+                sessionPass=pass; 
+                dadosCache=d; 
+                document.getElementById('displayUser').innerText = user.toUpperCase();
+                renderizarCards(d.slice(-20).reverse()); 
+                document.getElementById('login-screen').style.display='none'; 
+                document.getElementById('app-system').classList.remove('hidden'); 
+            }
         });
     }
 
@@ -285,7 +320,7 @@
                     </div>
                 </div>`;
             div.innerHTML += html;
-            carregarFotoCard(i.cpf, i.foto); // Carrega foto assíncrona
+            carregarFotoCard(i.cpf, i.foto); 
         });
     }
 
@@ -293,7 +328,6 @@
         if(!url || url === "Sem anexo") return;
         let id = ""; try { if(url.includes("id=")) id = url.split("id=")[1].split("&")[0]; else if(url.includes("/file/d/")) id = url.split("/file/d/")[1].split("/")[0]; } catch(e){}
         if(id) {
-            // Usa link direto thumbnail para o card (mais rápido que base64)
             let thumbUrl = `https://lh3.googleusercontent.com/d/${id}=s200`;
             let img = document.getElementById(`card-img-${cpf}`);
             img.src = thumbUrl; img.style.display = 'block';
@@ -314,15 +348,12 @@
         document.getElementById('view-nivel').innerText = "NÍVEL DE RISCO: " + (item.nivel || "0");
         document.getElementById('view-update').innerText = item.dataUpdate ? new Date(item.dataUpdate).toLocaleString() : "-";
 
-        // Áudio
         const audioDiv = document.getElementById('view-audio-container');
         if(item.audio) { audioDiv.innerHTML = `<audio controls src="${item.audio}" style="width:100%; height:30px;"></audio>`; } else audioDiv.innerText = "Nenhum registro.";
 
-        // Evidência Link
         const btnEv = document.getElementById('view-evidencia-btn');
         if(item.evidencia && item.evidencia !== "Sem anexo") { btnEv.href = item.evidencia; btnEv.style.display = 'inline-block'; } else btnEv.style.display = 'none';
 
-        // FOTO BASE64 (PARA O PDF)
         const img = document.getElementById('view-foto');
         const noImg = document.getElementById('view-no-foto');
         const load = document.getElementById('view-loading');
@@ -349,7 +380,6 @@
     function imprimirFicha() {
         const el = document.getElementById('ficha-impressao');
         document.querySelectorAll('.no-print, .close-modal').forEach(e=>e.style.display='none');
-        // Configuração para PDF Escuro Profissional
         const opt = { 
             margin: 5, filename: 'Dossie_Confidencial.pdf', 
             image: { type: 'jpeg', quality: 0.98 }, 
@@ -357,7 +387,7 @@
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } 
         };
         html2pdf().set(opt).from(el).save().then(()=>{
-            document.querySelectorAll('.no-print, .close-modal').forEach(e=>e.style.display='flex'); // Botão Fechar é flex ou block? Ajuste se sumir
+            document.querySelectorAll('.no-print, .close-modal').forEach(e=>e.style.display='flex');
             document.querySelector('.close-modal').style.display = 'block';
         });
     }
@@ -421,7 +451,8 @@
             nascimento: document.getElementById('nascimento').value, afiliacao: document.getElementById('afiliacao').value,
             associados: document.getElementById('associados').value, endereco: document.getElementById('endereco').value,
             email: document.getElementById('email').value, telefone: document.getElementById('telefone').value,
-            redes: document.getElementById('redes').value, detalhes: document.getElementById('detalhes').value,
+            // REMOVIDO: redes (não existe no HTML)
+            detalhes: document.getElementById('detalhes').value,
             fisico: document.getElementById('fisico').value,
             fotoBase64: foto.b64, fotoMime: foto.mime, fotoNome: foto.nome, arquivoBase64: ev.b64, arquivoMime: ev.mime, arquivoNome: ev.nome,
             urlFotoExistente: urlFotoAntiga, urlEvidenciaExistente: urlEvidenciaAntiga, urlAudioExistente: urlAudioAntiga
